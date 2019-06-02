@@ -1,0 +1,14 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:ResourceDictionaries.Styles">
+     <Style TargetType="Label" x:Key="TextBoxLabel">
+          <Setter Property="FontSize" Value="14"/>
+          <Setter Property="Foreground" Value="DarkSlateGray"/>
+     </Style>
+     <Style TargetType="Label" x:Key="TitleLabel">
+          <Setter Property="FontSize" Value="18"/>
+          <Setter Property="HorizontalContentAlignment" Value="Left"/>
+          <Setter Property="Foreground" Value="Black"/>
+          <Setter Property="FontWeight" Value="DemiBold"/>
+     </Style>
+</ResourceDictionary>

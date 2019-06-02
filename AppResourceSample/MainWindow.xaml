@@ -1,0 +1,16 @@
+﻿<Window x:Class="AppResourceSample.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AppResourceSample"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+          <StackPanel>               
+          <Button  Margin="10,10,10,5">Base Button</Button>
+          <Button  Margin="10, 5" Style="{StaticResource StyleButtDark}">Dark Button</Button>
+          <Button  Margin="10, 5" Style="{StaticResource StyleButtLight}">Light Button</Button>
+          </StackPanel>
+     </Grid>
+</Window>
