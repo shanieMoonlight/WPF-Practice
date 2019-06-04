@@ -1,4 +1,4 @@
-﻿namespace PriceFinder
+﻿namespace PriceFinding
 {
    internal class Person
    {

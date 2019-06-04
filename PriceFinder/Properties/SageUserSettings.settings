@@ -1,0 +1,33 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PriceFinder.Properties" GeneratedClassName="SageUserSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="baseCurrCode" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="carrNomCode" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">4905</Value>
+    </Setting>
+    <Setting Name="stockNomCode" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">4000</Value>
+    </Setting>
+    <Setting Name="sageAccDSN" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SageConecto</Value>
+    </Setting>
+    <Setting Name="sagePassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)">270978</Value>
+    </Setting>
+    <Setting Name="sageUsername" Type="System.String" Scope="User">
+      <Value Profile="(Default)">manager</Value>
+    </Setting>
+    <Setting Name="taxCode" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="taxCodeForeign" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="sageDBDir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\ProgramData\Sage\Accounts\2017\</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

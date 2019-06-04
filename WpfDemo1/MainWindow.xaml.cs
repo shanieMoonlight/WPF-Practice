@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace PriceFinder
+namespace PriceFinding
 {
    /// <summary>
    /// Interaction logic for MainWindow.xaml

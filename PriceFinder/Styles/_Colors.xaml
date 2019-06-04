@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:PriceFinder.Styles">
+                    xmlns:local="clr-namespace:PriceFinding.Styles">
 
      <!--Control colors.-->
      <Color x:Key="ColorPrimary">#8bc34a</Color>

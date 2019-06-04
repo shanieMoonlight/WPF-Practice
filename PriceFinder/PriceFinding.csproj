@@ -38,14 +38,26 @@
     <ApplicationIcon>pf.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BespokeFusion, Version=1.0.1.10, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialMessageBox.1.0.0.11\lib\BespokeFusion.dll</HintPath>
+    </Reference>
+    <Reference Include="MahApps.Metro, Version=1.2.4.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\MahApps.Metro.dll</HintPath>
+    </Reference>
     <Reference Include="MaterialDesignColors, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.1.1.3\lib\net45\MaterialDesignColors.dll</HintPath>
     </Reference>
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.5.1.1345, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.5.1\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -64,6 +76,30 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Business Objects\Customer.cs" />
+    <Compile Include="Business Objects\DataStorage.cs" />
+    <Compile Include="Business Objects\MyDictionary.cs" />
+    <Compile Include="Business Objects\MyException.cs" />
+    <Compile Include="Business Objects\Order.cs" />
+    <Compile Include="Business Objects\Product.cs" />
+    <Compile Include="Business Objects\SageAccessType.cs" />
+    <Compile Include="Business Objects\Sale.cs" />
+    <Compile Include="Managing Data\DataManager.cs" />
+    <Compile Include="Managing Data\ODBC Readers\ODBCInvoiceReader.cs" />
+    <Compile Include="Managing Data\ODBC Readers\ODBCListReader.cs" />
+    <Compile Include="Managing Data\ODBC Readers\ODBCPriceListReader.cs" />
+    <Compile Include="Managing Data\ODBC Readers\ODBCPriceListTypes.cs" />
+    <Compile Include="Managing Data\SDO  Readers\SDOHelper.cs" />
+    <Compile Include="Managing Data\SDO  Readers\SDOInvoiceReader.cs" />
+    <Compile Include="Managing Data\SDO  Readers\SDOListReader.cs" />
+    <Compile Include="Managing Data\SDO  Readers\SDOPriceListReader.cs" />
+    <Compile Include="MyMessageBox.cs" />
+    <Compile Include="Properties\SageTableSettings.Designer.cs" />
+    <Compile Include="Properties\SageUserSettings.Designer.cs" />
+    <Compile Include="Reader Interfaces\IInvoiceReader.cs" />
+    <Compile Include="Reader Interfaces\IListReader.cs" />
+    <Compile Include="Reader Interfaces\IPriceListReader.cs" />
+    <Compile Include="Writing\PostOrderWriter.cs" />
     <Page Include="Colors.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -118,6 +154,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PriceTypes.cs" />
+    <Compile Include="ProductStrip.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -136,6 +174,8 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
+    <None Include="Properties\SageTableSettings.settings" />
+    <None Include="Properties\SageUserSettings.settings" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

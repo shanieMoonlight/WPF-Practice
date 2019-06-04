@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:PriceFinder.Styles"
+                    xmlns:local="clr-namespace:PriceFinding.Styles"
                     xmlns:System="clr-namespace:System;assembly=mscorlib">
      <System:Double x:Key="dblCornerRadius">2.35</System:Double>
      <System:Double x:Key="dblCornerRadius_TL">2.35</System:Double>

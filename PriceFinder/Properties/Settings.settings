@@ -1,7 +1,30 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PriceFinder.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="defaultMargin" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">40</Value>
+    </Setting>
+    <Setting Name="minDataFileAgeInDays" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="invoiceLookBackYrs" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="NOT_FOUND" Type="System.String" Scope="User">
+      <Value Profile="(Default)">NOT_FOUND</Value>
+    </Setting>
+    <Setting Name="appProgramDir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Price Finder</Value>
+    </Setting>
+    <Setting Name="appPFUpdaterDir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PF_Updaters</Value>
+    </Setting>
+    <Setting Name="programDir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Price Finder</Value>
+    </Setting>
+    <Setting Name="storageFileName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PfDataStore.ser</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

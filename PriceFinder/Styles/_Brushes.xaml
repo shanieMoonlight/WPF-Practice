@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:PriceFinder.Styles">
+                    x:Class="PriceFinding.Styles.MyBrushes"
+                    xmlns:local="clr-namespace:PriceFinding.Styles">
      <ResourceDictionary.MergedDictionaries>
           <ResourceDictionary Source="_Colors.xaml" />
      </ResourceDictionary.MergedDictionaries>

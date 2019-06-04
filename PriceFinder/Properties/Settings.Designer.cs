@@ -8,23 +8,103 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PriceFinder.Properties
-{
-
-
-   [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
-   internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
-   {
-
-      private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-
-      public static Settings Default
-      {
-         get
-         {
-            return defaultInstance;
-         }
-      }
-   }
+namespace PriceFinding.Properties {
+    
+    
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+        
+        private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
+        
+        public static Settings Default {
+            get {
+                return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("40")]
+        public double defaultMargin {
+            get {
+                return ((double)(this["defaultMargin"]));
+            }
+            set {
+                this["defaultMargin"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int minDataFileAgeInDays {
+            get {
+                return ((int)(this["minDataFileAgeInDays"]));
+            }
+            set {
+                this["minDataFileAgeInDays"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int invoiceLookBackYrs {
+            get {
+                return ((int)(this["invoiceLookBackYrs"]));
+            }
+            set {
+                this["invoiceLookBackYrs"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("NOT_FOUND")]
+        public string NOT_FOUND {
+            get {
+                return ((string)(this["NOT_FOUND"]));
+            }
+            set {
+                this["NOT_FOUND"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Price Finder")]
+        public string appProgramDir {
+            get {
+                return ((string)(this["appProgramDir"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("PF_Updaters")]
+        public string appPFUpdaterDir {
+            get {
+                return ((string)(this["appPFUpdaterDir"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Price Finder")]
+        public string programDir {
+            get {
+                return ((string)(this["programDir"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("PfDataStore.ser")]
+        public string storageFileName {
+            get {
+                return ((string)(this["storageFileName"]));
+            }
+        }
+    }
 }
