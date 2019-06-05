@@ -39,8 +39,9 @@ namespace PriceFinding
 
       private void ButtOrder_Click(object sender, RoutedEventArgs e)
       {
-
-         MyMessageBox.ShowOk("Your cool message here", "The awesome message title");
+         ToggleProgressBarVisibility();
+         //prgBarCard. = !prgBarCard.IsVisible;
+         //MyMessageBox.ShowOk("Your cool message here", "The awesome message title");
 
       }//ButtOrder_Click
 
@@ -139,78 +140,30 @@ namespace PriceFinding
       private async void ButtUpdate_Click(object sender, RoutedEventArgs e)
       {
          var dm = new DataManager();
-         await Task.Run(async () =>
+         //await Task.Run(async () =>
+         //{
+         //   await dm.Update();
+         //});
+
+         Application.Current.Dispatcher.Invoke((Action)async delegate
          {
-            await dm.Update();
+            dm.Update();
          });
       }//ButtUpdate_Click
 
       //-------------------------------------------------------------------------------------------------------//
 
+      private void ToggleProgressBarVisibility()
+      {
+         if (prgDisplay.Visibility == Visibility.Visible)
+            prgDisplay.Visibility = Visibility.Hidden;
+         else
+            prgDisplay.Visibility = Visibility.Visible;
+      }//ToggleProgressBarVisibility
+
       //-------------------------------------------------------------------------------------------------------//
 
-      ///// <summary>
-      ///// Enable/Disable all controls.
-      ///// </summary>
-      ///// <param name="enabled"></param>
-      //private void ChangeEnabledAllControls(bool enabled)
-      //{
-      //   //Do all this through ChangeEnabled so that it's thread safe.
-      //   foreach (Control c in this.Controls)
-      //      ChangeEnabled(c, enabled);
 
-      //}//ChangeEnabled
-
-      ////-------------------------------------------------------------------------------------------------------//
-
-      ///// <summary>
-      ///// Changes enabled settings from thread that created control.
-      ///// </summary>
-      ///// <param name="tb"></param>
-      ///// <param name="text"></param>
-      //private void ChangeEnabled(Control c, bool enabled)
-      //{
-      //   // InvokeRequired required compares the thread ID of the
-      //   // calling thread to the thread ID of the creating thread.
-      //   // If these threads are different, it returns true.
-      //   if (c.InvokeRequired)
-      //   {
-      //      Action<Control, bool> callback = new Action<Control, bool>(ChangeEnabled);
-      //      c.Invoke(callback, new object[] { c, enabled });
-      //   }
-      //   else
-      //   {
-      //      c.Enabled = enabled;
-      //   }//Else
-      //}//addText
-
-      ////-------------------------------------------------------------------------------------------------------//
-
-      ///// <summary>
-      ///// Updates AutoCompletes from thread that created control.
-      ///// </summary>
-      ///// <param name="tb"></param>
-      ///// <param name="text"></param>
-      //private void UpdateAutoComplete<T>(TextBox tb, MyDictionary<T> myDic)
-      //{
-      //   // InvokeRequired required compares the thread ID of the
-      //   // calling thread to the thread ID of the creating thread.
-      //   // If these threads are different, it returns true.
-      //   if (tb.InvokeRequired)
-      //   {
-      //      Action<TextBox, MyDictionary<T>> callback = new Action<TextBox, MyDictionary<T>>(UpdateAutoComplete);
-      //      tb.Invoke(callback, new object[] { tb, myDic });
-      //   }
-      //   else
-      //   {
-      //      //Add codes to AutoComplete
-      //      string[] codes = myDic.Keys.ToArray();
-      //      //Create new AutoCompleteStringCollection otherwise we will just add to the existing one and have duplicate entries.
-      //      AutoCompleteStringCollection acStringCollection = new AutoCompleteStringCollection();
-      //      acStringCollection.AddRange(codes);
-      //      tb.AutoCompleteCustomSource = acStringCollection;
-      //   }//Else
-      //}//UpdateAutoComplete
 
       //-------------------------------------------------------------------------------------------------------//
 

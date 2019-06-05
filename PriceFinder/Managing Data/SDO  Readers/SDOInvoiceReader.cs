@@ -180,7 +180,7 @@ namespace PriceFinding
             string exInfo = "Problem parsing " + val + " in invoice: " + invNum + ", product: " + prodCode
                             + "\n Date has been set to " + defaultVal + ".";
             //MessageBox.Show(exInfo);
-           MessageBox.Show(exInfo); ;
+           MyMessageBox.Show("Error", exInfo); ;
         }//parseExMsg
 
         //------------------------------------------------------------------------------------------------------------------//

@@ -35,13 +35,13 @@ namespace PriceFinding
         /// <param name="customersFileName"></param>
         public MyDictionary<Customer> ReadCustomerData()
         {
-            MyDictionary<Customer> customerMap = new MyDictionary<Customer>(); 
+            MyDictionary<Customer> customerMap = new MyDictionary<Customer>();
 
             try
             {
                 sdo = new SDOEngine();
                 ws = (WorkSpace)sdo.Workspaces.Add("App Server Update");
-                ws.Connect(sageUsrSet.sageDBDir, sageUsrSet.sageUsername, sageUsrSet.sagePassword, "UniqueUpdater");
+                ws.Connect(@"C:\ProgramData\Sage\Accounts\2017\Company.000\ACCDATA", sageUsrSet.sageUsername, sageUsrSet.sagePassword, "UniqueUpdater");
                 salesRecord = (SalesRecord)ws.CreateObject("SalesRecord");
                 currencyData = (CurrencyData)ws.CreateObject("CurrencyData");
 

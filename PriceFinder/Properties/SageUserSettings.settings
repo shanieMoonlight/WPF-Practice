@@ -27,7 +27,7 @@
       <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="sageDBDir" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\ProgramData\Sage\Accounts\2017\</Value>
+      <Value Profile="(Default)">C:\ProgramData\Sage\Accounts\2017\Company.000\ACCDATA</Value>
     </Setting>
   </Settings>
 </SettingsFile>

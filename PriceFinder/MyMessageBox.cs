@@ -19,7 +19,7 @@ namespace PriceFinding
       /// <param name="title">Title</param>
       /// <param name="canCancel">Is there a cancel button</param>
       /// <param name="canCopy">Is there a copy button</param>
-      public static void Show(string message, string title, bool canCancel = false, bool canCopy = false)
+      public static MessageBoxResult Show(string title, string message, bool canCancel = false, bool canCopy = false)
       {
          var msg = new CustomMaterialMessageBox
          {
@@ -51,6 +51,7 @@ namespace PriceFinding
 
          msg.Show();
 
+         return msg.Result;
       }//Show
 
       //--------------------------------------------------------------------------------------------------//
@@ -61,7 +62,7 @@ namespace PriceFinding
       /// <param name="message">What you want to say</param>
       /// <param name="title">Title</param>
       /// <param name="canCopy">Is there a copy button</param>
-      public static void ShowOk(string message, string title, bool canCopy = true)
+      public static MessageBoxResult ShowOk(string title, string message, bool canCopy = true)
       {
          var msg = new CustomMaterialMessageBox
          {
@@ -77,7 +78,10 @@ namespace PriceFinding
                Content = "Ok" ,
                Background = (Brush)Application.Current.Resources["BrushPrimaryDark"],
                BorderBrush = (Brush)Application.Current.Resources["BrushPrimaryDark"]
-            },            
+            },
+
+            ShowCloseButton = false,
+
             MainContentControl = { Background = (Brush)Application.Current.Resources["BrushPrimaryLight"] },
             TitleBackgroundPanel = { Background = (Brush)Application.Current.Resources["BrushPrimaryDark"] },
             BorderBrush = (Brush)Application.Current.Resources["BrushPrimaryDark"]
@@ -91,6 +95,7 @@ namespace PriceFinding
 
          msg.Show();
 
+         return msg.Result;
       }//Show
 
 

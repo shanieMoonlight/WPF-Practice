@@ -53,6 +53,9 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="ShowMeTheXAML, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ShowMeTheXAML.1.0.12\lib\net45\ShowMeTheXAML.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -96,6 +99,11 @@
     <Compile Include="MyMessageBox.cs" />
     <Compile Include="Properties\SageTableSettings.Designer.cs" />
     <Compile Include="Properties\SageUserSettings.Designer.cs" />
+    <Compile Include="Properties\SageUserSettings1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>SageUserSettings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Reader Interfaces\IInvoiceReader.cs" />
     <Compile Include="Reader Interfaces\IListReader.cs" />
     <Compile Include="Reader Interfaces\IPriceListReader.cs" />
@@ -175,7 +183,10 @@
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\SageTableSettings.settings" />
-    <None Include="Properties\SageUserSettings.settings" />
+    <None Include="Properties\SageUserSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>SageUserSettings1.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

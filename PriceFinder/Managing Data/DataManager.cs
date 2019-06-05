@@ -92,15 +92,10 @@ namespace PriceFinding
 
       /// <summary>
       /// Update data by querying database
-      /// </summary>
-      public async 
-      //-------------------------------------------------------------------------------------------------------//
-
       /// <summary>
       /// Update data by querying database
       /// </summary>
-      Task//Update
-Update()
+      public void Update()
       {
          isUpdated = false;
 
@@ -142,7 +137,7 @@ Update()
          }
          catch (Exception e)
          {
-            MessageBox.Show("Data not updated\r\n\r\n" + e.Message);
+            MyMessageBox.ShowOk("Error", "Data not updated" + e.Message);
          }//Catch
 
 
@@ -161,7 +156,7 @@ Update()
          }
          catch (Exception e)
          {
-            MessageBox.Show("Data updates have not been stored. You will have to update again on next program start up\r\n\r\n" + e.Message);
+            MyMessageBox.Show("Error", "Data updates have not been stored. You will have to update again on next program start up\r\n\r\n" + e.Message);
          }
          finally
          {
@@ -207,17 +202,19 @@ Update()
                if (checkDate < lastModifiedDatePFFile)
                   dataStore = DeserializeFromJSON<DataStorage>(pfStorageFilePath);
                else
-                  MessageBox.Show("Error: Pricing Data has not been uploaded."
-                                   + "\n    -----------------     \n"
-                                   + "You need to update the data.");
+                  MyMessageBox.Show("Error",
+                     "Pricing Data has not been uploaded."
+                     + "\n    -----------------     \n"
+                     + "You need to update the data.");
             }
             catch (Exception ex)
             {
-               MessageBox.Show("Error: Pricing Data has not been uploaded."
-                                    + "\n    -----------------     \n"
-                                    + "You need to update the data."
-                                    + "\n    -----------------     \n"
-                                    + ex.Message);
+               MyMessageBox.Show("Error",
+                  "Pricing Data has not been uploaded."
+                     + "\n    -----------------     \n"
+                     + "You need to update the data."
+                     + "\n    -----------------     \n"
+                     + ex.Message);
             }//Catch
          }//Catch
 
@@ -348,9 +345,10 @@ Update()
          }
          catch (Exception e)
          {
-            MessageBox.Show("Error: " + parseFileName(filePath) + " has not been stored."
-                             + "\n\n    -----------------     \n\n"
-                             + e.Message);
+            MyMessageBox.Show("Error: ",
+               parseFileName(filePath) + " has not been stored."
+                  + "\n\n    -----------------     \n\n"
+                  + e.Message);
          }//Catch
 
          return dataStore;
@@ -377,9 +375,10 @@ Update()
          }
          catch (Exception e)
          {
-            MessageBox.Show("Error: " + parseFileName(pfStorageFilePath) + " has not been stored."
-                             + "\n\n    -----------------     \n\n"
-                             + e.Message);
+            MyMessageBox.Show("Error: ",
+               parseFileName(pfStorageFilePath) + " has not been stored."
+                  + "\n\n    -----------------     \n\n"
+                  + e.Message);
          }//Catch
       }//SerializeToJSON
 
