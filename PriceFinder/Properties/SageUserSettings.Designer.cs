@@ -73,7 +73,7 @@ namespace PriceFinding.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("270978")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Password")]
         public string sagePassword {
             get {
                 return ((string)(this["sagePassword"]));
@@ -85,7 +85,7 @@ namespace PriceFinding.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("manager")]
+        [global::System.Configuration.DefaultSettingValueAttribute("PriceFinder")]
         public string sageUsername {
             get {
                 return ((string)(this["sageUsername"]));
@@ -121,7 +121,7 @@ namespace PriceFinding.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\ProgramData\\Sage\\Accounts\\2017\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"C:\ProgramData\Sage\Accounts\2017\Company.000\ACCDATA")]
         public string sageDBDir {
             get {
                 return ((string)(this["sageDBDir"]));

@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace PriceFinding
 {
@@ -26,7 +27,7 @@ namespace PriceFinding
 
       //--------------------------------------------------------------------------//
 
-      public TextBox tbCode;
+      public ComboBox cbCode;
       public TextBox tbDesc;
       public TextBox tbDate;
       public TextBox tbLast;
@@ -37,14 +38,17 @@ namespace PriceFinding
       public TextBox tbResult;
       public TextBox tbQty;
 
+      private DataManager _dataManager;
+
       //--------------------------------------------------------------------------//
 
-      public ProductStrip(Grid gridRow)
+      public ProductStrip(Grid gridRow, DataManager dataManager)
       {
          var dpProductInfo = (DockPanel)gridRow.Children[0];
-         tbCode = (TextBox)dpProductInfo.Children[CODE_IDX];
+         cbCode = (ComboBox)dpProductInfo.Children[CODE_IDX];
          tbDesc = (TextBox)dpProductInfo.Children[DESC_IDX];
-         tbCode.TextChanged += tbCode_TextChanged;
+         cbCode.KeyUp += CbCode_KeyUp;
+         cbCode.SelectionChanged += CbCode_SelectionChanged;
 
          var spProductPricing = (StackPanel)gridRow.Children[1];
 
@@ -64,10 +68,20 @@ namespace PriceFinding
          tbQty.PreviewTextInput += NumberValidationTextBox;
          tbQty.Text = "1";
 
-         if (cbTypes.Items.Count > 0)
-            cbTypes.Items.Clear();
-         cbTypes.ItemsSource = PriceTypes.GetPriceTypes();
-         cbTypes.SelectedIndex = 0;
+         //if (cbTypes.Items.Count > 0)
+         //   cbTypes.Items.Clear();
+         //cbTypes.ItemsSource = PriceTypes.GetPriceTypes();
+         //cbTypes.SelectedIndex = 0;
+
+         _dataManager = dataManager;
+
+         //if (cbCode.Items.Count > 0)
+         //   cbCode.Items.Clear();
+         //cbCode.ItemsSource = _dataManager.ProductMap.Keys;
+
+         SetComboBoxItems(cbTypes, PriceTypes.GetPriceTypes(), true);
+         SetComboBoxItems(cbCode, _dataManager.ProductMap.Keys);
+
 
       }//ctor
 
@@ -78,7 +92,7 @@ namespace PriceFinding
       /// </summary>
       public void Clear()
       {
-         tbCode.Text = "";
+         cbCode.Text = "";
          tbDesc.Text = "";
          tbDate.Text = "";
          tbLast.Text = "";
@@ -88,19 +102,42 @@ namespace PriceFinding
 
       //--------------------------------------------------------------------------//
 
-      private void tbCode_TextChanged(object sender, EventArgs e)
+      private void CbCode_KeyUp(object sender, EventArgs e)
       {
-         var code = tbCode.Text;
-         var desc = "Change_" + new Random().Next();// dataMgr.ProductMap.ContainsKey(code) ? dataMgr.ProductMap[code].Description : "";
-         tbDesc.Text = desc;
-
-
-         // tbDesc.Text = "";
-         tbDate.Text = "";
-         tbLast.Text = "";
-         tbCost.Text = "";
-         tbPriceList.Text = "";
+         SetProductDescription(cbCode.Text);
       }//tbCode_TextChanged
+
+      //--------------------------------------------------------------------------//
+
+      private void CbCode_SelectionChanged(object sender, SelectionChangedEventArgs e)
+      {
+
+         if (cbCode.SelectedValue != null)
+            SetProductDescription((string)cbCode.SelectedValue);
+      }//CbCustomerCode_SelectionChanged
+
+      //--------------------------------------------------------------------------//
+
+      /// <summary>
+      /// Sets the Customere description if the code matches a customer.
+      /// </summary>
+      /// <param name="code">Customer Code</param>
+      private void SetProductDescription(string code)
+      {
+
+         var cus = _dataManager.CheckProduct(code);
+
+         if (cus.Code != Settings.Default.NOT_FOUND)
+         {
+            tbDesc.Text = cus.Description;
+            cbCode.ClearValue(TextBox.BackgroundProperty);
+         }
+         else
+         {
+            tbDesc.Text = "";
+            cbCode.Background = Brushes.Salmon;
+         }//else
+      }//SetCustomerDescription
 
       //--------------------------------------------------------------------------//
 
@@ -111,6 +148,16 @@ namespace PriceFinding
       }//NumberValidationTextBox
 
       //--------------------------------------------------------------------------//
+
+     private void SetComboBoxItems(ComboBox cb, IEnumerable<string> dataSet, bool selectFirstItem = false)
+      {
+
+         if (cb.Items.Count > 0)
+            cb.Items.Clear();
+         cb.ItemsSource = dataSet;
+         if (selectFirstItem)
+            cb.SelectedIndex = 0;
+      }//SetComboBoxItems
 
    }//Cls
 }//NS

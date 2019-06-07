@@ -15,10 +15,10 @@
       <Value Profile="(Default)">SageConecto</Value>
     </Setting>
     <Setting Name="sagePassword" Type="System.String" Scope="User">
-      <Value Profile="(Default)">270978</Value>
+      <Value Profile="(Default)">PriceFinder</Value>
     </Setting>
     <Setting Name="sageUsername" Type="System.String" Scope="User">
-      <Value Profile="(Default)">manager</Value>
+      <Value Profile="(Default)">PASSWORD</Value>
     </Setting>
     <Setting Name="taxCode" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">1</Value>

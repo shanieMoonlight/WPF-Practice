@@ -1,15 +1,20 @@
 ﻿using BespokeFusion;
 using PriceFinding;
+using PriceFinding.Managing_Data;
 using PriceFinding.Properties;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Markup;
+using System.Windows.Media;
 using System.Xml;
 
 namespace PriceFinding
@@ -24,15 +29,31 @@ namespace PriceFinding
       private List<ProductStrip> strips = new List<ProductStrip>();
       private double defaultMargin;
 
+      private DataManager _dataManager;
+
       //-------------------------------------------------------------------------------------------------------//
 
       public MainWindow()
       {
+
          InitializeComponent();
 
-         SetInitialProductRows();
 
          defaultMargin = Settings.Default.defaultMargin;
+         try
+         {
+
+            _dataManager = new DataManager();
+
+            cbCustomerCode.ItemsSource = _dataManager.CustomerMap.Keys;
+
+            SetInitialProductRows();
+         }
+         catch (BackgroundMessageBoxException mbe)
+         {
+            MyMessageBox.ShowOk(mbe.Title, mbe.Message);
+         }//catch
+
       }//ctor
 
       //-------------------------------------------------------------------------------------------------------//
@@ -40,8 +61,6 @@ namespace PriceFinding
       private void ButtOrder_Click(object sender, RoutedEventArgs e)
       {
          ToggleProgressBarVisibility();
-         //prgBarCard. = !prgBarCard.IsVisible;
-         //MyMessageBox.ShowOk("Your cool message here", "The awesome message title");
 
       }//ButtOrder_Click
 
@@ -50,7 +69,7 @@ namespace PriceFinding
       private void SetInitialProductRows()
       {
          //Add First row
-         strips.Add(new ProductStrip(grdProductsRow));
+         strips.Add(new ProductStrip(grdProductsRow, _dataManager));
 
 
          // "INITIAL_ROW_COUNT - 1" because we're starting with on row already built
@@ -74,7 +93,7 @@ namespace PriceFinding
 
          Grid.SetRow(newProductStrip, gridRowIdx);
          grdProducts.Children.Add(newProductStrip);
-         strips.Add(new ProductStrip(newProductStrip));
+         strips.Add(new ProductStrip(newProductStrip, _dataManager));
 
       }//SetProductRows
 
@@ -139,16 +158,26 @@ namespace PriceFinding
 
       private async void ButtUpdate_Click(object sender, RoutedEventArgs e)
       {
-         var dm = new DataManager();
-         //await Task.Run(async () =>
-         //{
-         //   await dm.Update();
-         //});
+         if (_dataManager == null)
+            _dataManager = new DataManager(false);
 
-         Application.Current.Dispatcher.Invoke((Action)async delegate
+         prgDisplay.Visibility = Visibility.Visible;
+         try
          {
-            dm.Update();
-         });
+
+            await Task.Run(() => _dataManager.Update());
+         }
+         catch (BackgroundMessageBoxException mbe)
+         {
+            MyMessageBox.ShowOk(mbe.Title, mbe.Message);
+         }
+         prgDisplay.Visibility = Visibility.Hidden;
+
+
+         // Write result.
+         MyMessageBox.ShowOk("Result", "Ready to go.");
+
+
       }//ButtUpdate_Click
 
       //-------------------------------------------------------------------------------------------------------//
@@ -163,9 +192,132 @@ namespace PriceFinding
 
       //-------------------------------------------------------------------------------------------------------//
 
+      private void CbCustomerCode_KeyUp(object sender, KeyEventArgs e)
+      {
+         SetCustomerDescription(cbCustomerCode.Text);
 
+      }//CbCustomerCode_KeyUp
 
       //-------------------------------------------------------------------------------------------------------//
 
+      private void CbCustomerCode_SelectionChanged(object sender, SelectionChangedEventArgs e)
+      {
+
+         if (cbCustomerCode.SelectedValue != null)
+            SetCustomerDescription((string)cbCustomerCode.SelectedValue);
+      }//CbCustomerCode_SelectionChanged
+
+      //-------------------------------------------------------------------------------------------------------//
+
+      /// <summary>
+      /// Sets the Customere description if the code matches a customer.
+      /// </summary>
+      /// <param name="code">Customer Code</param>
+      private void SetCustomerDescription(string code)
+      {
+
+         var cus = _dataManager.CheckCustomer(code);
+
+         if (cus.Code != Settings.Default.NOT_FOUND)
+         {
+            tbCustomerDesc.Text = cus.Description;
+            cbCustomerCode.ClearValue(TextBox.BackgroundProperty);
+         }
+         else
+         {
+            tbCustomerDesc.Text = "";
+            cbCustomerCode.Background = Brushes.Salmon;
+         }//else
+      }//SetCustomerDescription
+
+      //-------------------------------------------------------------------------------------------------------//
+
+      /// <summary>
+      /// Try to find prices for customer and products.
+      /// </summary>
+      private void FindPrices()
+      {
+
+         var productReader = new SDOProductReader();
+
+         string NOT_FOUND = Settings.Default.NOT_FOUND;
+         try
+         {
+            string cusCode = cbCustomerCode.Text;
+            if (!cusCode.Equals(""))
+            {
+               Customer customer = _dataManager.CheckCustomer(cusCode);
+               tbCustomerDesc.Text = customer.Description;
+
+               //Fill in all queried rows.
+               foreach (ProductStrip prodStrip in strips)
+               {
+                  string prodCode = prodStrip.cbCode.Text;
+
+                  if (!prodCode.Equals(""))
+                  {
+                     Product product = _dataManager.CheckProduct(prodCode);
+
+                     //If Product exists get Cost Price
+                     if (product.Code == NOT_FOUND)
+                     {
+                        prodStrip.tbDesc.Text = NOT_FOUND;
+                        prodStrip.tbCost.Text = NOT_FOUND;
+                     }
+                     else
+                     {
+                        prodStrip.tbDesc.Text = product.Description;
+
+                        //prodStrip.tbCost.Text = (product.CostPrice * customer.XRate).ToString();
+                        prodStrip.tbCost.Text = productReader.GetCostPrice(prodCode).ToString();
+                     }//Else
+
+                     //Check last sale
+                     Sale sale = _dataManager.CheckSale(cusCode, prodCode);
+                     if (sale.Code == NOT_FOUND)
+                     {
+                        prodStrip.tbDate.Text = NOT_FOUND;
+                        prodStrip.tbLast.Text = NOT_FOUND;
+                     }
+                     else
+                     {
+                        prodStrip.tbDate.Text = sale.Date.ToString("dd-MMM-yyyy");
+                        prodStrip.tbLast.Text = sale.SalePrice.ToString();
+                     }//Else
+
+                     //Check Price List
+                     double price = _dataManager.CheckListPrice(cusCode, prodCode);
+                     if (price == -1)
+                     {
+                        prodStrip.tbPriceList.Text = NOT_FOUND;
+                     }
+                     else
+                     {
+                        prodStrip.tbPriceList.Text = price.ToString();
+                     }//Else 
+
+                  }//IF 
+
+
+               }//ForEach
+            }
+            else
+            {
+               MessageBox.Show("You must enter a customer.");
+            }//Else
+
+
+         }
+         catch (Exception ex)
+         {
+            string exInfo = ex.GetType().ToString() + "\r\n" + ex.Message;
+            MessageBox.Show(exInfo);
+         }//Catch
+      }//FindPrices
+
+      private void ButtFind_Click(object sender, RoutedEventArgs e)
+      {
+         FindPrices();
+      }
    }//Cls
 }//NS

@@ -27,13 +27,11 @@ namespace PriceFinding
       /// <summary>
       /// For storing all the PriceFinder data 
       /// </summary>
-      private string pfStorageFilePath;
+      private readonly string pfStorageFilePath;
       /// <summary>
       /// For retreiving app server data so we don't need to update ours.
       /// </summary>                       
-      private string appServerStorageFilePath;
-
-      private MyDictionary<Customer> customerMap;
+      private readonly string appServerStorageFilePath;
       private MyDictionary<Product> productMap;
       private MyDictionary<MyDictionary<List<Sale>>> customerActivity;
       private MyDictionary<MyDictionary<double>> priceListActivity;
@@ -42,20 +40,22 @@ namespace PriceFinding
       private bool isUpdated = false;
 
       private DataStorage dataStore;
+
+
       #endregion
 
       //-------------------------------------------------------------------------------------------------------//
 
       #region Properties
 
-      public MyDictionary<Customer> CustomerMap
-      {
-         get { return customerMap; }
-      }
+      public MyDictionary<Customer> CustomerMap { get; private set; }
       public MyDictionary<Product> ProductMap
       {
          get { return productMap; }
       }
+
+      public MyDictionary<MyDictionary<Product>> FastProductMap { get; private set; }
+
 
       public bool IsSerializing
       {
@@ -71,12 +71,34 @@ namespace PriceFinding
 
       //-------------------------------------------------------------------------------------------------------//
 
-      public DataManager()
+      public DataManager(bool update)
       {
-         customerMap = new MyDictionary<Customer>();
+         CustomerMap = new MyDictionary<Customer>();
          productMap = new MyDictionary<Product>();
          customerActivity = new MyDictionary<MyDictionary<List<Sale>>>();
          priceListActivity = new MyDictionary<MyDictionary<double>>();
+
+         string baseDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), set.programDir);
+         string appServerBaseDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), set.appProgramDir);
+         string appServerPriceFinderDir = Path.Combine(appServerBaseDir, set.appPFUpdaterDir);
+         pfStorageFilePath = Path.Combine(baseDir, set.storageFileName);
+         appServerStorageFilePath = Path.Combine(appServerPriceFinderDir, set.storageFileName);
+
+         Directory.CreateDirectory(baseDir);
+
+         if (update)
+            UpdateFromBackup();
+      }//CTOR
+
+      //-------------------------------------------------------------------------------------------------------//
+
+      public DataManager()
+      {
+         CustomerMap = new MyDictionary<Customer>();
+         productMap = new MyDictionary<Product>();
+         customerActivity = new MyDictionary<MyDictionary<List<Sale>>>();
+         priceListActivity = new MyDictionary<MyDictionary<double>>();
+         FastProductMap = new MyDictionary<MyDictionary<Product>>();
 
          string baseDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), set.programDir);
          string appServerBaseDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), set.appProgramDir);
@@ -99,7 +121,7 @@ namespace PriceFinding
       {
          isUpdated = false;
 
-         IListReader ListReader;
+         SDOListReader ListReader;
          IInvoiceReader InvoiceReader;
          IPriceListReader PriceListReader;
 
@@ -109,10 +131,9 @@ namespace PriceFinding
 
             //Lists must be read first becaause InvoiceReader and PriceListReader will use them.
             //Read Customer data.
-            customerMap = ListReader.ReadCustomerData();
+            CustomerMap = ListReader.ReadCustomerData();
             //Read Product data.
             productMap = ListReader.ReadProductData();
-
 
             //if (set.sageAccess == SageAccessType.ODBC)
             //{
@@ -137,15 +158,15 @@ namespace PriceFinding
          }
          catch (Exception e)
          {
-            MyMessageBox.ShowOk("Error", "Data not updated" + e.Message);
+            throw new BackgroundMessageBoxException("Error", "Data not updated" + e.Message);
          }//Catch
 
 
 
          //Package app data for storage.
-         List<Customer> customerList = customerMap.Values.ToList<Customer>();
+         List<Customer> customerList = CustomerMap.Values.ToList<Customer>();
          List<Product> productList = productMap.Values.ToList<Product>();
-         dataStore = new DataStorage(customerMap, productMap, customerActivity, priceListActivity);
+         dataStore = new DataStorage(CustomerMap, productMap, customerActivity, priceListActivity, FastProductMap);
 
 
          //Store data.
@@ -156,7 +177,7 @@ namespace PriceFinding
          }
          catch (Exception e)
          {
-            MyMessageBox.Show("Error", "Data updates have not been stored. You will have to update again on next program start up\r\n\r\n" + e.Message);
+            throw new BackgroundMessageBoxException("Error", "Data updates have not been stored. You will have to update again on next program start up\r\n\r\n" + e.Message);
          }
          finally
          {
@@ -202,14 +223,14 @@ namespace PriceFinding
                if (checkDate < lastModifiedDatePFFile)
                   dataStore = DeserializeFromJSON<DataStorage>(pfStorageFilePath);
                else
-                  MyMessageBox.Show("Error",
+                  throw new BackgroundMessageBoxException("Error",
                      "Pricing Data has not been uploaded."
                      + "\n    -----------------     \n"
                      + "You need to update the data.");
             }
             catch (Exception ex)
             {
-               MyMessageBox.Show("Error",
+               throw new BackgroundMessageBoxException("Error",
                   "Pricing Data has not been uploaded."
                      + "\n    -----------------     \n"
                      + "You need to update the data."
@@ -218,12 +239,13 @@ namespace PriceFinding
             }//Catch
          }//Catch
 
-         customerMap = dataStore.CustomerMap;
+         CustomerMap = dataStore.CustomerMap;
 
          productMap = dataStore.ProductMap;
 
          customerActivity = dataStore.CustomerActivity;
          priceListActivity = dataStore.PriceListActivity;
+         FastProductMap = dataStore.FastProductMap;
 
       }//updateFromBackup
 
@@ -345,8 +367,8 @@ namespace PriceFinding
          }
          catch (Exception e)
          {
-            MyMessageBox.Show("Error: ",
-               parseFileName(filePath) + " has not been stored."
+            throw new BackgroundMessageBoxException("Error: ",
+               ParseFileName(filePath) + " has not been stored."
                   + "\n\n    -----------------     \n\n"
                   + e.Message);
          }//Catch
@@ -375,8 +397,8 @@ namespace PriceFinding
          }
          catch (Exception e)
          {
-            MyMessageBox.Show("Error: ",
-               parseFileName(pfStorageFilePath) + " has not been stored."
+            throw new BackgroundMessageBoxException("Error: ",
+               ParseFileName(pfStorageFilePath) + " has not been stored."
                   + "\n\n    -----------------     \n\n"
                   + e.Message);
          }//Catch
@@ -391,7 +413,7 @@ namespace PriceFinding
 
       //-------------------------------------------------------------------------------------------------------//
 
-      private string parseFileName(string filePath)
+      private string ParseFileName(string filePath)
       {
          int index = filePath.LastIndexOf("\\") + 1;
          return filePath.Substring(index);
@@ -399,5 +421,6 @@ namespace PriceFinding
 
       //-------------------------------------------------------------------------------------------------------//
 
+   
    }//Class
 }//NS

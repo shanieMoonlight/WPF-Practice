@@ -41,6 +41,9 @@
     <Reference Include="BespokeFusion, Version=1.0.1.10, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialMessageBox.1.0.0.11\lib\BespokeFusion.dll</HintPath>
     </Reference>
+    <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net462\ControlzEx.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.2.4.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
@@ -79,6 +82,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Managing Data\SDO  Readers\SDOProductReader.cs" />
+    <Compile Include="Utility\BackgroundMessageBoxException.cs" />
     <Compile Include="Business Objects\Customer.cs" />
     <Compile Include="Business Objects\DataStorage.cs" />
     <Compile Include="Business Objects\MyDictionary.cs" />
@@ -96,7 +101,7 @@
     <Compile Include="Managing Data\SDO  Readers\SDOInvoiceReader.cs" />
     <Compile Include="Managing Data\SDO  Readers\SDOListReader.cs" />
     <Compile Include="Managing Data\SDO  Readers\SDOPriceListReader.cs" />
-    <Compile Include="MyMessageBox.cs" />
+    <Compile Include="Utility\MyMessageBox.cs" />
     <Compile Include="Properties\SageTableSettings.Designer.cs" />
     <Compile Include="Properties\SageUserSettings.Designer.cs" />
     <Compile Include="Properties\SageUserSettings1.Designer.cs">
@@ -108,10 +113,6 @@
     <Compile Include="Reader Interfaces\IListReader.cs" />
     <Compile Include="Reader Interfaces\IPriceListReader.cs" />
     <Compile Include="Writing\PostOrderWriter.cs" />
-    <Page Include="Colors.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

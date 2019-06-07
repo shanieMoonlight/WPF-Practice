@@ -62,9 +62,9 @@ namespace PriceFinding
                 MyDictionary<List<string>> plUsers = new MyDictionary<List<string>>();
 
                 //Create instances of the objects
-                priceRecord = (SageDataObject240.PriceRecord)ws.CreateObject("PriceRecord");
-                salesRecord = (SageDataObject240.SalesRecord)ws.CreateObject("SalesRecord");
-                stockRecord = (SageDataObject240.StockRecord)ws.CreateObject("StockRecord");
+                priceRecord = (PriceRecord)ws.CreateObject("PriceRecord");
+                salesRecord = (SalesRecord)ws.CreateObject("SalesRecord");
+                stockRecord = (StockRecord)ws.CreateObject("StockRecord");
 
 
                 //Create a dictionary of PL's that are acually being referenced v's Empty ProductActivities.

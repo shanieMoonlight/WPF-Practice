@@ -15,6 +15,7 @@ namespace PriceFinding
       private string poNumber;
       private string address;
       public const string DEF_ADDRESS = "Using Default Address";
+
       private double xRate = 1;
 
 
