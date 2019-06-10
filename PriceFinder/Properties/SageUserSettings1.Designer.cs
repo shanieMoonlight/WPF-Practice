@@ -73,7 +73,7 @@ namespace PriceFinder.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("PASSWORD")]
+        [global::System.Configuration.DefaultSettingValueAttribute("PriceFinder")]
         public string sagePassword {
             get {
                 return ((string)(this["sagePassword"]));
@@ -85,7 +85,7 @@ namespace PriceFinder.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("PriceFinder")]
+        [global::System.Configuration.DefaultSettingValueAttribute("PASSWORD")]
         public string sageUsername {
             get {
                 return ((string)(this["sageUsername"]));
@@ -128,6 +128,18 @@ namespace PriceFinder.Properties {
             }
             set {
                 this["sageDBDir"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("24")]
+        public int sageVersion {
+            get {
+                return ((int)(this["sageVersion"]));
+            }
+            set {
+                this["sageVersion"] = value;
             }
         }
     }

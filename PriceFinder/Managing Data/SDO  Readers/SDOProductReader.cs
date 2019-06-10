@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace PriceFinding.Managing_Data
 {
-  public class SDOProductReader
+   public class SDOProductReader
    {
 
       private static SageUserSettings sageUsrSet = SageUserSettings.Default;
@@ -31,6 +31,7 @@ namespace PriceFinding.Managing_Data
          sdo = new SDOEngine();
          ws = (WorkSpace)sdo.Workspaces.Add("App Server Update");
          //ws.Connect(sageUsrSet.sageDBDir, sageUsrSet.sageUsername, sageUsrSet.sagePassword, "UniqueUpdater");
+         ws.Disconnect();
          ws.Connect(sageUsrSet.sageDBDir, "PriceFinder", "PASSWORD", "UniqueUpdater");
       }//ctor
 
@@ -38,9 +39,8 @@ namespace PriceFinding.Managing_Data
 
       public double GetCostPrice(string prodCode)
       {
-    
+         //Create product with prodCode
          stockRecord = (StockRecord)ws.CreateObject("StockRecord");
-
          SDOHelper.Write(stockRecord, "STOCK_CODE", prodCode);
 
          var result = stockRecord.Find(false);

@@ -25,6 +25,16 @@ namespace PriceFinding
        /// Constructor for order products
        /// </summary>
        /// <param name="code"></param>
+       /// <param name="description"></param>
+      public Product(string code, string description)
+      {
+         this.code = code;
+         this.description = description;
+      }//ctor
+       /// <summary>
+       /// Constructor for order products
+       /// </summary>
+       /// <param name="code"></param>
        /// <param name="salePrice"></param>
        /// <param name="qty"></param>
       public Product(string code, double salePrice, int qty)

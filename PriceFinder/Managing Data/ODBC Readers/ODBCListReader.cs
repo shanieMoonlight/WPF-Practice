@@ -99,10 +99,8 @@ namespace PriceFinding
             #endregion
 
             
-            string code = String.Empty;
-            string desc = String.Empty;
-            double costPrice = 0;
-            //double salePrice = 0;
+            string code = string.Empty;
+            string desc = string.Empty;
 
             try
             {
@@ -112,11 +110,9 @@ namespace PriceFinding
 
                     code = row[set.colStockCode].ToString();
                     desc = row[set.colProdDesc].ToString();
-                    costPrice = (double)row[set.colLstPurchPrice];
-                    //salePrice = (double)row[set.colSalePrc];
 
                     //Create customer
-                    Product product = new Product(code, desc, costPrice);
+                    Product product = new Product(code, desc);
 
                     productMap.Add(code, product);
 
@@ -129,7 +125,7 @@ namespace PriceFinding
                                   + e.GetType() + "\r\n" + e.Message
                                   + "\r\n    -----------------     \r\n"
                                   + "Query: " + queryString
-                                  + "\r\nProduct: " + code + ", " + desc + ": Cost Price: " + costPrice;
+                                  + "\r\nProduct: " + code + ", " + desc;
                 throw new Exception(eString);
             }//Catch
 

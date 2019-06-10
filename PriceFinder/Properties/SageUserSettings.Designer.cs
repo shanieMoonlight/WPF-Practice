@@ -130,5 +130,19 @@ namespace PriceFinding.Properties {
                 this["sageDBDir"] = value;
             }
         }
-    }
+      [global::System.Configuration.UserScopedSettingAttribute()]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+      [global::System.Configuration.DefaultSettingValueAttribute("24")]
+      public int sageVersion
+      {
+         get
+         {
+            return ((int)(this["sageVersion"]));
+         }
+         set
+         {
+            this["sageVersion"] = value;
+         }
+      }
+   }
 }

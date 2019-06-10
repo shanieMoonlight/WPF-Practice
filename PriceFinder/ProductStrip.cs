@@ -24,6 +24,7 @@ namespace PriceFinding
       public const int TYPE_IDX = 5;
       public const int RESULT_IDX = 6;
       public const int QTY_IDX = 7;
+      public const string NO_RESULT = "---";
 
       //--------------------------------------------------------------------------//
 
@@ -68,20 +69,15 @@ namespace PriceFinding
          tbQty.PreviewTextInput += NumberValidationTextBox;
          tbQty.Text = "1";
 
-         //if (cbTypes.Items.Count > 0)
-         //   cbTypes.Items.Clear();
-         //cbTypes.ItemsSource = PriceTypes.GetPriceTypes();
-         //cbTypes.SelectedIndex = 0;
+         cbTypes.SelectionChanged += CbTypes_SelectionChanged;
+
+         tbMargin.KeyUp += TbMargin_KeyUp;
 
          _dataManager = dataManager;
 
-         //if (cbCode.Items.Count > 0)
-         //   cbCode.Items.Clear();
-         //cbCode.ItemsSource = _dataManager.ProductMap.Keys;
-
          SetComboBoxItems(cbTypes, PriceTypes.GetPriceTypes(), true);
          SetComboBoxItems(cbCode, _dataManager.ProductMap.Keys);
-
+         
 
       }//ctor
 
@@ -102,10 +98,25 @@ namespace PriceFinding
 
       //--------------------------------------------------------------------------//
 
+      public void UpdateProductList(IEnumerable<string> dataSet)
+      {
+         SetComboBoxItems(cbCode, dataSet);
+      }//UpdateProductList
+
+      //--------------------------------------------------------------------------//
+
       private void CbCode_KeyUp(object sender, EventArgs e)
       {
-         SetProductDescription(cbCode.Text);
+         SetProductInfo(cbCode.Text);
       }//tbCode_TextChanged
+
+      //--------------------------------------------------------------------------//
+
+      private void TbMargin_KeyUp(object sender, KeyEventArgs e)
+      {
+         if (cbTypes.Text == PriceTypes.MARGIN)
+            tbResult.Text = CalculateSaleFromMargin();
+      }//TbMargin_KeyUp
 
       //--------------------------------------------------------------------------//
 
@@ -113,8 +124,73 @@ namespace PriceFinding
       {
 
          if (cbCode.SelectedValue != null)
-            SetProductDescription((string)cbCode.SelectedValue);
+            SetProductInfo((string)cbCode.SelectedValue);
       }//CbCustomerCode_SelectionChanged
+
+      //--------------------------------------------------------------------------//
+
+      private void CbTypes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+      {
+
+         SetResult();
+      }//cbTypes_SelectionChanged
+
+      //--------------------------------------------------------------------------//
+
+      public void SetResult()
+      {
+         switch (cbTypes.SelectedValue.ToString())
+         {
+            case PriceTypes.LAST_PRICE:
+               tbResult.Text = CalculateSaleFromLast();
+               break;
+            case PriceTypes.PRICE_LIST_PRICE:
+               tbResult.Text = CalculateSaleFromPriceList();
+               break;
+            case PriceTypes.MARGIN:
+               tbResult.Text = CalculateSaleFromMargin();
+               break;
+            default:
+               break;
+         }//switch
+      }//SetResult
+
+      //--------------------------------------------------------------------------//
+
+      private string CalculateSaleFromLast()
+      {
+         return string.IsNullOrWhiteSpace(tbLast.Text) || tbLast.Text == Settings.Default.NOT_FOUND
+            ? NO_RESULT
+            : tbLast.Text;
+
+      }//CalculateSaleFromLast
+
+      //--------------------------------------------------------------------------//
+
+      private string CalculateSaleFromPriceList()
+      {
+
+         return string.IsNullOrWhiteSpace(tbPriceList.Text) || tbPriceList.Text == Settings.Default.NOT_FOUND
+            ? NO_RESULT
+            : tbPriceList.Text;
+
+      }//CalculateSaleFromPriceList
+
+      //--------------------------------------------------------------------------//
+
+      private string CalculateSaleFromMargin()
+      {
+
+         if (!double.TryParse(tbMargin.Text, out double margin))
+            return NO_RESULT;
+
+         if (!double.TryParse(tbCost.Text, out double cost))
+            return NO_RESULT;
+
+         var salePrice = cost / (1 - (margin / 100));
+         return salePrice.ToString();
+
+      }//CalculateSaleFromMargin
 
       //--------------------------------------------------------------------------//
 
@@ -122,15 +198,15 @@ namespace PriceFinding
       /// Sets the Customere description if the code matches a customer.
       /// </summary>
       /// <param name="code">Customer Code</param>
-      private void SetProductDescription(string code)
+      private void SetProductInfo(string code)
       {
 
-         var cus = _dataManager.CheckProduct(code);
+         var product = _dataManager.CheckProduct(code);
 
-         if (cus.Code != Settings.Default.NOT_FOUND)
+         if (product.Code != Settings.Default.NOT_FOUND)
          {
-            tbDesc.Text = cus.Description;
-            cbCode.ClearValue(TextBox.BackgroundProperty);
+            tbDesc.Text = product.Description;
+            cbCode.ClearValue(Control.BackgroundProperty);
          }
          else
          {
@@ -149,7 +225,7 @@ namespace PriceFinding
 
       //--------------------------------------------------------------------------//
 
-     private void SetComboBoxItems(ComboBox cb, IEnumerable<string> dataSet, bool selectFirstItem = false)
+      private void SetComboBoxItems(ComboBox cb, IEnumerable<string> dataSet, bool selectFirstItem = false)
       {
 
          if (cb.Items.Count > 0)

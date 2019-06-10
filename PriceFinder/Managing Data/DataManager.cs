@@ -22,7 +22,13 @@ namespace PriceFinding
 
       private static SageUserSettings sageUsrSet = SageUserSettings.Default;
       private Settings set = Settings.Default;
-      public static string connString = String.Format("DSN={0};Uid={1};Pwd={2}", sageUsrSet.sageAccDSN, sageUsrSet.sageUsername, sageUsrSet.sagePassword);
+      //public static string connString = String.Format("DSN={0};Uid={1};Pwd={2}", sageUsrSet.sageAccDSN, sageUsrSet.sageUsername, sageUsrSet.sagePassword);
+      private static int sageVersion = sageUsrSet.sageVersion;
+      private static string dataPath = @"C:\ProgramData\Sage\Accounts\2017\Company.000\ACCDATA";
+      private static string username = sageUsrSet.sageUsername;
+      private static string password = sageUsrSet.sagePassword;
+      
+      public static string connString = $@"Driver={{Sage Line 50 v{sageVersion}}};DIR={dataPath};UseDataPath=No;UID={username};PWD={password}";
 
       /// <summary>
       /// For storing all the PriceFinder data 
@@ -107,7 +113,7 @@ namespace PriceFinding
          appServerStorageFilePath = Path.Combine(appServerPriceFinderDir, set.storageFileName);
 
          Directory.CreateDirectory(baseDir);
-         UpdateFromBackup();
+
       }//CTOR
 
       //-------------------------------------------------------------------------------------------------------//
@@ -121,13 +127,13 @@ namespace PriceFinding
       {
          isUpdated = false;
 
-         SDOListReader ListReader;
+         ODBCListReader ListReader;
          IInvoiceReader InvoiceReader;
          IPriceListReader PriceListReader;
 
          try
          {
-            ListReader = new SDOListReader();
+            ListReader = new ODBCListReader();
 
             //Lists must be read first becaause InvoiceReader and PriceListReader will use them.
             //Read Customer data.
@@ -228,6 +234,10 @@ namespace PriceFinding
                      + "\n    -----------------     \n"
                      + "You need to update the data.");
             }
+            catch (BackgroundMessageBoxException bme)
+            {
+               throw bme;
+            }
             catch (Exception ex)
             {
                throw new BackgroundMessageBoxException("Error",
@@ -257,22 +267,40 @@ namespace PriceFinding
       /// <param name="cusCode">Customer Code</param>
       /// <param name="prodCode">Product Code</param>
       /// <returns>Most recent sale or blank sale.</returns>
+      public Sale CheckSale(string cusCode, IEnumerable<string> prodCodes)
+      {
+         Sale blankSale = new Sale();
+
+         var invoiceReader = new ODBCInvoiceReader(null, null);
+         var lastSale = invoiceReader.GetLastPriceData(cusCode, prodCodes);
+
+         if (lastSale != null)
+            return lastSale;
+         else
+            return blankSale;
+
+      }//CheckSale
+
+      //-------------------------------------------------------------------------------------------------------//
+
+      /// <summary>
+      /// Checks for the most recent sale of product to customer.
+      /// </summary>
+      /// <param name="cusCode">Customer Code</param>
+      /// <param name="prodCode">Product Code</param>
+      /// <returns>Most recent sale or blank sale.</returns>
       public Sale CheckSale(string cusCode, string prodCode)
       {
-         Sale sale = new Sale();
+         Sale blankSale = new Sale();
 
-         //If CusCode & ProdCode are in customerActivity return most recent Sale else return blank Sale
-         if (customerActivity.ContainsKey(cusCode))
-         {
-            MyDictionary<List<Sale>> prodActivity = customerActivity[cusCode];
-            if (prodActivity.ContainsKey(prodCode))
-            {
-               List<Sale> sales = prodActivity[prodCode];
-               sale = sales[0];
-            }//If
-         }//If
+         var invoiceReader = new ODBCInvoiceReader(null, null);
+         var lastSale = invoiceReader.GetLastPriceData(cusCode, prodCode);
 
-         return sale;
+         if (lastSale != null)
+            return lastSale;
+         else
+            return blankSale;
+
       }//CheckSale
 
       //-------------------------------------------------------------------------------------------------------//
@@ -421,6 +449,6 @@ namespace PriceFinding
 
       //-------------------------------------------------------------------------------------------------------//
 
-   
+
    }//Class
 }//NS

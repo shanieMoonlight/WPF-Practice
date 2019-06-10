@@ -7,7 +7,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -43,8 +45,9 @@ namespace PriceFinding
          try
          {
 
-            _dataManager = new DataManager();
 
+            _dataManager = new DataManager();
+            _dataManager.UpdateFromBackup();
             cbCustomerCode.ItemsSource = _dataManager.CustomerMap.Keys;
 
             SetInitialProductRows();
@@ -52,6 +55,10 @@ namespace PriceFinding
          catch (BackgroundMessageBoxException mbe)
          {
             MyMessageBox.ShowOk(mbe.Title, mbe.Message);
+         }
+         catch (Exception e)
+         {
+            MyMessageBox.ShowOk("Error", e.Message);
          }//catch
 
       }//ctor
@@ -165,7 +172,16 @@ namespace PriceFinding
          try
          {
 
-            await Task.Run(() => _dataManager.Update());
+            await Task.Run(() =>
+            {
+               _dataManager.Update();
+               cbCustomerCode.ItemsSource = _dataManager.CustomerMap.Keys;
+               foreach (var strip in strips)
+               {
+                  strip.UpdateProductList(_dataManager.ProductMap.Keys);
+               }
+
+            });
          }
          catch (BackgroundMessageBoxException mbe)
          {
@@ -244,80 +260,179 @@ namespace PriceFinding
          try
          {
             string cusCode = cbCustomerCode.Text;
-            if (!cusCode.Equals(""))
-            {
-               Customer customer = _dataManager.CheckCustomer(cusCode);
-               tbCustomerDesc.Text = customer.Description;
 
-               //Fill in all queried rows.
-               foreach (ProductStrip prodStrip in strips)
+            if (cusCode.Equals(""))
+            {
+               MyMessageBox.Show("Error", "You must enter a customer.");
+               return;
+            }//If
+
+            Customer customer = _dataManager.CheckCustomer(cusCode);
+            tbCustomerDesc.Text = customer.Description;
+
+            //Fill in all queried rows.
+            foreach (ProductStrip prodStrip in strips)
+            {
+               string prodCode = prodStrip.cbCode.Text;
+
+               if (prodCode.Equals(""))
+                  continue;
+
+               Product product = _dataManager.CheckProduct(prodCode);
+
+               //If Product exists get Cost Price
+               if (product.Code == NOT_FOUND)
                {
-                  string prodCode = prodStrip.cbCode.Text;
+                  prodStrip.tbDesc.Text = NOT_FOUND;
+                  prodStrip.tbCost.Text = NOT_FOUND;
+               }
+               else
+               {
+                  prodStrip.tbDesc.Text = product.Description;
 
-                  if (!prodCode.Equals(""))
-                  {
-                     Product product = _dataManager.CheckProduct(prodCode);
+                  var costPrice = productReader.GetCostPrice(prodCode) * customer.XRate;
+                  prodStrip.tbCost.Text = costPrice.ToString();
+               }//Else
 
-                     //If Product exists get Cost Price
-                     if (product.Code == NOT_FOUND)
-                     {
-                        prodStrip.tbDesc.Text = NOT_FOUND;
-                        prodStrip.tbCost.Text = NOT_FOUND;
-                     }
-                     else
-                     {
-                        prodStrip.tbDesc.Text = product.Description;
+               //Check last sale
+               Sale sale = _dataManager.CheckSale(cusCode, prodCode);
+               if (sale.Code == NOT_FOUND)
+               {
+                  prodStrip.tbDate.Text = NOT_FOUND;
+                  prodStrip.tbLast.Text = NOT_FOUND;
+               }
+               else
+               {
+                  prodStrip.tbDate.Text = sale.Date.ToString("dd-MMM-yy");
+                  prodStrip.tbLast.Text = sale.SalePrice.ToString();
+               }//Else
 
-                        //prodStrip.tbCost.Text = (product.CostPrice * customer.XRate).ToString();
-                        prodStrip.tbCost.Text = productReader.GetCostPrice(prodCode).ToString();
-                     }//Else
-
-                     //Check last sale
-                     Sale sale = _dataManager.CheckSale(cusCode, prodCode);
-                     if (sale.Code == NOT_FOUND)
-                     {
-                        prodStrip.tbDate.Text = NOT_FOUND;
-                        prodStrip.tbLast.Text = NOT_FOUND;
-                     }
-                     else
-                     {
-                        prodStrip.tbDate.Text = sale.Date.ToString("dd-MMM-yyyy");
-                        prodStrip.tbLast.Text = sale.SalePrice.ToString();
-                     }//Else
-
-                     //Check Price List
-                     double price = _dataManager.CheckListPrice(cusCode, prodCode);
-                     if (price == -1)
-                     {
-                        prodStrip.tbPriceList.Text = NOT_FOUND;
-                     }
-                     else
-                     {
-                        prodStrip.tbPriceList.Text = price.ToString();
-                     }//Else 
-
-                  }//IF 
+               //Check Price List
+               double price = _dataManager.CheckListPrice(cusCode, prodCode);
+               if (price == -1)
+               {
+                  prodStrip.tbPriceList.Text = NOT_FOUND;
+               }
+               else
+               {
+                  prodStrip.tbPriceList.Text = price.ToString();
+               }//Else 
 
 
-               }//ForEach
-            }
-            else
-            {
-               MessageBox.Show("You must enter a customer.");
-            }//Else
+
+            }//ForEach
+
 
 
          }
          catch (Exception ex)
          {
             string exInfo = ex.GetType().ToString() + "\r\n" + ex.Message;
-            MessageBox.Show(exInfo);
+            MyMessageBox.Show("Error", exInfo);
          }//Catch
       }//FindPrices
 
+      //-------------------------------------------------------------------------------------------------------//
+
+      /// <summary>
+      /// Try to find prices for customer and products.
+      /// </summary>
+      private void FindPrices2()
+      {
+
+         var productReader = new SDOProductReader();
+
+         string NOT_FOUND = Settings.Default.NOT_FOUND;
+         try
+         {
+            string cusCode = cbCustomerCode.Text;
+
+            if (cusCode.Equals(""))
+            {
+               MyMessageBox.Show("Error", "You must enter a customer.");
+               return;
+            }//If
+
+            Customer customer = _dataManager.CheckCustomer(cusCode);
+            tbCustomerDesc.Text = customer.Description;
+
+            var codes = strips
+               .Where(s => !string.IsNullOrWhiteSpace(s.cbCode.Text))
+               .Select(s => s.cbCode.Text);
+
+            _dataManager.CheckSale(cusCode, codes);
+
+            //Fill in all queried rows.
+            foreach (ProductStrip prodStrip in strips)
+            {
+               string prodCode = prodStrip.cbCode.Text;
+
+               if (prodCode.Equals(""))
+                  continue;
+
+               Product product = _dataManager.CheckProduct(prodCode);
+
+               //If Product exists get Cost Price
+               if (product.Code == NOT_FOUND)
+               {
+                  prodStrip.tbDesc.Text = NOT_FOUND;
+                  prodStrip.tbCost.Text = NOT_FOUND;
+               }
+               else
+               {
+                  prodStrip.tbDesc.Text = product.Description;
+
+                  var costPrice = productReader.GetCostPrice(prodCode) * customer.XRate;
+                  prodStrip.tbCost.Text = costPrice.ToString();
+               }//Else
+
+               //Check last sale
+               Sale sale = _dataManager.CheckSale(cusCode, prodCode);
+               if (sale.Code == NOT_FOUND)
+               {
+                  prodStrip.tbDate.Text = NOT_FOUND;
+                  prodStrip.tbLast.Text = NOT_FOUND;
+               }
+               else
+               {
+                  prodStrip.tbDate.Text = sale.Date.ToString("dd-MMM-yy");
+                  prodStrip.tbLast.Text = sale.SalePrice.ToString();
+               }//Else
+
+               //Check Price List
+               double price = _dataManager.CheckListPrice(cusCode, prodCode);
+               if (price == -1)
+               {
+                  prodStrip.tbPriceList.Text = NOT_FOUND;
+               }
+               else
+               {
+                  prodStrip.tbPriceList.Text = price.ToString();
+               }//Else 
+
+
+
+            }//ForEach
+
+
+
+         }
+         catch (Exception ex)
+         {
+            string exInfo = ex.GetType().ToString() + "\r\n" + ex.Message;
+            MyMessageBox.Show("Error", exInfo);
+         }//Catch
+      }//FindPrices
+
+      //-------------------------------------------------------------------------------------------------------//
+
       private void ButtFind_Click(object sender, RoutedEventArgs e)
       {
-         FindPrices();
-      }
+         FindPrices2();
+         foreach (var strip in strips)
+            strip.SetResult();
+
+      }//ButtFind_Click
+
    }//Cls
 }//NS

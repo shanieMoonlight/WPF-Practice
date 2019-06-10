@@ -36,7 +36,7 @@ namespace PriceFinding
       public MyDictionary<Customer> ReadCustomerData()
       {
          MyDictionary<Customer> customerMap = new MyDictionary<Customer>();
-         
+
          try
          {
             sdo = new SDOEngine();
@@ -116,7 +116,7 @@ namespace PriceFinding
 
                   Product product = new Product(code, desc, costPrice);
                   productMap.Add(code, product);
-                                                   
+
                }
                catch (Exception)
                {
@@ -130,66 +130,6 @@ namespace PriceFinding
          }//finally
 
          return productMap;
-
-      }//readProductData
-
-      //-------------------------------------------------------------------------------------------------------//
-
-      /// <summary>
-      /// Reads all products and stores it's values in a List.
-      /// </summary>
-      /// <param name="customersFileName"></param>
-      public MyDictionary<MyDictionary<Product>> ReadFastProductData()
-      {
-         MyDictionary<Product> productMap = new MyDictionary<Product>();
-         MyDictionary<MyDictionary<Product>> fastProductList = new MyDictionary<MyDictionary<Product>>();
-
-         try
-         {
-            sdo = new SDOEngine();
-            ws = (WorkSpace)sdo.Workspaces.Add("App Server Update");
-            ws.Connect(sageUsrSet.sageDBDir, sageUsrSet.sageUsername, sageUsrSet.sagePassword, "UniqueUpdater");
-            stockRecord = (StockRecord)ws.CreateObject("StockRecord");
-
-            string code = string.Empty;
-            string desc = string.Empty;
-            double costPrice = 0;
-            double salePrice = 0;
-
-            stockRecord.MoveFirst();
-            do
-            {
-               try
-               {
-                  code = CutQuotes((string)SDOHelper.Read(stockRecord, "STOCK_CODE"));
-                  desc = (string)SDOHelper.Read(stockRecord, "DESCRIPTION");
-                  //costPrice = (double)SDOHelper.Read(stockRecord, "LAST_PURCHASE_PRICE");
-                  //salePrice = (double)SDOHelper.Read(stockRecord, "SALES_PRICE");
-
-                  Product product = new Product(code, desc, costPrice);
-                  productMap.Add(code, product);
-
-                  var firstLetter = code.Substring(0, 1);
-                  if (!fastProductList.ContainsKey(firstLetter))
-                     fastProductList[firstLetter] = new MyDictionary<Product>();
-
-                  fastProductList[firstLetter].Add(code, product);
-
-
-
-               }
-               catch (Exception)
-               {
-                  //Just skip product if it throws an exception
-               }//Catch
-            } while (stockRecord.MoveNext());
-         }
-         finally
-         {
-            DestroyAllObjects();
-         }//finally
-
-         return fastProductList;
 
       }//readProductData
 
