@@ -83,6 +83,13 @@ namespace PriceFinding
 
       //--------------------------------------------------------------------------//
 
+      public ProductStrip(Grid gridRow, DataManager dataManager, int tabIndex):this(gridRow, dataManager)
+      {
+         cbCode.TabIndex = tabIndex;
+      }//ctor
+
+      //--------------------------------------------------------------------------//
+
       /// <summary>
       /// Clears text boxes.
       /// </summary>
@@ -230,10 +237,15 @@ namespace PriceFinding
 
          if (cb.Items.Count > 0)
             cb.Items.Clear();
+
          cb.ItemsSource = dataSet;
+
          if (selectFirstItem)
             cb.SelectedIndex = 0;
+
       }//SetComboBoxItems
+
+      //--------------------------------------------------------------------------//
 
    }//Cls
 }//NS

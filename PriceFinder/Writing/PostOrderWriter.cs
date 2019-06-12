@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SageDataObject240;
-using System.IO;
+﻿using PriceFinding.Business_Objects;
 using PriceFinding.Properties;
+using SageDataObject240;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
-using PriceFinding.Business_Objects;
 
 namespace PriceFinding.Writing
 {
-    class PostOrderWriter
+   class PostOrderWriter
     {
         #region Variables
         private SDOEngine sdo;
@@ -24,9 +22,8 @@ namespace PriceFinding.Writing
         private Order order;
         private FileStream logWriter;
 
-        private SageTableSettings setTbl = SageTableSettings.Default;
-        private SageUserSettings setUsr = SageUserSettings.Default;
-        private Settings set = Settings.Default;
+        private static UserSettings setUsr = UserSettings.Default;
+        private readonly Settings set = Settings.Default;
 
         private const string crlf = "\r\n";
         private Int16 taxCode;
@@ -34,7 +31,7 @@ namespace PriceFinding.Writing
         private string username = String.Empty;
         private double defTaxRate;
         private int currencyCode;
-        private int baseCurrencyCode = (int)SageUserSettings.Default.baseCurrCode;
+        private readonly int baseCurrencyCode = (int)setUsr.baseCurrCode;
 
         private double cusDiscountRate = 0;
 

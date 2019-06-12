@@ -14,7 +14,6 @@ namespace PriceFinding
    {
       public MyDictionary<Customer> CustomerMap;
       public MyDictionary<Product> ProductMap;
-      public MyDictionary<MyDictionary<Product>> FastProductMap;
       public MyDictionary<MyDictionary<List<Sale>>> CustomerActivity;
       public MyDictionary<MyDictionary<double>> PriceListActivity;
 
@@ -25,18 +24,16 @@ namespace PriceFinding
       {
          CustomerMap = new MyDictionary<Customer>();
          ProductMap = new MyDictionary<Product>();
-         FastProductMap = new MyDictionary<MyDictionary<Product>>();
          CustomerActivity = new MyDictionary<MyDictionary<List<Sale>>>();
          PriceListActivity = new MyDictionary<MyDictionary<double>>();
       }//ctor
       public DataStorage(MyDictionary<Customer> CustomerMap, MyDictionary<Product> ProductMap, MyDictionary<MyDictionary<List<Sale>>> customerActivity,
-         MyDictionary<MyDictionary<double>> priceListActivity, MyDictionary<MyDictionary<Product>> fastProductMap)
+         MyDictionary<MyDictionary<double>> priceListActivity)
       {
          this.CustomerMap = CustomerMap;
          this.ProductMap = ProductMap;
          this.CustomerActivity = customerActivity;
          this.PriceListActivity = priceListActivity;
-         this.FastProductMap = fastProductMap;
       }//ctor
        /// <summary>
        /// Deserialization constructor
@@ -49,7 +46,6 @@ namespace PriceFinding
          this.ProductMap = (MyDictionary<Product>)info.GetValue("ProductMap", typeof(MyDictionary<Product>));
          this.CustomerActivity = (MyDictionary<MyDictionary<List<Sale>>>)info.GetValue("CustomerActivity", typeof(MyDictionary<MyDictionary<List<Sale>>>));
          this.PriceListActivity = (MyDictionary<MyDictionary<double>>)info.GetValue("PriceListActivity", typeof(MyDictionary<MyDictionary<double>>));
-         this.FastProductMap = (MyDictionary<MyDictionary<Product>>)info.GetValue("FastProductMap", typeof(MyDictionary<MyDictionary<Product>>));
 
       }//ctor 
       #endregion
@@ -60,7 +56,6 @@ namespace PriceFinding
       {
          info.AddValue("CustomerMap", this.CustomerMap);
          info.AddValue("ProductMap", this.ProductMap);
-         info.AddValue("FastProductMap", this.FastProductMap);
          info.AddValue("CustomerActivity", this.CustomerActivity);
          info.AddValue("PriceListActivity", this.PriceListActivity);
       }//GetObjectData

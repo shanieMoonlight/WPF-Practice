@@ -1,0 +1,4 @@
+﻿
+
+1. Use binding.
+2. MVVM

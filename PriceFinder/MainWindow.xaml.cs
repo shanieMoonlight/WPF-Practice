@@ -1,6 +1,7 @@
 ﻿using BespokeFusion;
 using PriceFinding;
 using PriceFinding.Managing_Data;
+using PriceFinding.Managing_Data.ODBC_Readers;
 using PriceFinding.Properties;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace PriceFinding
       private const int INITIAL_ROW_COUNT = 10;
       private List<ProductStrip> strips = new List<ProductStrip>();
       private double defaultMargin;
-
+      private readonly string NOT_FOUND = Settings.Default.NOT_FOUND;
       private DataManager _dataManager;
 
       //-------------------------------------------------------------------------------------------------------//
@@ -44,8 +45,6 @@ namespace PriceFinding
          defaultMargin = Settings.Default.defaultMargin;
          try
          {
-
-
             _dataManager = new DataManager();
             _dataManager.UpdateFromBackup();
             cbCustomerCode.ItemsSource = _dataManager.CustomerMap.Keys;
@@ -100,7 +99,7 @@ namespace PriceFinding
 
          Grid.SetRow(newProductStrip, gridRowIdx);
          grdProducts.Children.Add(newProductStrip);
-         strips.Add(new ProductStrip(newProductStrip, _dataManager));
+         strips.Add(new ProductStrip(newProductStrip, _dataManager, strips.Count + 1));
 
       }//SetProductRows
 
@@ -165,33 +164,33 @@ namespace PriceFinding
 
       private async void ButtUpdate_Click(object sender, RoutedEventArgs e)
       {
-         if (_dataManager == null)
-            _dataManager = new DataManager(false);
-
-         prgDisplay.Visibility = Visibility.Visible;
          try
          {
+            prgDisplay.Visibility = Visibility.Visible;
+
+            if (_dataManager == null)
+               _dataManager = new DataManager(false);
+
 
             await Task.Run(() =>
             {
                _dataManager.Update();
-               cbCustomerCode.ItemsSource = _dataManager.CustomerMap.Keys;
-               foreach (var strip in strips)
-               {
-                  strip.UpdateProductList(_dataManager.ProductMap.Keys);
-               }
-
             });
+
+            cbCustomerCode.ItemsSource = _dataManager.CustomerMap.Keys;
+            foreach (var strip in strips)
+               strip.UpdateProductList(_dataManager.ProductMap.Keys);
+
+            MyMessageBox.ShowOk("Result", "Ready to go.");
          }
          catch (BackgroundMessageBoxException mbe)
          {
             MyMessageBox.ShowOk(mbe.Title, mbe.Message);
          }
-         prgDisplay.Visibility = Visibility.Hidden;
-
-
-         // Write result.
-         MyMessageBox.ShowOk("Result", "Ready to go.");
+         finally
+         {
+            prgDisplay.Visibility = Visibility.Hidden;
+         }//finally
 
 
       }//ButtUpdate_Click
@@ -340,9 +339,8 @@ namespace PriceFinding
       private void FindPrices2()
       {
 
-         var productReader = new SDOProductReader();
+         var productReader = new ODBCProductReader();
 
-         string NOT_FOUND = Settings.Default.NOT_FOUND;
          try
          {
             string cusCode = cbCustomerCode.Text;
@@ -353,42 +351,38 @@ namespace PriceFinding
                return;
             }//If
 
-            Customer customer = _dataManager.CheckCustomer(cusCode);
-            tbCustomerDesc.Text = customer.Description;
 
             var codes = strips
                .Where(s => !string.IsNullOrWhiteSpace(s.cbCode.Text))
                .Select(s => s.cbCode.Text);
 
-            _dataManager.CheckSale(cusCode, codes);
+            var sales = _dataManager.CheckSales(cusCode, codes);
+            var costs = _dataManager.CheckCostPrices(codes);
 
             //Fill in all queried rows.
             foreach (ProductStrip prodStrip in strips)
             {
                string prodCode = prodStrip.cbCode.Text;
 
+               //Skip blanks
                if (prodCode.Equals(""))
                   continue;
 
-               Product product = _dataManager.CheckProduct(prodCode);
+               var customer = _dataManager.CheckCustomer(cbCustomerCode.Text);
 
                //If Product exists get Cost Price
-               if (product.Code == NOT_FOUND)
-               {
-                  prodStrip.tbDesc.Text = NOT_FOUND;
-                  prodStrip.tbCost.Text = NOT_FOUND;
-               }
-               else
-               {
-                  prodStrip.tbDesc.Text = product.Description;
-
-                  var costPrice = productReader.GetCostPrice(prodCode) * customer.XRate;
-                  prodStrip.tbCost.Text = costPrice.ToString();
-               }//Else
+               prodStrip.tbCost.Text = costs[prodCode].ToString();
 
                //Check last sale
-               Sale sale = _dataManager.CheckSale(cusCode, prodCode);
-               if (sale.Code == NOT_FOUND)
+               if (!costs.TryGetValue(prodCode, out double cost))
+                  prodStrip.tbCost.Text = NOT_FOUND;
+               else
+                  prodStrip.tbDate.Text = cost.ToString();
+
+
+
+               //Check last sale
+               if (!sales.TryGetValue(prodCode, out Sale sale))
                {
                   prodStrip.tbDate.Text = NOT_FOUND;
                   prodStrip.tbLast.Text = NOT_FOUND;
@@ -398,6 +392,7 @@ namespace PriceFinding
                   prodStrip.tbDate.Text = sale.Date.ToString("dd-MMM-yy");
                   prodStrip.tbLast.Text = sale.SalePrice.ToString();
                }//Else
+
 
                //Check Price List
                double price = _dataManager.CheckListPrice(cusCode, prodCode);
@@ -413,16 +408,14 @@ namespace PriceFinding
 
 
             }//ForEach
-
-
-
+                       
          }
          catch (Exception ex)
          {
             string exInfo = ex.GetType().ToString() + "\r\n" + ex.Message;
             MyMessageBox.Show("Error", exInfo);
          }//Catch
-      }//FindPrices
+      }//FindPrices2
 
       //-------------------------------------------------------------------------------------------------------//
 
@@ -433,6 +426,21 @@ namespace PriceFinding
             strip.SetResult();
 
       }//ButtFind_Click
+
+      //-------------------------------------------------------------------------------------------------------//
+
+      private void ButtClear_Click(object sender, RoutedEventArgs e)
+      {
+         cbCustomerCode.Text = "";
+         tbCustomerDesc.Text = "";
+
+
+         foreach (var strip in strips)
+            strip.Clear();
+
+      }//ButtClear_Click
+
+      //-------------------------------------------------------------------------------------------------------//
 
    }//Cls
 }//NS

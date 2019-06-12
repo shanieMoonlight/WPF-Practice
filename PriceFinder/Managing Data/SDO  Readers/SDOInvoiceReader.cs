@@ -1,4 +1,5 @@
-﻿using PriceFinding.Properties;
+﻿using PriceFinding.Managing_Data.ReaderInterfaces;
+using PriceFinding.Properties;
 using SageDataObject240;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace PriceFinding
    {
       #region Variables
 
-      private SageUserSettings sageUsrSet = SageUserSettings.Default;
+      private static UserSettings sageUsrSet = UserSettings.Default;
 
       private MyDictionary<Customer> customerMap;
       private MyDictionary<Product> productMap;
@@ -27,7 +28,7 @@ namespace PriceFinding
       private InvoiceItem invoiceItem;
 
       //The currency code is +1 on the sage50 interface so we need to compensate for it here.
-      int baseCurrCode = (int)(SageUserSettings.Default.baseCurrCode - 1);
+      readonly int baseCurrCode = (int)(sageUsrSet.baseCurrCode - 1);
       #endregion
 
       //-------------------------------------------------------------------------------------------------------//
@@ -267,7 +268,7 @@ namespace PriceFinding
 
       //-------------------------------------------------------------------------------------------------------//
 
-      private void parseExMsg(string val, string invNum, string prodCode, string defaultVal)
+      private void ParseExMsg(string val, string invNum, string prodCode, string defaultVal)
       {
          string exInfo = "Problem parsing " + val + " in invoice: " + invNum + ", product: " + prodCode
                          + "\n Date has been set to " + defaultVal + ".";
@@ -308,5 +309,10 @@ namespace PriceFinding
          }//If
 
       }//DestroyAllObjects
+
+      public Dictionary<string, Sale> GetLastPriceData(string customerCode, IEnumerable<string> productCodes)
+      {
+         throw new NotImplementedException();
+      }
    }//Cls
 }//NS

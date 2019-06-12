@@ -1,7 +1,7 @@
 ﻿
-namespace PriceFinding
+namespace PriceFinding.Managing_Data.ReaderInterfaces
 {
-    interface IListReader
+  public  interface IListReader 
     {
         MyDictionary<Customer> ReadCustomerData();
         MyDictionary<Product> ReadProductData();

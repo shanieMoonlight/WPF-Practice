@@ -1,5 +1,5 @@
 ﻿
-namespace PriceFinding
+namespace PriceFinding.Managing_Data.ReaderInterfaces
 {
     interface IPriceListReader
     {

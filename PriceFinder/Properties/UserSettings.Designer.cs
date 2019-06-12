@@ -8,16 +8,16 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PriceFinder.Properties {
+namespace PriceFinding.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
-    internal sealed partial class SageUserSettings : global::System.Configuration.ApplicationSettingsBase {
+    internal sealed partial class UserSettings : global::System.Configuration.ApplicationSettingsBase {
         
-        private static SageUserSettings defaultInstance = ((SageUserSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new SageUserSettings())));
+        private static UserSettings defaultInstance = ((UserSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new UserSettings())));
         
-        public static SageUserSettings Default {
+        public static UserSettings Default {
             get {
                 return defaultInstance;
             }
@@ -61,19 +61,7 @@ namespace PriceFinder.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SageConecto")]
-        public string sageAccDSN {
-            get {
-                return ((string)(this["sageAccDSN"]));
-            }
-            set {
-                this["sageAccDSN"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("PriceFinder")]
+        [global::System.Configuration.DefaultSettingValueAttribute("PASSWORD")]
         public string sagePassword {
             get {
                 return ((string)(this["sagePassword"]));
@@ -85,7 +73,7 @@ namespace PriceFinder.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("PASSWORD")]
+        [global::System.Configuration.DefaultSettingValueAttribute("PriceFinder")]
         public string sageUsername {
             get {
                 return ((string)(this["sageUsername"]));

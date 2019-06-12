@@ -1,11 +1,8 @@
-﻿using PriceFinding.Properties;
+﻿using PriceFinding.Managing_Data.ReaderInterfaces;
+using PriceFinding.Properties;
 using SageDataObject240;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PriceFinding
 {
@@ -15,7 +12,7 @@ namespace PriceFinding
    class SDOListReader : IListReader
    {
       #region Fields       
-      private static SageUserSettings sageUsrSet = SageUserSettings.Default;
+      private static UserSettings sageUsrSet = UserSettings.Default;
 
       //Declare Sage Objects
       private SDOEngine sdo;
@@ -24,7 +21,7 @@ namespace PriceFinding
       private StockRecord stockRecord;
       private CurrencyData currencyData;
 
-      private readonly double baseCurrencyCode = (double)SageUserSettings.Default.baseCurrCode;
+      private readonly double baseCurrencyCode = (double)sageUsrSet.baseCurrCode;
       #endregion
 
       //-------------------------------------------------------------------------------------------------------//

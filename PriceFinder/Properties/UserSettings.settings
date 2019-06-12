@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PriceFinder.Properties" GeneratedClassName="SageUserSettings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PriceFinding.Properties" GeneratedClassName="UserSettings">
   <Profiles />
   <Settings>
     <Setting Name="baseCurrCode" Type="System.Decimal" Scope="User">
@@ -11,14 +11,11 @@
     <Setting Name="stockNomCode" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">4000</Value>
     </Setting>
-    <Setting Name="sageAccDSN" Type="System.String" Scope="User">
-      <Value Profile="(Default)">SageConecto</Value>
-    </Setting>
     <Setting Name="sagePassword" Type="System.String" Scope="User">
-      <Value Profile="(Default)">PriceFinder</Value>
+      <Value Profile="(Default)">PASSWORD</Value>
     </Setting>
     <Setting Name="sageUsername" Type="System.String" Scope="User">
-      <Value Profile="(Default)">PASSWORD</Value>
+      <Value Profile="(Default)">PriceFinder</Value>
     </Setting>
     <Setting Name="taxCode" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">1</Value>

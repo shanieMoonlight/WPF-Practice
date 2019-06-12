@@ -38,7 +38,8 @@
                               AllowDrop="True"
                               Cursor="" 
                               SelectionChanged="CbCustomerCode_SelectionChanged"
-                              KeyUp="CbCustomerCode_KeyUp">
+                              KeyUp="CbCustomerCode_KeyUp"
+                              TabIndex="0">
                               <ComboBox.ItemsPanel>
                                    <ItemsPanelTemplate>
                                         <VirtualizingStackPanel />
@@ -50,6 +51,7 @@
                               Padding="3,0,2,0"
                               IsReadOnly="True"
                               Focusable="False"
+                              IsTabStop="False"
                               materialDesign:HintAssist.Hint="Customer Description"
                               materialDesign:HintAssist.IsFloating="True"/>
 
@@ -57,7 +59,7 @@
 
                     <StackPanel Grid.Column="1" Orientation="Horizontal" >
                          <Button x:Name="buttFind"  Margin="5,0" Click="ButtFind_Click">Find</Button>
-                         <Button x:Name="buttClear"  Margin="5,0" >Clear</Button>
+                         <Button x:Name="buttClear"  Margin="5,0" Click="ButtClear_Click" >Clear</Button>
                          <Button x:Name="buttUpdate"  Margin="5,0" Click="ButtUpdate_Click" >Update</Button>
                          <Button x:Name="buttOrder"  Margin="5,0" Click="ButtOrder_Click" >Order</Button>
                     </StackPanel>
@@ -121,14 +123,15 @@
                          </Grid.ColumnDefinitions>
                          <DockPanel Grid.Column="0">
                               <ComboBox x:Name="tbProductCode" Grid.Column="0" Grid.Row="1" Width="100" Margin="0,0,10,0" 
-                                  Padding="2,10,0,4" 
-                              materialDesign:HintAssist.Hint="Product Code"
-                              materialDesign:HintAssist.IsFloating="True"
-                              StaysOpenOnEdit="True"
-                              IsEditable="True"
-                              IsTextSearchEnabled="True"
-                              AllowDrop="True"
-                              Cursor="" >
+                                   Padding="2,10,0,4" 
+                                   materialDesign:HintAssist.Hint="Product Code"
+                                   materialDesign:HintAssist.IsFloating="True"
+                                   StaysOpenOnEdit="True"
+                                   IsEditable="True"
+                                   IsTextSearchEnabled="True"
+                                   AllowDrop="True"
+                                   TabIndex="1"
+                                   Cursor="" >
                                    <ComboBox.ItemsPanel>
                                         <ItemsPanelTemplate>
                                              <VirtualizingStackPanel />
@@ -233,7 +236,7 @@
                     <materialDesign:PackIcon Kind="Minus" 
                    Height="24" Width="24" />
                </Button>
-               
+
                <Button x:Name="fabAddProductrow"  Grid.Row="3" Style="{StaticResource MaterialDesignFloatingActionMiniButton}"   
                    HorizontalAlignment="Right"
                    VerticalAlignment="Top"

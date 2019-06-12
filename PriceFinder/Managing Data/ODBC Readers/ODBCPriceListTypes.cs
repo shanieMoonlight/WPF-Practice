@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PriceFinding
+namespace PriceFinding.Managing_Data.ODBC_Readers
 {
 
     public enum ODBCPriceListTypes

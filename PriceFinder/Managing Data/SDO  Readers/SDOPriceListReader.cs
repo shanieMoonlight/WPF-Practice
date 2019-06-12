@@ -1,23 +1,21 @@
-﻿using PriceFinding.Properties;
+﻿using PriceFinding.Managing_Data.ODBC_Readers;
+using PriceFinding.Managing_Data.ReaderInterfaces;
+using PriceFinding.Properties;
 using SageDataObject240;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace PriceFinding
 {
-    class SDOPriceListReader : IPriceListReader
+   class SDOPriceListReader : IPriceListReader
     {
         #region Variables
 
         // private SageTableSettings sageTblSet = SageTableSettings.Default;
-        private SageUserSettings sageUserSet = SageUserSettings.Default;
+        private UserSettings sageUserSet = UserSettings.Default;
 
-        private MyDictionary<Customer> customerMap;
+        private readonly MyDictionary<Customer> customerMap;
         private MyDictionary<Product> productMap;
 
         private SDOEngine sdo;
@@ -124,7 +122,7 @@ namespace PriceFinding
                         //Old plName: Check stock, if found get it's list price & add to productActivity from PLACtivity.
                         if (stockRecord.Find(false))
                         {
-                            listPrice = calculateListPrice(calcValue, calcMeth, costPrice, salePrice, xRate);
+                            listPrice = CalculateListPrice(calcValue, calcMeth, costPrice, salePrice, xRate);
                             productActivity[stockCode] = listPrice;
                         }//If
                     }
@@ -135,8 +133,8 @@ namespace PriceFinding
                         //Get new currency, keep till next Price List.
                         if (stockRecord.Find(false))
                         {
-                            xRate = getCurrency(priceRecord);
-                            listPrice = calculateListPrice(calcValue, calcMeth, costPrice, salePrice, xRate);
+                            xRate = GetCurrency(priceRecord);
+                            listPrice = CalculateListPrice(calcValue, calcMeth, costPrice, salePrice, xRate);
                             productActivity = miniPLActivity[plName];
                             productActivity[stockCode] = listPrice;
                             plNamePrev = plName;
@@ -167,7 +165,7 @@ namespace PriceFinding
 
         //-------------------------------------------------------------------------------------------------------//
 
-        private double calculateListPrice(double calcValue, int calcMeth, double costPrice, double salePrice, double xRate)
+        private double CalculateListPrice(double calcValue, int calcMeth, double costPrice, double salePrice, double xRate)
         {
             double listPrice = 0;
 
@@ -216,7 +214,7 @@ namespace PriceFinding
 
         //-----------------------------------------------------------------------------------------------------//
 
-        private double getCurrency(PriceRecord priceRecord)
+        private double GetCurrency(PriceRecord priceRecord)
         {
             PriceListRecord priceListRecord = null;
             try
@@ -274,7 +272,7 @@ namespace PriceFinding
 
         //-------------------------------------------------------------------------------------------------------//
 
-        private void parseExMsg(string val, string invNum, string prodCode, string defaultVal)
+        private void ParseExMsg(string val, string invNum, string prodCode, string defaultVal)
         {
             string exInfo = "Problem parsing " + val + " in invoice: " + invNum + ", product: " + prodCode
                             + "\n Date has been set to " + defaultVal + ".";

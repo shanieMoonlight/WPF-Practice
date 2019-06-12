@@ -1,19 +1,13 @@
-﻿using PriceFinder.Properties;
-using PriceFinding;
+﻿using PriceFinding.Properties;
 using SageDataObject240;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PriceFinding.Managing_Data
 {
    public class SDOProductReader
    {
 
-      private static SageUserSettings sageUsrSet = SageUserSettings.Default;
+      private static UserSettings sageUsrSet = UserSettings.Default;
 
       //Declare Sage Objects
       private SDOEngine sdo;
@@ -22,7 +16,7 @@ namespace PriceFinding.Managing_Data
       private StockRecord stockRecord;
       private CurrencyData currencyData;
 
-      private readonly double baseCurrencyCode = (double)SageUserSettings.Default.baseCurrCode;
+      private readonly double baseCurrencyCode = (double)sageUsrSet.baseCurrCode;
 
       //-------------------------------------------------------------------------------------------------------//
 
@@ -30,9 +24,8 @@ namespace PriceFinding.Managing_Data
       {
          sdo = new SDOEngine();
          ws = (WorkSpace)sdo.Workspaces.Add("App Server Update");
-         //ws.Connect(sageUsrSet.sageDBDir, sageUsrSet.sageUsername, sageUsrSet.sagePassword, "UniqueUpdater");
          ws.Disconnect();
-         ws.Connect(sageUsrSet.sageDBDir, "PriceFinder", "PASSWORD", "UniqueUpdater");
+         ws.Connect(sageUsrSet.sageDBDir, sageUsrSet.sageUsername, sageUsrSet.sagePassword, "UniqueUpdater");
       }//ctor
 
       //-------------------------------------------------------------------------------------------------------//

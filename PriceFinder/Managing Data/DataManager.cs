@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows;
 using Newtonsoft.Json;
+using PriceFinding.Managing_Data.ODBC_Readers;
+using PriceFinding.Managing_Data.ReaderInterfaces;
 
 namespace PriceFinding
 {
@@ -20,15 +22,11 @@ namespace PriceFinding
    {
       #region Fields
 
-      private static SageUserSettings sageUsrSet = SageUserSettings.Default;
+      private static UserSettings sageUsrSet = UserSettings.Default;
       private Settings set = Settings.Default;
-      //public static string connString = String.Format("DSN={0};Uid={1};Pwd={2}", sageUsrSet.sageAccDSN, sageUsrSet.sageUsername, sageUsrSet.sagePassword);
-      private static int sageVersion = sageUsrSet.sageVersion;
-      private static string dataPath = @"C:\ProgramData\Sage\Accounts\2017\Company.000\ACCDATA";
-      private static string username = sageUsrSet.sageUsername;
-      private static string password = sageUsrSet.sagePassword;
-      
-      public static string connString = $@"Driver={{Sage Line 50 v{sageVersion}}};DIR={dataPath};UseDataPath=No;UID={username};PWD={password}";
+
+
+      public static string connString = $@"Driver={{Sage Line 50 v{sageUsrSet.sageVersion}}};DIR={sageUsrSet.sageDBDir};UseDataPath=No;UID={sageUsrSet.sageUsername};PWD={sageUsrSet.sagePassword}";
 
       /// <summary>
       /// For storing all the PriceFinder data 
@@ -38,15 +36,13 @@ namespace PriceFinding
       /// For retreiving app server data so we don't need to update ours.
       /// </summary>                       
       private readonly string appServerStorageFilePath;
-      private MyDictionary<Product> productMap;
+      //private MyDictionary<Product> productMap;
       private MyDictionary<MyDictionary<List<Sale>>> customerActivity;
       private MyDictionary<MyDictionary<double>> priceListActivity;
-
-      private bool isSerializing = false;
-      private bool isUpdated = false;
-
       private DataStorage dataStore;
 
+      private IProductReader ProductReader;
+      private IInvoiceReader InvoiceReader;
 
       #endregion
 
@@ -55,43 +51,18 @@ namespace PriceFinding
       #region Properties
 
       public MyDictionary<Customer> CustomerMap { get; private set; }
-      public MyDictionary<Product> ProductMap
-      {
-         get { return productMap; }
-      }
+      public MyDictionary<Product> ProductMap { get; private set; }
 
-      public MyDictionary<MyDictionary<Product>> FastProductMap { get; private set; }
+      public bool IsSerializing { get; private set; } = false;
 
-
-      public bool IsSerializing
-      {
-         get { return isSerializing; }
-      }
-
-      public bool IsUpdated
-      {
-         get { return isUpdated; }
-      }
+      public bool IsUpdated { get; private set; } = false;
 
       #endregion
 
       //-------------------------------------------------------------------------------------------------------//
 
-      public DataManager(bool update)
+      public DataManager(bool update) : this()
       {
-         CustomerMap = new MyDictionary<Customer>();
-         productMap = new MyDictionary<Product>();
-         customerActivity = new MyDictionary<MyDictionary<List<Sale>>>();
-         priceListActivity = new MyDictionary<MyDictionary<double>>();
-
-         string baseDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), set.programDir);
-         string appServerBaseDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), set.appProgramDir);
-         string appServerPriceFinderDir = Path.Combine(appServerBaseDir, set.appPFUpdaterDir);
-         pfStorageFilePath = Path.Combine(baseDir, set.storageFileName);
-         appServerStorageFilePath = Path.Combine(appServerPriceFinderDir, set.storageFileName);
-
-         Directory.CreateDirectory(baseDir);
-
          if (update)
             UpdateFromBackup();
       }//CTOR
@@ -101,10 +72,9 @@ namespace PriceFinding
       public DataManager()
       {
          CustomerMap = new MyDictionary<Customer>();
-         productMap = new MyDictionary<Product>();
+         ProductMap = new MyDictionary<Product>();
          customerActivity = new MyDictionary<MyDictionary<List<Sale>>>();
          priceListActivity = new MyDictionary<MyDictionary<double>>();
-         FastProductMap = new MyDictionary<MyDictionary<Product>>();
 
          string baseDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), set.programDir);
          string appServerBaseDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), set.appProgramDir);
@@ -114,6 +84,8 @@ namespace PriceFinding
 
          Directory.CreateDirectory(baseDir);
 
+         ProductReader = new ODBCProductReader();
+         InvoiceReader = new ODBCInvoiceReader();
       }//CTOR
 
       //-------------------------------------------------------------------------------------------------------//
@@ -125,42 +97,22 @@ namespace PriceFinding
       /// </summary>
       public void Update()
       {
-         isUpdated = false;
+         IsUpdated = false;
 
-         ODBCListReader ListReader;
-         IInvoiceReader InvoiceReader;
-         IPriceListReader PriceListReader;
+         IListReader ListReader;
 
          try
          {
             ListReader = new ODBCListReader();
 
-            //Lists must be read first becaause InvoiceReader and PriceListReader will use them.
             //Read Customer data.
             CustomerMap = ListReader.ReadCustomerData();
             //Read Product data.
-            productMap = ListReader.ReadProductData();
-
-            //if (set.sageAccess == SageAccessType.ODBC)
-            //{
-            //   //At the moment pass empty Map references which will be filled later
-            //   InvoiceReader = new ODBCInvoiceReader(customerMap, productMap);
-            //   PriceListReader = new ODBCPriceListReader(customerMap, productMap);
-            //}
-            //else
-            //{
-            //   //At the moment pass empty Map references which will be filled later
-            //   InvoiceReader = new SDOInvoiceReader(customerMap, productMap);
-            //   PriceListReader = new SDOPriceListReader(customerMap, productMap);
-            //}//Else
+            ProductMap = ListReader.ReadProductData();
 
 
-            ////Read Invoice data.
-            //customerActivity = InvoiceReader.ReadInvoiceData();
-            ////Read PriceList data.
-            //priceListActivity = PriceListReader.ReadPriceListData();
+            IsUpdated = true;
 
-            isUpdated = true;
          }
          catch (Exception e)
          {
@@ -168,17 +120,16 @@ namespace PriceFinding
          }//Catch
 
 
-
          //Package app data for storage.
          List<Customer> customerList = CustomerMap.Values.ToList<Customer>();
-         List<Product> productList = productMap.Values.ToList<Product>();
-         dataStore = new DataStorage(CustomerMap, productMap, customerActivity, priceListActivity, FastProductMap);
+         List<Product> productList = ProductMap.Values.ToList<Product>();
+         dataStore = new DataStorage(CustomerMap, ProductMap, customerActivity, priceListActivity);
 
 
          //Store data.
          try
          {
-            isSerializing = true;
+            IsSerializing = true;
             SerializeToJSON();
          }
          catch (Exception e)
@@ -187,7 +138,7 @@ namespace PriceFinding
          }
          finally
          {
-            isSerializing = false;
+            IsSerializing = false;
          }//Finally
 
 
@@ -251,13 +202,12 @@ namespace PriceFinding
 
          CustomerMap = dataStore.CustomerMap;
 
-         productMap = dataStore.ProductMap;
+         ProductMap = dataStore.ProductMap;
 
          customerActivity = dataStore.CustomerActivity;
          priceListActivity = dataStore.PriceListActivity;
-         FastProductMap = dataStore.FastProductMap;
 
-      }//updateFromBackup
+      }//UpdateFromBackup
 
       //-------------------------------------------------------------------------------------------------------//
 
@@ -267,19 +217,14 @@ namespace PriceFinding
       /// <param name="cusCode">Customer Code</param>
       /// <param name="prodCode">Product Code</param>
       /// <returns>Most recent sale or blank sale.</returns>
-      public Sale CheckSale(string cusCode, IEnumerable<string> prodCodes)
+      public Dictionary<string, Sale> CheckSales(string cusCode, IEnumerable<string> prodCodes)
       {
-         Sale blankSale = new Sale();
+         var sales = InvoiceReader.GetLastPriceData(cusCode, prodCodes);
 
-         var invoiceReader = new ODBCInvoiceReader(null, null);
-         var lastSale = invoiceReader.GetLastPriceData(cusCode, prodCodes);
 
-         if (lastSale != null)
-            return lastSale;
-         else
-            return blankSale;
+         return sales;
 
-      }//CheckSale
+      }//CheckSales
 
       //-------------------------------------------------------------------------------------------------------//
 
@@ -293,8 +238,8 @@ namespace PriceFinding
       {
          Sale blankSale = new Sale();
 
-         var invoiceReader = new ODBCInvoiceReader(null, null);
-         var lastSale = invoiceReader.GetLastPriceData(cusCode, prodCode);
+
+         var lastSale = InvoiceReader.GetLastPriceData(cusCode, prodCode);
 
          if (lastSale != null)
             return lastSale;
@@ -302,6 +247,36 @@ namespace PriceFinding
             return blankSale;
 
       }//CheckSale
+
+      //-------------------------------------------------------------------------------------------------------//
+
+      /// <summary>
+      /// Checks for the most recent sale of product to customer.
+      /// </summary>
+      /// <param name="cusCode">Customer Code</param>
+      /// <param name="prodCode">Product Code</param>
+      /// <returns>Most recent sale or blank sale.</returns>
+      public Dictionary<string, double> CheckCostPrices(IEnumerable<string> prodCodes)
+      {
+
+
+         return ProductReader.GetCostPrices(prodCodes);
+
+      }//CheckCostPrices
+
+      //-------------------------------------------------------------------------------------------------------//
+
+      /// <summary>
+      /// Checks for the most recent sale of product to customer.
+      /// </summary>
+      /// <param name="cusCode">Customer Code</param>
+      /// <param name="prodCode">Product Code</param>
+      /// <returns>Most recent sale or blank sale.</returns>
+      public double CheckCostPrice(string prodCode)
+      {
+         return ProductReader.GetCostPrice(prodCode);
+
+      }//CheckCostPrice
 
       //-------------------------------------------------------------------------------------------------------//
 
