@@ -103,7 +103,7 @@
                               Content="Type"/>
                          <Label x:Name="lblResult" Grid.Column="1" Grid.Row="1" Width="80" Margin="0,0,0,0"  
                               Focusable="False"
-                              Content="Result"/>
+                              Content="Price"/>
                          <Label x:Name="lblQty" Grid.Column="1" Grid.Row="1" Width="80" Margin="0,0,0,0"  
                               Focusable="False"
                               Content="Qty"/>
@@ -150,48 +150,51 @@
 
 
                          <StackPanel Grid.Column="1" Orientation="Horizontal" MaxHeight="100" Background="{StaticResource BrushPrimary}">
-                              <TextBox x:Name="tbDate" Grid.Column="0" Grid.Row="1" Width="80" Margin="0,0,0,0" 
+                              <TextBox x:Name="tbDate" Width="80" Margin="0,0,0,0" 
                                    Padding="3,0,2,0"
                                    IsReadOnly="True"
                                    Focusable="False"
                                    Cursor="Arrow"
                                    materialDesign:HintAssist.Hint="Date"
                                    materialDesign:HintAssist.IsFloating="True"/>
-                              <TextBox x:Name="tbLastPrice" Grid.Column="1" Grid.Row="1" Width="80" Margin="0,0,0,0"   
+                              <TextBox x:Name="tbLastPrice" Width="80" Margin="0,0,0,0"   
                                    Padding="3,0,2,0"
                                    IsReadOnly="True"
                                    Focusable="False"
                                    Cursor="Arrow"
                                    materialDesign:HintAssist.Hint="Last"
                                    materialDesign:HintAssist.IsFloating="True"/>
-                              <TextBox x:Name="tbPriceList" Grid.Column="0" Grid.Row="1" Width="80" Margin="0,0,0,0" 
+                              <TextBox x:Name="tbPriceList" Width="80" Margin="0,0,0,0" 
                                    Padding="3,0,2,0"
                                    IsReadOnly="True"
                                    Focusable="False"
                                    Cursor="Arrow"
                                    materialDesign:HintAssist.Hint="List"
                                    materialDesign:HintAssist.IsFloating="True"/>
-                              <TextBox x:Name="tbCostPrice" Grid.Column="1" Grid.Row="1" Width="80" Margin="0,0,0,0"   
+                              <TextBox x:Name="tbCostPrice" Width="80" Margin="0,0,0,0"   
                                    Padding="3,0,2,0"
                                    IsReadOnly="True"
                                    Focusable="False"
                                    Cursor="Arrow"
                                    materialDesign:HintAssist.Hint="Cost"
                                    materialDesign:HintAssist.IsFloating="True"/>
-                              <TextBox x:Name="tbMargin" Grid.Column="1" Grid.Row="1" Width="80" Margin="0,0,0,0"   
-                                   Padding="3,0,2,0"
-                                   IsReadOnly="False"
-                                   Focusable="True"
-                                   PreviewTextInput="NumberValidationTextBox"
-                                   CaretBrush="{StaticResource BrushPrimaryDark}"
-                                   materialDesign:HintAssist.Hint="Margin %"
-                                   materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"
-                                   materialDesign:HintAssist.IsFloating="True"/>
+                              <StackPanel Grid.Column="1" Orientation="Horizontal" Width="auto" Background="{StaticResource BrushPrimaryLight}">
+                                   <TextBox x:Name="tbMargin" Width="80" Margin="0,0,0,0"   
+                                        Padding="3,0,2,0"
+                                        IsReadOnly="False"
+                                        Focusable="True"
+                                        TabIndex="100"
+                                        PreviewTextInput="NumberValidationTextBox"
+                                        CaretBrush="{StaticResource BrushPrimaryDark}"
+                                        materialDesign:HintAssist.Hint="Margin %"
+                                        materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"
+                                        materialDesign:HintAssist.IsFloating="True"/>
 
-                              <ComboBox x:Name="cbTypes" Width="80" Margin="0,0,0,0" Padding="0,10,0,15"  
-                                        SelectedIndex="0"
-                                        Cursor="Hand">
-                              </ComboBox>
+                                   <ComboBox x:Name="cbTypes" Width="80" Margin="0,0,0,0" Padding="0,10,0,15"  
+                                             SelectedIndex="0"
+                                             Cursor="Hand">
+                                   </ComboBox>
+                              </StackPanel>
 
                               <TextBox x:Name="tbResult" Width="80" Margin="0,0,0,0"   
                                    Padding="3,0,2,0"
@@ -199,19 +202,24 @@
                                    Focusable="False"
                                    Text="---"
                                    Cursor="Arrow"
+                                   MaxLength="10"
                                    PreviewTextInput="NumberValidationTextBox"
-                                   materialDesign:HintAssist.Hint="Result"
+                                   materialDesign:HintAssist.Hint="Price"
                                    materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"
                                    materialDesign:HintAssist.IsFloating="True"/>
-                              <TextBox x:Name="tbQty" Width="80" Margin="0,0,0,0"   
-                                   Padding="3,0,2,0"
-                                   IsReadOnly="False"
-                                   Focusable="True"
-                                   CaretBrush="{StaticResource BrushPrimaryDark}"
-                                   PreviewTextInput="NumberValidationTextBox"
-                                   materialDesign:HintAssist.Hint="Quantity"
-                                   materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"
-                                   materialDesign:HintAssist.IsFloating="True"/>
+                              
+                              <StackPanel Grid.Column="1" Orientation="Horizontal" Width="auto" Background="{StaticResource BrushPrimaryLight}">
+                                   <TextBox x:Name="tbQty" Width="80" Margin="0,0,0,0"   
+                                        Padding="3,0,2,0"
+                                        IsReadOnly="False"
+                                        Focusable="True"
+                                        CaretBrush="{StaticResource BrushPrimaryDark}"
+                                        PreviewTextInput="NumberValidationTextBox"
+                                        TabIndex="200"
+                                        materialDesign:HintAssist.Hint="Quantity"
+                                        materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"
+                                        materialDesign:HintAssist.IsFloating="True"/>
+                              </StackPanel>
                          </StackPanel>
                     </Grid>
 
@@ -247,8 +255,6 @@
                    Height="24" Width="24" />
                </Button>
           </Grid>
-
-
 
      </ScrollViewer>
 

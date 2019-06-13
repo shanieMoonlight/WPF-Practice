@@ -20,10 +20,15 @@ namespace PriceFinding
       public const int LAST_IDX = 1;
       public const int PRICE_LIST_IDX = 2;
       public const int COST_IDX = 3;
-      public const int MARGIN_IDX = 4;
-      public const int TYPE_IDX = 5;
-      public const int RESULT_IDX = 6;
-      public const int QTY_IDX = 7;
+
+      public const int STACK_MARGIN_AND_TYPE_IDX = 4;      
+      public const int MARGIN_IDX = 0;
+      public const int TYPE_IDX = 1;
+
+      public const int RESULT_IDX = 5;
+
+      public const int STACK_QTY_IDX = 6;
+      public const int QTY_IDX = 0;
       public const string NO_RESULT = "---";
 
       //--------------------------------------------------------------------------//
@@ -57,17 +62,23 @@ namespace PriceFinding
          tbLast = (TextBox)spProductPricing.Children[LAST_IDX];
          tbPriceList = (TextBox)spProductPricing.Children[PRICE_LIST_IDX];
          tbCost = (TextBox)spProductPricing.Children[COST_IDX];
-         tbMargin = (TextBox)spProductPricing.Children[MARGIN_IDX];
-         cbTypes = (ComboBox)spProductPricing.Children[TYPE_IDX];
+
+
+         var stackMarginAndType = (StackPanel)spProductPricing.Children[STACK_MARGIN_AND_TYPE_IDX];
+         tbMargin = (TextBox)stackMarginAndType.Children[MARGIN_IDX];
+         cbTypes = (ComboBox)stackMarginAndType.Children[TYPE_IDX];
+
          tbResult = (TextBox)spProductPricing.Children[RESULT_IDX];
-         tbQty = (TextBox)spProductPricing.Children[QTY_IDX];
+
+         var stackQty = (StackPanel)spProductPricing.Children[STACK_QTY_IDX];
+         tbQty = (TextBox)stackQty.Children[QTY_IDX];
 
          tbMargin.PreviewTextInput += NumberValidationTextBox;
          tbMargin.Text = Settings.Default.defaultMargin.ToString();
 
 
          tbQty.PreviewTextInput += NumberValidationTextBox;
-         tbQty.Text = "1";
+         //tbQty.Text = "1";
 
          cbTypes.SelectionChanged += CbTypes_SelectionChanged;
 
@@ -77,15 +88,17 @@ namespace PriceFinding
 
          SetComboBoxItems(cbTypes, PriceTypes.GetPriceTypes(), true);
          SetComboBoxItems(cbCode, _dataManager.ProductMap.Keys);
-         
+
 
       }//ctor
 
       //--------------------------------------------------------------------------//
 
-      public ProductStrip(Grid gridRow, DataManager dataManager, int tabIndex):this(gridRow, dataManager)
+      public ProductStrip(Grid gridRow, DataManager dataManager, int tabIndex) : this(gridRow, dataManager)
       {
          cbCode.TabIndex = tabIndex;
+         tbMargin.TabIndex = (tabIndex + 100);
+         tbQty.TabIndex = (tabIndex + 200);
       }//ctor
 
       //--------------------------------------------------------------------------//

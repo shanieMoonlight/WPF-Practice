@@ -43,6 +43,7 @@ namespace PriceFinding
 
       private IProductReader ProductReader;
       private IInvoiceReader InvoiceReader;
+      private IPriceListReader PriceListReader;
 
       #endregion
 
@@ -86,6 +87,7 @@ namespace PriceFinding
 
          ProductReader = new ODBCProductReader();
          InvoiceReader = new ODBCInvoiceReader();
+         PriceListReader = new ODBCPriceListReader();
       }//CTOR
 
       //-------------------------------------------------------------------------------------------------------//
@@ -288,22 +290,18 @@ namespace PriceFinding
       /// <returns>Most recent sale or blank sale.</returns>
       public double CheckListPrice(string cusCode, string prodCode)
       {
-         double listPrice = -1;
 
-         //If CusCode & ProdCode are in customerActivity return most recent Sale else return blank Sale
-         if (priceListActivity.ContainsKey(cusCode))
-         {
-            MyDictionary<double> prodActivity = priceListActivity[cusCode];
-            if (prodActivity.ContainsKey(prodCode))
-            {
-               listPrice = prodActivity[prodCode];
+       return  PriceListReader.GetPriceListPrice(cusCode, prodCode);
 
-            }//If
-         }//If
-
-         return listPrice;
       }//CheckListPrice
 
+      //-------------------------------------------------------------------------------------------------------//
+
+      public MyDictionary<double> CheckListPrices(string cusCode, IEnumerable<string> prodCodes)
+      {
+         return PriceListReader.GetPriceListPrices(cusCode, prodCodes);
+      }//CheckListPrices
+      
       //-------------------------------------------------------------------------------------------------------//
 
       /// <summary>

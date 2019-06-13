@@ -80,7 +80,9 @@ namespace PriceFinding
                BorderBrush = (Brush)Application.Current.Resources["BrushPrimaryDark"]
             },
 
-            ShowCloseButton = false,
+            ShowCloseButton = true,
+
+            ResizeMode = ResizeMode.CanResizeWithGrip,
 
             MainContentControl = { Background = (Brush)Application.Current.Resources["BrushPrimaryLight"] },
             TitleBackgroundPanel = { Background = (Brush)Application.Current.Resources["BrushPrimaryDark"] },

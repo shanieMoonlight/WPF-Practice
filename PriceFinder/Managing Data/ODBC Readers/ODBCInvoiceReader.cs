@@ -144,7 +144,8 @@ namespace PriceFinding.Managing_Data.ODBC_Readers
                                  {tbls.Inv}.{cols.CusCode},
                                  {tbls.Inv}.{cols.InvDate},
                                  {tbls.Inv}.{cols.CurrCode},
-                                 { tbls.InvItm}.{cols.StockCode},
+                                 {tbls.InvItm}.{cols.StockCode},
+                                 {tbls.InvItm}.{cols.Qty},
                                  (({cols.NetAmt}/{cols.Qty})) AS  {salePriceCol},
                                  (({cols.FrgnNetAmt}/{cols.Qty})) AS {foreignSalePriceCol}
                               FROM 
@@ -163,15 +164,10 @@ namespace PriceFinding.Managing_Data.ODBC_Readers
                                  {cols.InvDate}  Desc, 
                                  {cols.StockCode}"
                               ;
+
          #endregion
 
-
-         string invNum = string.Empty;
-         string prodCode = string.Empty;
-         double salePrice = 0;
-         DateTime date = new DateTime();
          var salesMap = new Dictionary<string, Sale>();
-
 
          try
          {
@@ -190,19 +186,21 @@ namespace PriceFinding.Managing_Data.ODBC_Readers
                      date = r[cols.InvDate].ToString(),
                      salePrice = r[salePriceCol].ToString(),
                      foreignSalePrice = r[foreignSalePriceCol].ToString(),
-                     currency = r[cols.CurrCode].ToString()
+                     currency = r[cols.CurrCode].ToString(),
+                     qty = r[cols.Qty].ToString()
                   });
 
 
                foreach (var item in results)
                {
-                  invNum = item.invNum;
-                  prodCode = item.prodCode;
-                  if (!DateTime.TryParse(item.date, out date))
-                     ParseExMsg(cols.InvDate, invNum, prodCode, "1900/0/0");
+                  if (!DateTime.TryParse(item.date, out DateTime date))
+                     ParseExMsg(cols.InvDate, item.invNum, item.prodCode, "1900/0/0");
 
-                  if (!double.TryParse(item.salePrice, out salePrice))
-                     ParseExMsg(salePriceCol, invNum, prodCode, " 0. So is sale price");
+                  if (!double.TryParse(item.salePrice, out double salePrice))
+                     ParseExMsg(salePriceCol, item.invNum, item.prodCode, " 0. So is sale price");
+
+                  if (!int.TryParse(item.qty, out int qty))
+                     ParseExMsg("Quantity", item.invNum, item.prodCode, " 0. So is sale price");
 
 
                   //Check if it's a foreign customer.
@@ -211,12 +209,12 @@ namespace PriceFinding.Managing_Data.ODBC_Readers
                   {
                      if (!double.TryParse(item.foreignSalePrice, out salePrice))
                      {
-                        ParseExMsg(foreignSalePriceCol, invNum, prodCode, " 0. So is sale price");
+                        ParseExMsg(foreignSalePriceCol, item.invNum, item.prodCode, " 0. So is sale price");
                      }//If
                   }//If
 
 
-                  salesMap[item.prodCode] = new Sale(date, salePrice, prodCode);
+                  salesMap[item.prodCode] = new Sale(date, salePrice, item.prodCode, qty);
                }//foreach
 
 
@@ -228,10 +226,10 @@ namespace PriceFinding.Managing_Data.ODBC_Readers
                               + "\r\n    -----------------     \r\n"
                               + e.GetType() + "\r\n" + e.Message
                               + "\r\n    -----------------     \r\n"
-                              + "Query: " + queryString
-                              + "\r\nInvoice No.: " + invNum + ", Product: " + prodCode + "Customer : " + customerCode
-                              + "\r\nSale Price : " + salePrice + "\r\n";
-            // server.TbInfo = eString;
+                              + "Query: " + queryString;
+                              //+ "\r\nInvoice No.: " + invNum + ", Product: " + prodCode + "Customer : " + customerCode
+                              //+ "\r\nSale Price : " + salePrice + "\r\n";
+                              // server.TbInfo = eString;
             throw new Exception(eString);
          }//Catch
 

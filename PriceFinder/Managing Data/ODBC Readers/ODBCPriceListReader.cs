@@ -13,17 +13,13 @@ namespace PriceFinding.Managing_Data.ODBC_Readers
       private SageTables tbls = new SageTables();
       private SageColumns cols = new SageColumns();
 
-      private readonly MyDictionary<Customer> customerMap;
-      private MyDictionary<Product> productMap;
 
       #endregion
 
       //-------------------------------------------------------------------------------------------------------//
 
-      public ODBCPriceListReader(MyDictionary<Customer> customerMap, MyDictionary<Product> productMap)
+      public ODBCPriceListReader()
       {
-         this.customerMap = customerMap;
-         this.productMap = productMap;
       }//CTOR
 
       //-------------------------------------------------------------------------------------------------------//
@@ -32,14 +28,9 @@ namespace PriceFinding.Managing_Data.ODBC_Readers
       /// Reads all invoices and stores it's values in a List.
       /// </summary>
       /// <param name="customersFileName"></param>
-      public MyDictionary<MyDictionary<double>> ReadPriceListData()
+      public double GetPriceListPrice(string cusCode, string prodCode)
       {
-         //
-         MyDictionary<MyDictionary<double>> PriceListActivity = new MyDictionary<MyDictionary<double>>();
-         //Dictionary of PriceList Name vs PriceList Data.
-         MyDictionary<MyDictionary<double>> miniPLActivity = new MyDictionary<MyDictionary<double>>();
-         //Dictionary of PriceList Name vs PriceListUserList.
-         MyDictionary<List<string>> plUsers = new MyDictionary<List<string>>();
+         var notFound = -1;
 
          #region queryStringPLNames
          string queryStringPLNames = $@"SELECT 
@@ -48,44 +39,22 @@ namespace PriceFinding.Managing_Data.ODBC_Readers
                                      FROM 
                                        {tbls.Cust}
                                      WHERE 
-                                       {cols.PrcRef} <> {string.Empty}
+                                       {tbls.Cust}.{cols.CusCode} = '{cusCode}'
                                      ORDER BY 
                                        {cols.PrcRef}"
                                      ;
          #endregion
 
          string cusPriceListRef = string.Empty;
-         string cusCode = string.Empty;
 
-         //Create a dictionary of PL's that are acually being referenced v's Empty ProductActivities.
-         //Single Price Lists can be used for multiple Customers
+
          try
          {
             DataTable dataTable = FillTableFromODBC(queryStringPLNames);
+            if (dataTable.Rows.Count < 1)
+               return notFound;
 
-            foreach (DataRow row in dataTable.Rows)
-            {
-               cusPriceListRef = row[cols.PrcRef].ToString();
-               cusCode = row[cols.CusCode].ToString();
-
-               //If pLists already contains PL then add customer to it's entry. Else make new entry if not empty string.
-               if (plUsers.ContainsKey(cusPriceListRef))
-               {
-                  plUsers[cusPriceListRef].Add(cusCode);
-               }
-               else if (!cusPriceListRef.Equals(string.Empty))
-               {
-                  plUsers[cusPriceListRef] = new List<string>
-                  {
-                     cusCode
-                  };
-
-                  //Add new entry for each priceList.
-                  miniPLActivity[cusPriceListRef] = new MyDictionary<double>();
-               }//Else
-
-            }//ForEach
-
+            cusPriceListRef = dataTable.Rows[0][cols.PrcRef].ToString();
 
             #region queryStringPLData
             string queryStringPLData = $@"SELECT 
@@ -117,67 +86,32 @@ namespace PriceFinding.Managing_Data.ODBC_Readers
                                          ON 
                                              {tbls.Stock}.{cols.StockCode} =  {tbls.Prc}.{cols.StockCode}
                                      )
-                                     ORDER BY 
-                                        {cols.PrcRef}"
+                                     WHERE 
+                                        {tbls.Prc}.{cols.PrcRef} = '{cusPriceListRef}'
+                                     AND 
+                                        {tbls.Prc}.{cols.StockCode} = '{prodCode}'"
                                  ;
             #endregion
 
             dataTable = FillTableFromODBC(queryStringPLData);
 
-            Dictionary<string, double> productActivity = null;
-            string plName = string.Empty;
-            string plNamePrev = string.Empty;
-            string stockCode;
-            double calcValue;
-            int calcMeth;
-            double xRate;
-            double costPrice;
-            double salePrice;
-            double listPrice;
-
-            foreach (DataRow row in dataTable.Rows)
-            {
-               plName = row[cols.PrcRef].ToString().Trim();
-               stockCode = row[cols.StockCode].ToString();
-               calcValue = (double)row[cols.CalcVal];
-               calcMeth = (int)row[cols.CalcMeth];
-               xRate = (double)row[cols.XRate];
-               costPrice = (double)row[cols.LstPurchPrice];
-               salePrice = (double)row[cols.SalePrc];
-
-               if (plName.Equals(plNamePrev))
-               {
-                  //Old plName: Check stock, if found get it's list price & add to productActivity from PLACtivity.
-                  if (productMap.ContainsKey(stockCode))
-                  {
-                     listPrice = CalculateListPrice(calcValue, calcMeth, costPrice, salePrice, xRate);
-                     productActivity[stockCode] = listPrice;
-                  }//If
-               }
-               else if (miniPLActivity.ContainsKey(plName))
-               {
-                  //New name:Check stock, if found get it's list price & add to productActivity from PLACtivity. 
-                  //Change plNamePrev
-                  //Get new currency, keep till next Price List.
-                  if (productMap.ContainsKey(stockCode))
-                  {
-                     listPrice = CalculateListPrice(calcValue, calcMeth, costPrice, salePrice, xRate);
-                     productActivity = miniPLActivity[plName];
-                     productActivity[stockCode] = listPrice;
-                     plNamePrev = plName;
-                  }//If
-               }//Else
-            }//ForEach
+            if (dataTable.Rows.Count < 1)
+               return notFound;
 
 
-            //Give each customer their own PriceList.
-            foreach (string key in plUsers.Keys)
-            {
-               foreach (string plUserCusCode in plUsers[key])
-               {
-                  PriceListActivity[plUserCusCode] = miniPLActivity[key];
-               }//ForEach
-            }//ForEach  
+            var row = dataTable.Rows[0];
+
+
+            string plName = row[cols.PrcRef].ToString().Trim();
+            string stockCode = row[cols.StockCode].ToString();
+            double calcValue = (double)row[cols.CalcVal];
+            int calcMeth = (int)row[cols.CalcMeth];
+            double xRate = (double)row[cols.XRate];
+            double costPrice = (double)row[cols.LstPurchPrice];
+            double salePrice = (double)row[cols.SalePrc];
+
+            return CalculateListPrice(calcValue, calcMeth, costPrice, salePrice, xRate);
+
          }
          catch (Exception e)
          {
@@ -187,14 +121,119 @@ namespace PriceFinding.Managing_Data.ODBC_Readers
                               + "\r\n    -----------------     \r\n"
                               + "Query: " + queryStringPLNames
                               + "\r\n Pricing Ref: " + cusPriceListRef + "Customer : " + cusCode + "\r\n";
-            // server.TbInfo = eString;
+
             throw new Exception(eString);
          }//Catch
 
 
-         return PriceListActivity;
+      }//GetPriceListPrice
 
-      }//ReadPriceListData
+      //-------------------------------------------------------------------------------------------------------//
+
+
+      public MyDictionary<double> GetPriceListPrices(string cusCode, IEnumerable<string> prodCodes)
+      {
+
+         var results = new MyDictionary<double>();
+
+
+         #region queryStringPLNames
+         string queryStringPLNames = $@"SELECT 
+                                       {tbls.Cust}.{cols.PrcRef},
+                                       {tbls.Cust}.{cols.CusCode},
+                                     FROM 
+                                       {tbls.Cust}
+                                     WHERE 
+                                       {tbls.Cust}.{cols.CusCode} = '{cusCode}'
+                                     ORDER BY 
+                                       {cols.PrcRef}"
+                                     ;
+         #endregion
+
+         string cusPriceListRef = string.Empty;
+
+
+         try
+         {
+            //First find the PriceList name.
+            DataTable dataTable = FillTableFromODBC(queryStringPLNames);
+            if (dataTable.Rows.Count < 1)
+               return results;
+
+            cusPriceListRef = dataTable.Rows[0][cols.PrcRef].ToString();
+
+            #region queryStringPLData
+            string queryStringPLData = $@"SELECT 
+                                     {tbls.Prc}.{cols.PrcRef}, 
+                                     {tbls.Prc}.{cols.StockCode}, 
+                                     {tbls.Prc}.{cols.CalcMeth}, 
+                                     {tbls.Prc}.{cols.CalcVal}, 
+                                     {tbls.Curr}.{cols.XRate}, 
+                                     {tbls.PrcLst}.{cols.CurrCode}, 
+                                     {tbls.Stock}.{cols.LstPurchPrice}, 
+                                     {tbls.Stock}.{cols.SalePrc} 
+                                     FROM 
+                                       (
+                                          (
+                                             (
+                                                 {tbls.PrcLst}
+                                               INNER JOIN
+                                                 {tbls.Prc}
+                                               ON 
+                                                 {tbls.Prc}.{cols.PrcRef} = {tbls.PrcLst}.{cols.PrcRef}
+                                             ) 
+                                             INNER JOIN
+                                                 {tbls.Curr}
+                                             ON 
+                                                 {tbls.PrcLst}.{cols.CurrCode} =  {tbls.Curr}.{cols.CurrNum}
+                                         ) 
+                                         INNER JOIN 
+                                             {tbls.Stock}
+                                         ON 
+                                             {tbls.Stock}.{cols.StockCode} =  {tbls.Prc}.{cols.StockCode}
+                                     )
+                                     WHERE 
+                                        {tbls.Prc}.{cols.PrcRef} = '{cusPriceListRef}'
+                                     AND 
+                                        {tbls.Prc}.{cols.StockCode} IN ('{string.Join("', '", prodCodes)}')"
+                                 ;
+            #endregion
+
+            dataTable = FillTableFromODBC(queryStringPLData);
+
+            if (dataTable.Rows.Count < 1)
+               return results;
+
+            //Fill in the price list prices.
+            foreach (DataRow row in dataTable.Rows)
+            {
+               string plName = row[cols.PrcRef].ToString().Trim();
+               string stockCode = row[cols.StockCode].ToString();
+               double calcValue = (double)row[cols.CalcVal];
+               int calcMeth = (int)row[cols.CalcMeth];
+               double xRate = (double)row[cols.XRate];
+               double costPrice = (double)row[cols.LstPurchPrice];
+               double salePrice = (double)row[cols.SalePrc];
+
+               results[stockCode] = CalculateListPrice(calcValue, calcMeth, costPrice, salePrice, xRate);
+
+            }//foreach
+
+            return results;
+
+         }
+         catch (Exception e)
+         {
+            string eString = "Problem reading PriceList Data"
+                              + "\r\n    -----------------     \r\n"
+                              + e.GetType() + "\r\n" + e.Message
+                              + "\r\n    -----------------     \r\n"
+                              + "Query: " + queryStringPLNames
+                              + "\r\n Pricing Ref: " + cusPriceListRef + "Customer : " + cusCode + "\r\n";
+
+            throw new Exception(eString);
+         }//Catch
+      }//GetPriceListPrices
 
       //-------------------------------------------------------------------------------------------------------//
 
@@ -251,8 +290,8 @@ namespace PriceFinding.Managing_Data.ODBC_Readers
       {
          string exInfo = "Problem parsing " + val + " in invoice: " + invNum + ", product: " + prodCode
                          + "\n Date has been set to " + defaultVal + ".";
-         //MessageBox.Show(exInfo);
-         MyMessageBox.Show("Error", exInfo);
+
+         throw new Exception(exInfo);
       }//ParseExMsg
 
       //-------------------------------------------------------------------------------------------------------//

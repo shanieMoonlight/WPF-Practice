@@ -2,3 +2,5 @@
 
 1. Use binding.
 2. MVVM
+3. Add manual pricing option.
+4. Settings form

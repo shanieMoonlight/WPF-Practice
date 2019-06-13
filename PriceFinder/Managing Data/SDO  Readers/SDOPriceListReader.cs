@@ -163,9 +163,24 @@ namespace PriceFinding
 
         }//ReadPriceListData
 
-        //-------------------------------------------------------------------------------------------------------//
+      //-------------------------------------------------------------------------------------------------------//
 
-        private double CalculateListPrice(double calcValue, int calcMeth, double costPrice, double salePrice, double xRate)
+
+      public MyDictionary<double> GetPriceListPrices(string custoemrCode, IEnumerable<string> productCodes)
+      {
+         throw new NotImplementedException();
+      }//ReadPriceListData
+
+      //-------------------------------------------------------------------------------------------------------//
+
+      public double GetPriceListPrice(string customerCode, string productCode)
+      {
+         throw new NotImplementedException();
+      }//ReadPriceListData
+
+      //-------------------------------------------------------------------------------------------------------//
+
+      private double CalculateListPrice(double calcValue, int calcMeth, double costPrice, double salePrice, double xRate)
         {
             double listPrice = 0;
 
@@ -323,5 +338,5 @@ namespace PriceFinding
 
         }//DestroyAllObjects
 
-    }//Cls
+   }//Cls
 }//NS

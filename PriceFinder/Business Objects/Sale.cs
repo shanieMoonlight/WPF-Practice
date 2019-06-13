@@ -17,6 +17,7 @@ namespace PriceFinding
       public DateTime Date { get; }
       public double SalePrice { get; }
       public string Code { get; private set; } = Settings.Default.NOT_FOUND;
+      public int Qty { get; private set; } = 1;
       #endregion
 
       //----------------------------------------------------------------------------------------------------------//
@@ -35,6 +36,13 @@ namespace PriceFinding
          this.Date = date;
          this.SalePrice = price;
          this.Code = code;
+      }//ctor 
+      public Sale(DateTime date, double price, string code, int qty)
+      {
+         this.Date = date;
+         this.SalePrice = price;
+         this.Code = code;
+         this.Qty = qty;
       }//ctor 
 
       /// <summary>

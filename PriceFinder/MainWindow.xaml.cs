@@ -1,8 +1,10 @@
 ﻿using BespokeFusion;
 using PriceFinding;
+using PriceFinding.Business_Objects;
 using PriceFinding.Managing_Data;
 using PriceFinding.Managing_Data.ODBC_Readers;
 using PriceFinding.Properties;
+using PriceFinding.Writing;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -66,7 +68,73 @@ namespace PriceFinding
 
       private void ButtOrder_Click(object sender, RoutedEventArgs e)
       {
-         ToggleProgressBarVisibility();
+         var products = new List<Product>();
+         string cusCode = cbCustomerCode.Text;
+
+         if (cusCode.Equals(""))
+            return;
+
+         Customer customer = _dataManager.CheckCustomer(cusCode);
+
+         foreach (ProductStrip prodStrip in strips)
+         {
+            string prodCode = prodStrip.cbCode.Text;
+
+            if (prodCode.Equals(""))
+               continue;
+
+            Product product = _dataManager.CheckProduct(prodCode);
+            if (product.Code != Settings.Default.NOT_FOUND && !string.IsNullOrWhiteSpace(prodStrip.tbLast.Text))
+            {
+               product.SalePrice = double.Parse(prodStrip.tbResult.Text);
+               product.Qty = int.Parse(prodStrip.tbQty.Text);
+               products.Add(product);
+            }//if
+
+         }//foreach
+
+         PostOrderWriter posrOrderWriter = null;
+
+         Order order = new Order(customer, products);
+         string username = "Shanie Moonlight";
+         posrOrderWriter = new PostOrderWriter(order, username);
+
+         if (order != null)
+         {
+
+            //Make sure order has customer and products.
+            if (order.customer == null)
+            {
+               MyMessageBox.ShowOk("Error", "402 Reading order error: No Customer found in order request. Please re-send");
+            }
+            if (order.productList.Count <= 0)
+            {
+               MyMessageBox.ShowOk("Error", "402 Reading order error. No productList found in order request. Please re-send");
+            }//If
+
+            try
+            {
+               //Let rep know if order was posted.
+               if (posrOrderWriter.Post())
+               {
+                  MyMessageBox.ShowOk("Error", "Success, order received.");
+               }
+               else
+               {
+                  MyMessageBox.ShowOk("Error", "Order not posted. Contact administrator.");
+               }//Else
+            }
+            catch (Exception ex)
+            {
+
+               MyMessageBox.ShowOk("Error", "WTF." + Environment.NewLine + ex.Message);
+            }
+
+         }
+         else
+         {
+            MyMessageBox.ShowOk("Error", "402 Reading order error. Order not in correct format. Please re-send");
+         }//Else
 
       }//ButtOrder_Click
 
@@ -347,17 +415,18 @@ namespace PriceFinding
 
             if (cusCode.Equals(""))
             {
-               MyMessageBox.Show("Error", "You must enter a customer.");
+               MyMessageBox.ShowOk("Error", "You must enter a customer.");
                return;
             }//If
 
 
-            var codes = strips
+            var prodCodes = strips
                .Where(s => !string.IsNullOrWhiteSpace(s.cbCode.Text))
                .Select(s => s.cbCode.Text);
 
-            var sales = _dataManager.CheckSales(cusCode, codes);
-            var costs = _dataManager.CheckCostPrices(codes);
+            var sales = _dataManager.CheckSales(cusCode, prodCodes);
+            var costs = _dataManager.CheckCostPrices(prodCodes);
+            var listPrices = _dataManager.CheckListPrices(cusCode, prodCodes);
 
             //Fill in all queried rows.
             foreach (ProductStrip prodStrip in strips)
@@ -368,6 +437,8 @@ namespace PriceFinding
                if (prodCode.Equals(""))
                   continue;
 
+
+
                var customer = _dataManager.CheckCustomer(cbCustomerCode.Text);
 
                //If Product exists get Cost Price
@@ -377,7 +448,7 @@ namespace PriceFinding
                if (!costs.TryGetValue(prodCode, out double cost))
                   prodStrip.tbCost.Text = NOT_FOUND;
                else
-                  prodStrip.tbDate.Text = cost.ToString();
+                  prodStrip.tbCost.Text = cost.ToString();
 
 
 
@@ -386,34 +457,30 @@ namespace PriceFinding
                {
                   prodStrip.tbDate.Text = NOT_FOUND;
                   prodStrip.tbLast.Text = NOT_FOUND;
+                  prodStrip.tbQty.Text = "";
                }
                else
                {
                   prodStrip.tbDate.Text = sale.Date.ToString("dd-MMM-yy");
                   prodStrip.tbLast.Text = sale.SalePrice.ToString();
+                  prodStrip.tbQty.Text = sale.Qty.ToString();
                }//Else
 
 
                //Check Price List
-               double price = _dataManager.CheckListPrice(cusCode, prodCode);
-               if (price == -1)
-               {
+               if (!listPrices.TryGetValue(prodCode, out double priceListPrice))
                   prodStrip.tbPriceList.Text = NOT_FOUND;
-               }
                else
-               {
-                  prodStrip.tbPriceList.Text = price.ToString();
-               }//Else 
-
+                  prodStrip.tbPriceList.Text = priceListPrice.ToString();
 
 
             }//ForEach
-                       
+
          }
          catch (Exception ex)
          {
             string exInfo = ex.GetType().ToString() + "\r\n" + ex.Message;
-            MyMessageBox.Show("Error", exInfo);
+            MyMessageBox.ShowOk("Error", exInfo);
          }//Catch
       }//FindPrices2
 
