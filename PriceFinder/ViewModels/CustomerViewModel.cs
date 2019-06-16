@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace PriceFinding.ViewModels
 {
    public class CustomerViewModel : ObservableObject
    {
-      private IEnumerable<string> _codeList;
+      private IEnumerable<Customer> _codeList;
+      public BackgroundViewModel Background { get; set; }
       private MyDictionary<Customer> _map;
       private string _code;
       private string _description;
@@ -21,12 +23,14 @@ namespace PriceFinding.ViewModels
       public CustomerViewModel(MyDictionary<Customer> customerMap)
       {
          _map = customerMap;
-         CodeList = _map.Keys;
+         //CodeList = _map.Keys;
+         CodeList = _map.ToList().Select(kvp => kvp.Value);
+         Background = new BackgroundViewModel();
       }//ctor
 
       //-------------------------------------------------------------------------------//
 
-      public IEnumerable<string> CodeList
+      public IEnumerable<Customer> CodeList
       {
          get
          {
@@ -51,9 +55,17 @@ namespace PriceFinding.ViewModels
          set
          {
             _code = value ?? "";
-            //Set description.
-            if (_map.TryGetValue(_code, out Customer customer))
-               Description = customer.Description;
+
+            if (_map.TryGetValue(_code, out Customer customer) || string.IsNullOrWhiteSpace(_code))
+            {
+               Background.Color = Brushes.Transparent;
+               //Description = customer.Description;
+            }
+            else
+            {
+               Background.Color = Brushes.Salmon;
+               //Description = "";
+            }//else
 
             //Tell the view.
             OnPropertyChanged(nameof(Code));
@@ -78,6 +90,14 @@ namespace PriceFinding.ViewModels
             OnPropertyChanged(nameof(Description));
          }
       }//Description
+
+      //-------------------------------------------------------------------------------//
+
+      public void Clear()
+      {
+         Code = null;
+         Description = null;
+      }//Clear
 
       //-------------------------------------------------------------------------------//
 

@@ -11,7 +11,7 @@ namespace PriceFinding.ViewModels
    {
     
       public OrderViewModel Order { get; private set; }
-      private DataManager _dataManager;
+      private readonly DataManager _dataManager;
 
 
       //-------------------------------------------------------------------------------//
@@ -23,6 +23,13 @@ namespace PriceFinding.ViewModels
          Order = new OrderViewModel(_dataManager);
         
       }//ctor
+
+      //-------------------------------------------------------------------------------//
+
+      public void Clear()
+      {
+         Order.Clear();
+      }//Clear
 
       //-------------------------------------------------------------------------------//
 

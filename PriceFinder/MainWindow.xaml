@@ -28,7 +28,7 @@
 
                     <StackPanel Grid.Column="0" Orientation="Horizontal" MaxHeight="100" Margin="0,5,0,5">
 
-                         <ComboBox x:Name="cbCustomerCode" Grid.Column="0" Grid.Row="1" Width="100" Margin="0,0,10,0" 
+                         <ComboBox x:Name="cbCustomerCode" Grid.Column="0" Grid.Row="1" Width="300" Margin="0,0,10,0" 
                               Padding="2,10,0,4" 
                               materialDesign:HintAssist.Hint="Customer Code"
                               materialDesign:HintAssist.IsFloating="True"
@@ -37,9 +37,10 @@
                               IsTextSearchEnabled="True"
                               AllowDrop="True"
                               Cursor="Hand" 
+                              Background="{Binding Order.Customer.Background.Color}"
                               ItemsSource="{Binding Order.Customer.CodeList}"
-                              SelectedValue="{Binding Order.Customer.Code}"
-                              DisplayMemberPath="{Binding Order.Customer.Code, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"         
+                              SelectedValuePath="Code"
+                              SelectedValue="{Binding Order.Customer.Code, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"         
                               TabIndex="0">
                               <ComboBox.ItemsPanel>
                                    <ItemsPanelTemplate>
@@ -48,14 +49,14 @@
                               </ComboBox.ItemsPanel>
                          </ComboBox>
 
-                         <TextBox x:Name="tbCustomerDesc" Grid.Column="1" Grid.Row="1" Width="200" Margin="0,0,0,0"   
+                         <!--<TextBox x:Name="tbCustomerDesc" Grid.Column="1" Grid.Row="1" Width="200" Margin="0,0,0,0"   
                               Padding="3,0,2,0"
                               IsReadOnly="True"
                               Focusable="False"
                               IsTabStop="False"
                               Text="{Binding Order.Customer.Description}"
                               materialDesign:HintAssist.Hint="Customer Description"
-                              materialDesign:HintAssist.IsFloating="True"/>
+                              materialDesign:HintAssist.IsFloating="True"/>-->
 
                     </StackPanel>
 
@@ -113,119 +114,140 @@
 
                </Grid>
 
-               <Grid x:Name="grdProducts"  Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Background="{StaticResource BrushPrimaryLight}">
+
+               <Grid  Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Background="{StaticResource BrushPrimaryLight}">
                     <Grid.RowDefinitions>
                          <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
+                    <ItemsControl ItemsSource="{Binding Order.Products}">
+                         <ItemsControl.ItemTemplate>
+                              <DataTemplate>
 
-                    <Grid  x:Name="grdProductsRow" Grid.Column="0" Grid.ColumnSpan="3" Background="{StaticResource BrushPrimaryLight}" >
-                         <Grid.ColumnDefinitions>
-                              <ColumnDefinition Width="*"/>
-                              <ColumnDefinition Width="auto"/>
-                         </Grid.ColumnDefinitions>
-                         <DockPanel Grid.Column="0">
-                              <ComboBox x:Name="tbProductCode" Grid.Column="0" Grid.Row="1" Width="100" Margin="0,0,10,0" 
-                                   Padding="2,10,0,4" 
-                                   materialDesign:HintAssist.Hint="Product Code"
-                                   materialDesign:HintAssist.IsFloating="True"
-                                   StaysOpenOnEdit="True"
-                                   IsEditable="True"
-                                   IsTextSearchEnabled="True"
-                                   AllowDrop="True"
-                                   TabIndex="1"
-                                   Cursor="Hand" >
-                                   <ComboBox.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                             <VirtualizingStackPanel />
-                                        </ItemsPanelTemplate>
-                                   </ComboBox.ItemsPanel>
-                              </ComboBox>
-                              <TextBox x:Name="tbProductDesc" Grid.Column="1" Grid.Row="1" Margin="5,0,5,0"  
-                                   Padding="3,0,2,0" 
-                                   IsReadOnly="True"
-                                   Focusable="False"
-                                   Cursor="Arrow"
-                                   materialDesign:HintAssist.Hint="Product Description"
-                                   materialDesign:HintAssist.IsFloating="True"/>
+                                   <Grid Grid.Column="0" Grid.ColumnSpan="3" Background="{StaticResource BrushPrimaryLight}" >
+                                             <Grid.ColumnDefinitions>
+                                                  <ColumnDefinition Width="*"/>
+                                                  <ColumnDefinition Width="auto"/>
+                                             </Grid.ColumnDefinitions>
+                                             <DockPanel Grid.Column="0">
+                                                  <ComboBox Grid.Column="0" Grid.Row="1" Width="100" Margin="0,0,10,0" 
+                                                       Padding="2,10,0,4" 
+                                                       materialDesign:HintAssist.Hint="Product Code"
+                                                       materialDesign:HintAssist.IsFloating="True"
+                                                       StaysOpenOnEdit="True"
+                                                       IsEditable="True"
+                                                       IsTextSearchEnabled="True"
+                                                       AllowDrop="True"
+                                                       TabIndex="1"
+                                                       ItemsSource="{Binding CodeList}"
+                                                       SelectedValue="{Binding Code, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"       
+                                                       Cursor="Hand" >
+                                                       <ComboBox.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                 <VirtualizingStackPanel />
+                                                            </ItemsPanelTemplate>
+                                                       </ComboBox.ItemsPanel>
+                                                  </ComboBox>
+                                                  <TextBox Grid.Column="1" Grid.Row="1" Margin="5,0,5,0"  
+                                                       Padding="3,0,2,0" 
+                                                       IsReadOnly="True"
+                                                       Focusable="False"
+                                                       Cursor="Arrow"
+                                                       Text="{Binding Description}"
+                                                       materialDesign:HintAssist.Hint="Product Description"
+                                                       materialDesign:HintAssist.IsFloating="True"/>
 
-                         </DockPanel>
+                                             </DockPanel>
 
 
-                         <StackPanel Grid.Column="1" Orientation="Horizontal" MaxHeight="100" Background="{StaticResource BrushPrimary}">
-                              <TextBox x:Name="tbDate" Width="80" Margin="0,0,0,0" 
-                                   Padding="3,0,2,0"
-                                   IsReadOnly="True"
-                                   Focusable="False"
-                                   Cursor="Arrow"
-                                   materialDesign:HintAssist.Hint="Date"
-                                   materialDesign:HintAssist.IsFloating="True"/>
-                              <TextBox x:Name="tbLastPrice" Width="80" Margin="0,0,0,0"   
-                                   Padding="3,0,2,0"
-                                   IsReadOnly="True"
-                                   Focusable="False"
-                                   Cursor="Arrow"
-                                   materialDesign:HintAssist.Hint="Last"
-                                   materialDesign:HintAssist.IsFloating="True"/>
-                              <TextBox x:Name="tbPriceList" Width="80" Margin="0,0,0,0" 
-                                   Padding="3,0,2,0"
-                                   IsReadOnly="True"
-                                   Focusable="False"
-                                   Cursor="Arrow"
-                                   materialDesign:HintAssist.Hint="List"
-                                   materialDesign:HintAssist.IsFloating="True"/>
-                              <TextBox x:Name="tbCostPrice" Width="80" Margin="0,0,0,0"   
-                                   Padding="3,0,2,0"
-                                   IsReadOnly="True"
-                                   Focusable="False"
-                                   Cursor="Arrow"
-                                   materialDesign:HintAssist.Hint="Cost"
-                                   materialDesign:HintAssist.IsFloating="True"/>
-                              <StackPanel Grid.Column="1" Orientation="Horizontal" Width="auto" Background="{StaticResource BrushPrimaryLight}">
-                                   <TextBox x:Name="tbMargin" Width="80" Margin="0,0,0,0"   
-                                        Padding="3,0,2,0"
-                                        IsReadOnly="False"
-                                        Focusable="True"
-                                        TabIndex="100"
-                                        PreviewTextInput="NumberValidationTextBox"
-                                        CaretBrush="{StaticResource BrushPrimaryDark}"
-                                        materialDesign:HintAssist.Hint="Margin %"
-                                        materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"
-                                        materialDesign:HintAssist.IsFloating="True"/>
+                                             <StackPanel Grid.Column="1" Orientation="Horizontal" MaxHeight="100" Background="{StaticResource BrushPrimary}">
+                                                  <TextBox Width="80" Margin="0,0,0,0" 
+                                                       Padding="3,0,2,0"
+                                                       IsReadOnly="True"
+                                                       Focusable="False"
+                                                       Cursor="Arrow"
+                                                       Text="{Binding Date}"
+                                                       materialDesign:HintAssist.Hint="Date"
+                                                       materialDesign:HintAssist.IsFloating="True"/>
+                                                  <TextBox Width="80" Margin="0,0,0,0"   
+                                                       Padding="3,0,2,0"
+                                                       IsReadOnly="True"
+                                                       Focusable="False"
+                                                       Cursor="Arrow"      
+                                                       Text="{Binding Last}"                                                    
+                                                       materialDesign:HintAssist.Hint="Last"
+                                                       materialDesign:HintAssist.IsFloating="True"/>
+                                                  <TextBox Width="80" Margin="0,0,0,0" 
+                                                       Padding="3,0,2,0"
+                                                       IsReadOnly="True"
+                                                       Focusable="False"
+                                                       Cursor="Arrow"
+                                                       Text="{Binding PriceList}"
+                                                       materialDesign:HintAssist.Hint="List"
+                                                       materialDesign:HintAssist.IsFloating="True"/>
+                                                  <TextBox Width="80" Margin="0,0,0,0"   
+                                                       Padding="3,0,2,0"
+                                                       IsReadOnly="True"
+                                                       Focusable="False"
+                                                       Cursor="Arrow"
+                                                       Text="{Binding Cost}"
+                                                       materialDesign:HintAssist.Hint="Cost"
+                                                       materialDesign:HintAssist.IsFloating="True"/>
+                                                  <StackPanel Grid.Column="1" Orientation="Horizontal" Width="auto" Background="{StaticResource BrushPrimaryLight}">
+                                                       <TextBox Width="80" Margin="0,0,0,0"   
+                                                            Padding="3,0,2,0"
+                                                            IsReadOnly="False"
+                                                            Focusable="True"
+                                                            TabIndex="100"
+                                                            PreviewTextInput="NumberValidationTextBox"
+                                                            CaretBrush="{StaticResource BrushPrimaryDark}"
+                                                            Text="{Binding Margin}"
+                                                            materialDesign:HintAssist.Hint="Margin %"
+                                                            materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"
+                                                            materialDesign:HintAssist.IsFloating="True"/>
 
-                                   <!--SelectedIndex="0"-->
-                                   <ComboBox x:Name="cbTypes" Width="80" Margin="0,0,5,0" Padding="0,10,0,15"  
-                                             Cursor="Hand">
-                                   </ComboBox>
-                              </StackPanel>
+                                                       <!--SelectedIndex="0"-->
+                                                       <ComboBox Width="80" Margin="0,0,5,0" Padding="0,10,0,15"  
+                                                            Cursor="Hand"
+                                                            ItemsSource="{Binding Types}"                                                            
+                                                            SelectedValue="{Binding Type, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"      >
+                                                       </ComboBox>
+                                                  </StackPanel>
 
-                              <TextBox x:Name="tbResult" Width="80" Margin="0,0,0,0"   
-                                   Padding="3,0,2,0"
-                                   IsReadOnly="True"
-                                   Focusable="False"
-                                   Cursor="Arrow"
-                                   MaxLength="10"
-                                   PreviewTextInput="NumberValidationTextBox"
-                                   materialDesign:HintAssist.Hint="Price"
-                                   materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"
-                                   materialDesign:HintAssist.IsFloating="True"/>
+                                                  <TextBox Width="80" Margin="0,0,0,0"   
+                                                       Padding="3,0,2,0"
+                                                       IsReadOnly="True"
+                                                       Focusable="False"
+                                                       Cursor="Arrow"
+                                                       MaxLength="10"
+                                                       PreviewTextInput="NumberValidationTextBox"
+                                                       materialDesign:HintAssist.Hint="Price"
+                                                       Text="{Binding Result}"
+                                                       materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"
+                                                       materialDesign:HintAssist.IsFloating="True"/>
 
-                              <StackPanel Grid.Column="1" Orientation="Horizontal" Width="auto" Background="{StaticResource BrushPrimaryLight}">
-                                   <TextBox x:Name="tbQty" Width="80" Margin="0,0,0,0"   
-                                        Padding="3,0,2,0"
-                                        IsReadOnly="False"
-                                        Focusable="True"
-                                        CaretBrush="{StaticResource BrushPrimaryDark}"
-                                        PreviewTextInput="NumberValidationTextBox"
-                                        TabIndex="200"
-                                        materialDesign:HintAssist.Hint="Quantity"
-                                        materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"
-                                        materialDesign:HintAssist.IsFloating="True"/>
-                              </StackPanel>
-                         </StackPanel>
-                    </Grid>
+                                                  <StackPanel Grid.Column="1" Orientation="Horizontal" Width="auto" Background="{StaticResource BrushPrimaryLight}">
+                                                       <TextBox Width="80" Margin="0,0,0,0"   
+                                                            Padding="3,0,2,0"
+                                                            IsReadOnly="False"
+                                                            Focusable="True"
+                                                            CaretBrush="{StaticResource BrushPrimaryDark}"
+                                                            PreviewTextInput="NumberValidationTextBox"
+                                                            TabIndex="200"
+                                                            Text="{Binding Quantity}"
+                                                            materialDesign:HintAssist.Hint="Quantity"
+                                                            materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"
+                                                            materialDesign:HintAssist.IsFloating="True"/>
+                                                  </StackPanel>
+                                             </StackPanel>
+                                        </Grid>
 
+                              </DataTemplate>
+                         </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                </Grid>
 
+
+            
                <smtx:XamlDisplay x:Name="prgDisplay" Key="progress" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12" Visibility="Hidden">
                     <materialDesign:Card  x:Name="prgBarCard"  UniformCornerRadius="99" Padding="4" Opacity="0.95" Background="{StaticResource BrushPrimaryLight}">
                          <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" 

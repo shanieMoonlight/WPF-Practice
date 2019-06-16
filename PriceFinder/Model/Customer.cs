@@ -10,13 +10,7 @@ namespace PriceFinding.Models
    [Serializable()]
    public class Customer : ISerializable
    {
-      private string code = Settings.Default.NOT_FOUND;
-      private string description = Settings.Default.NOT_FOUND;
-      private string poNumber;
-      private string address;
       public const string DEF_ADDRESS = "Using Default Address";
-
-      private double xRate = 1;
 
 
       //-------------------------------------------------------------------------------------------------------//
@@ -28,15 +22,15 @@ namespace PriceFinding.Models
 
       public Customer(string code, string description)
       {
-         this.code = code;
-         this.description = description;
+         this.Code = code;
+         this.Description = description;
       }//ctor 
 
       public Customer(string code, string description, double xRate)
       {
-         this.code = code;
-         this.description = description;
-         this.xRate = xRate;
+         this.Code = code;
+         this.Description = description;
+         this.XRate = xRate;
       }//ctor 
 
       /// <summary>
@@ -46,44 +40,28 @@ namespace PriceFinding.Models
       /// <param name="ctxt"></param>
       public Customer(SerializationInfo info, StreamingContext ctxt)
       {
-         this.code = (string)info.GetValue("code", typeof(string));
-         this.description = (string)info.GetValue("description", typeof(string));
-         this.xRate = (double)info.GetValue("xRate", typeof(double));
+         this.Code = (string)info.GetValue("code", typeof(string));
+         this.Description = (string)info.GetValue("description", typeof(string));
+         this.XRate = (double)info.GetValue("xRate", typeof(double));
       }//ctor
       #endregion
 
       //-------------------------------------------------------------------------------------------------------//
 
       #region Properties
-      public string Code
-      {
-         get { return code; }
-      }//Code 
-      public string Description
-      {
-         get { return description; }
-      }//Description 
-      public string PoNumber
-      {
-         get { return poNumber; }
-      }//PoNumber 
-      public string Address
-      {
-         get { return address; }
-      }//Address 
-      public double XRate
-      {
-         get { return xRate; }
-         set { xRate = value; }
-      }//XRate
+      public string Code { get; } = Settings.Default.NOT_FOUND;
+      public string Description { get; } = Settings.Default.NOT_FOUND;
+      public string PoNumber { get { return PoNumber1; } }
+      public string Address { get; }
+      public double XRate { get; set; } = 1;
+      public string PoNumber1 { get; }
       #endregion
 
       //-------------------------------------------------------------------------------------------------------//
 
       public override string ToString()
       {
-         return "code: " + code + " \r\n"
-                + "description: " + description + " \r\n";
+         return Code + " - " + Description;
       }//ToString
 
       //-------------------------------------------------------------------------------------------------------//
@@ -95,9 +73,9 @@ namespace PriceFinding.Models
       /// <param name="context"></param>
       public void GetObjectData(SerializationInfo info, StreamingContext context)
       {
-         info.AddValue("code", this.code);
-         info.AddValue("description", this.description);
-         info.AddValue("xRate", this.xRate);
+         info.AddValue("code", this.Code);
+         info.AddValue("description", this.Description);
+         info.AddValue("xRate", this.XRate);
       }//GetObjectData
 
    }//Cls

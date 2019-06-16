@@ -30,7 +30,7 @@ namespace PriceFinding
    public partial class MainWindow : Window
    {
 
-      private const int INITIAL_ROW_COUNT = 10;
+      private const int INITIAL_ROW_COUNT = 2;
       private List<ProductStrip> strips = new List<ProductStrip>();
       private double defaultMargin;
       private readonly string NOT_FOUND = Settings.Default.NOT_FOUND;
@@ -54,9 +54,8 @@ namespace PriceFinding
             _dataManager.UpdateFromBackup();
             _mainViewModel = new MainViewModel(_dataManager);
             DataContext = _mainViewModel;
-           // cbCustomerCode.ItemsSource = _dataManager.CustomerMap.Keys;
 
-            SetInitialProductRows();
+           //SetInitialProductRows();
          }
          catch (BackgroundMessageBoxException mbe)
          {
@@ -145,76 +144,76 @@ namespace PriceFinding
 
       //-------------------------------------------------------------------------------------------------------//
 
-      private void SetInitialProductRows()
-      {
-         //Add First row
-         strips.Add(new ProductStrip(grdProductsRow, _dataManager));
+      //private void SetInitialProductRows()
+      //{
+      //   //Add First row
+      //   strips.Add(new ProductStrip(grdProductsRow, _dataManager));
 
 
-         // "INITIAL_ROW_COUNT - 1" because we're starting with on row already built
-         for (int i = 0; i < INITIAL_ROW_COUNT - 1; i++)
-         {
-            AddProductRow();
-         }//for
+      //   // "INITIAL_ROW_COUNT - 1" because we're starting with on row already built
+      //   for (int i = 0; i < INITIAL_ROW_COUNT - 1; i++)
+      //   {
+      //      AddProductRow();
+      //   }//for
 
-      }//SetProductRows
+      //}//SetProductRows
 
-      //-------------------------------------------------------------------------------------------------------//
+      ////-------------------------------------------------------------------------------------------------------//
 
-      private void AddProductRow()
-      {
-         //Make a spot for the new row to go.
-         var rows = grdProducts.RowDefinitions;
-         rows.Add(new RowDefinition());
-         var gridRowIdx = rows.Count - 1;
+      //private void AddProductRow()
+      //{
+      //   //Make a spot for the new row to go.
+      //   var rows = grdProducts.RowDefinitions;
+      //   rows.Add(new RowDefinition());
+      //   var gridRowIdx = rows.Count - 1;
 
-         var newProductStrip = MakeProductRow();
+      //   var newProductStrip = MakeProductRow();
 
-         Grid.SetRow(newProductStrip, gridRowIdx);
-         grdProducts.Children.Add(newProductStrip);
-         strips.Add(new ProductStrip(newProductStrip, _dataManager, strips.Count + 1));
+      //   Grid.SetRow(newProductStrip, gridRowIdx);
+      //   grdProducts.Children.Add(newProductStrip);
+      //   strips.Add(new ProductStrip(newProductStrip, _dataManager, strips.Count + 1));
 
-      }//SetProductRows
+      //}//SetProductRows
 
-      //-------------------------------------------------------------------------------------------------------//
+      ////-------------------------------------------------------------------------------------------------------//
 
-      private Grid MakeProductRow()
-      {
-         string gridXaml = XamlWriter.Save(grdProductsRow);
+      //private Grid MakeProductRow()
+      //{
+      //   string gridXaml = XamlWriter.Save(grdProductsRow);
 
-         // Load it into a new object:
-         StringReader stringReader = new StringReader(gridXaml);
-         XmlReader xmlReader = XmlReader.Create(stringReader);
-         return (Grid)XamlReader.Load(xmlReader);
+      //   // Load it into a new object:
+      //   StringReader stringReader = new StringReader(gridXaml);
+      //   XmlReader xmlReader = XmlReader.Create(stringReader);
+      //   return (Grid)XamlReader.Load(xmlReader);
 
-      }//MakeProductRow
+      //}//MakeProductRow
 
-      //-------------------------------------------------------------------------------------------------------//
+      ////-------------------------------------------------------------------------------------------------------//
 
-      private void RemoveProductRow()
-      {
-         var rows = grdProducts.RowDefinitions;
-         if (rows.Count < 2)
-            return;
+      //private void RemoveProductRow()
+      //{
+      //   var rows = grdProducts.RowDefinitions;
+      //   if (rows.Count < 2)
+      //      return;
 
-         var lastRowIdx = rows.Count - 1;
+      //   var lastRowIdx = rows.Count - 1;
 
-         rows.RemoveAt(rows.Count - 1);
+      //   rows.RemoveAt(rows.Count - 1);
 
-      }//SetProductRows
+      //}//SetProductRows
 
       //-------------------------------------------------------------------------------------------------------//
 
       private void FabAddProductrow_Click(object sender, RoutedEventArgs e)
       {
-         AddProductRow();
+       //  AddProductRow();
       }//FabAddProductrow_Click
 
       //-------------------------------------------------------------------------------------------------------//
 
       private void FabRemoveProductRow_Click(object sender, RoutedEventArgs e)
       {
-         RemoveProductRow();
+        // RemoveProductRow();
       }//FabRemoveProductRow_Click
 
       //-------------------------------------------------------------------------------------------------------//
@@ -224,15 +223,7 @@ namespace PriceFinding
          Regex regex = new Regex("[^0-9]+");
          e.Handled = regex.IsMatch(e.Text);
       }//NumberValidationTextBox
-
-      //-------------------------------------------------------------------------------------------------------//
-
-      private void TbCustomerCode_TextChanged(object sender, TextChangedEventArgs e)
-      {
-         var desc = "Change_" + new Random().Next();// dataMgr.ProductMap.ContainsKey(code) ? dataMgr.ProductMap[code].Description : "";
-         tbCustomerDesc.Text = desc;
-      }//TbCustomerCode_TextChanged
-
+      
       //-------------------------------------------------------------------------------------------------------//
 
       private async void ButtUpdate_Click(object sender, RoutedEventArgs e)
@@ -280,46 +271,6 @@ namespace PriceFinding
 
       //-------------------------------------------------------------------------------------------------------//
 
-      private void CbCustomerCode_KeyUp(object sender, KeyEventArgs e)
-      {
-         SetCustomerDescription(cbCustomerCode.Text);
-
-      }//CbCustomerCode_KeyUp
-
-      //-------------------------------------------------------------------------------------------------------//
-
-      private void CbCustomerCode_SelectionChanged(object sender, SelectionChangedEventArgs e)
-      {
-
-         if (cbCustomerCode.SelectedValue != null)
-            SetCustomerDescription((string)cbCustomerCode.SelectedValue);
-      }//CbCustomerCode_SelectionChanged
-
-      //-------------------------------------------------------------------------------------------------------//
-
-      /// <summary>
-      /// Sets the Customere description if the code matches a customer.
-      /// </summary>
-      /// <param name="code">Customer Code</param>
-      private void SetCustomerDescription(string code)
-      {
-
-         var cus = _dataManager.CheckCustomer(code);
-
-         if (cus.Code != Settings.Default.NOT_FOUND)
-         {
-            tbCustomerDesc.Text = cus.Description;
-            cbCustomerCode.ClearValue(TextBox.BackgroundProperty);
-         }
-         else
-         {
-            tbCustomerDesc.Text = "";
-            cbCustomerCode.Background = Brushes.Salmon;
-         }//else
-      }//SetCustomerDescription
-
-      //-------------------------------------------------------------------------------------------------------//
-
       /// <summary>
       /// Try to find prices for customer and products.
       /// </summary>
@@ -340,7 +291,6 @@ namespace PriceFinding
             }//If
 
             Customer customer = _dataManager.CheckCustomer(cusCode);
-            tbCustomerDesc.Text = customer.Description;
 
             //Fill in all queried rows.
             foreach (ProductStrip prodStrip in strips)
@@ -478,7 +428,7 @@ namespace PriceFinding
                else
                   prodStrip.tbPriceList.Text = priceListPrice.ToString();
 
-               tbMargin.Text = Settings.Default.defaultMargin.ToString();
+               //tbMargin.Text = Settings.Default.defaultMargin.ToString();
             }//ForEach
 
          }
@@ -503,8 +453,7 @@ namespace PriceFinding
 
       private void ButtClear_Click(object sender, RoutedEventArgs e)
       {
-         cbCustomerCode.Text = "";
-         tbCustomerDesc.Text = "";
+         _mainViewModel.Clear();
 
 
          foreach (var strip in strips)

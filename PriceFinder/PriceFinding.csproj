@@ -125,6 +125,7 @@
     <Compile Include="Managing Data\Reader Interfaces\IPriceListReader.cs" />
     <Compile Include="Utility\Sage\SageColumns.cs" />
     <Compile Include="Utility\Sage\SageTables.cs" />
+    <Compile Include="ViewModels\BackgroundViewModel.cs" />
     <Compile Include="ViewModels\CustomerViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\OrderViewModel.cs" />
