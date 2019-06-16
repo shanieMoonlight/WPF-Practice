@@ -73,7 +73,7 @@ namespace PriceFinding.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Price Finder")]
+        [global::System.Configuration.DefaultSettingValueAttribute("FindSe")]
         public string appProgramDir {
             get {
                 return ((string)(this["appProgramDir"]));

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using PriceFinding.Models;
+using System.Collections.Generic;
 
 namespace PriceFinding.Managing_Data.ReaderInterfaces
 {

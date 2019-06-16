@@ -101,14 +101,15 @@
       <DependentUpon>UserSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="Utility\BackgroundMessageBoxException.cs" />
-    <Compile Include="Business Objects\Customer.cs" />
-    <Compile Include="Business Objects\DataStorage.cs" />
-    <Compile Include="Business Objects\MyDictionary.cs" />
-    <Compile Include="Business Objects\MyException.cs" />
-    <Compile Include="Business Objects\Order.cs" />
-    <Compile Include="Business Objects\Product.cs" />
-    <Compile Include="Business Objects\SageAccessType.cs" />
-    <Compile Include="Business Objects\Sale.cs" />
+    <Compile Include="Model\Customer.cs" />
+    <Compile Include="Utility\Binding\ObservableObject.cs" />
+    <Compile Include="Utility\DataStorage.cs" />
+    <Compile Include="Utility\MyDictionary.cs" />
+    <Compile Include="Utility\MyException.cs" />
+    <Compile Include="Model\Order.cs" />
+    <Compile Include="Model\Product.cs" />
+    <Compile Include="Utility\SageAccessType.cs" />
+    <Compile Include="Model\Sale.cs" />
     <Compile Include="Managing Data\DataManager.cs" />
     <Compile Include="Managing Data\ODBC Readers\ODBCInvoiceReader.cs" />
     <Compile Include="Managing Data\ODBC Readers\ODBCListReader.cs" />
@@ -124,6 +125,10 @@
     <Compile Include="Managing Data\Reader Interfaces\IPriceListReader.cs" />
     <Compile Include="Utility\Sage\SageColumns.cs" />
     <Compile Include="Utility\Sage\SageTables.cs" />
+    <Compile Include="ViewModels\CustomerViewModel.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\OrderViewModel.cs" />
+    <Compile Include="ViewModels\ProductViewModel.cs" />
     <Compile Include="Writing\PostOrderWriter.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -228,7 +233,6 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Assets\" />
     <Folder Include="Utility\Sage\Tables\" />
   </ItemGroup>
   <ItemGroup>

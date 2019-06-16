@@ -9,6 +9,9 @@
      <Grid Background="{Binding Background.Color}">
           <DockPanel LastChildFill="false" Margin="0,20,0,0">
                <StackPanel Width="150" DockPanel.Dock="Top">
+                    <ComboBox
+                         ItemsSource="{Binding Person.List }">
+                    </ComboBox>
                     <TextBlock Text="{Binding Person.Name, StringFormat=Welcome {0}}"/>
                     <TextBox Text="{Binding Person.Name, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button Content="Submit"/>

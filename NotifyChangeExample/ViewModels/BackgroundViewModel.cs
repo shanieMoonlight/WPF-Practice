@@ -24,7 +24,8 @@ namespace NotifyChangeExample.ViewModels
          set
          {
             _color = value;
-            OnPropertyChanged("Color"); //"Color" is the name of the Property that just got changed. THis will tell the View about it.
+            //"Color" is the name of the Property that just got changed. This will tell the View about it.
+            OnPropertyChanged("Color");
          }
       }//Color
 

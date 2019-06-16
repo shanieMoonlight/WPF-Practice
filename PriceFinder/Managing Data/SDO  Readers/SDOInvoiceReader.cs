@@ -1,4 +1,5 @@
 ﻿using PriceFinding.Managing_Data.ReaderInterfaces;
+using PriceFinding.Models;
 using PriceFinding.Properties;
 using SageDataObject240;
 using System;
@@ -19,8 +20,8 @@ namespace PriceFinding
 
       private static UserSettings sageUsrSet = UserSettings.Default;
 
-      private MyDictionary<Customer> customerMap;
-      private MyDictionary<Product> productMap;
+      private MyDictionary<Models.Customer> customerMap;
+      private MyDictionary<Models.Product> productMap;
 
       private SDOEngine sdo;
       private WorkSpace ws;
@@ -33,7 +34,7 @@ namespace PriceFinding
 
       //-------------------------------------------------------------------------------------------------------//
 
-      public SDOInvoiceReader(MyDictionary<Customer> customerMap, MyDictionary<Product> productMap)
+      public SDOInvoiceReader(MyDictionary<Models.Customer> customerMap, MyDictionary<Models.Product> productMap)
       {
          this.customerMap = customerMap;
          this.productMap = productMap;

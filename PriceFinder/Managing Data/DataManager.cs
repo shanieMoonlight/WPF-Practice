@@ -12,6 +12,7 @@ using System.Windows;
 using Newtonsoft.Json;
 using PriceFinding.Managing_Data.ODBC_Readers;
 using PriceFinding.Managing_Data.ReaderInterfaces;
+using PriceFinding.Models;
 
 namespace PriceFinding
 {
@@ -32,13 +33,7 @@ namespace PriceFinding
       /// For storing all the PriceFinder data 
       /// </summary>
       private readonly string pfStorageFilePath;
-      /// <summary>
-      /// For retreiving app server data so we don't need to update ours.
-      /// </summary>                       
-      private readonly string appServerStorageFilePath;
-      //private MyDictionary<Product> productMap;
-      private MyDictionary<MyDictionary<List<Sale>>> customerActivity;
-      private MyDictionary<MyDictionary<double>> priceListActivity;
+
       private DataStorage dataStore;
 
       private IProductReader ProductReader;
@@ -74,14 +69,10 @@ namespace PriceFinding
       {
          CustomerMap = new MyDictionary<Customer>();
          ProductMap = new MyDictionary<Product>();
-         customerActivity = new MyDictionary<MyDictionary<List<Sale>>>();
-         priceListActivity = new MyDictionary<MyDictionary<double>>();
+
 
          string baseDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), set.programDir);
-         string appServerBaseDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), set.appProgramDir);
-         string appServerPriceFinderDir = Path.Combine(appServerBaseDir, set.appPFUpdaterDir);
          pfStorageFilePath = Path.Combine(baseDir, set.storageFileName);
-         appServerStorageFilePath = Path.Combine(appServerPriceFinderDir, set.storageFileName);
 
          Directory.CreateDirectory(baseDir);
 
@@ -125,7 +116,7 @@ namespace PriceFinding
          //Package app data for storage.
          List<Customer> customerList = CustomerMap.Values.ToList<Customer>();
          List<Product> productList = ProductMap.Values.ToList<Product>();
-         dataStore = new DataStorage(CustomerMap, ProductMap, customerActivity, priceListActivity);
+         dataStore = new DataStorage(CustomerMap, ProductMap, null, null);
 
 
          //Store data.
@@ -159,56 +150,27 @@ namespace PriceFinding
          //Last update must be sooner than minDataFileAgeInDays ago.
          DateTime checkDate = DateTime.Now.AddDays(-(int)set.minDataFileAgeInDays);
          //Will return 1601/00/00 if file not found.
-         DateTime lastModifiedDateAppFile = new FileInfo(appServerStorageFilePath).LastWriteTime;
          DateTime lastModifiedDatePFFile = new FileInfo(pfStorageFilePath).LastWriteTime;
 
          //Deserialize stored data.
          //First check if the server has left one for us. If check if PF left one otherwise inform user.
          dataStore = new DataStorage();
-         try
-         {
+       
             //Make sure that file is recent 
-            if (checkDate < lastModifiedDateAppFile)
-               dataStore = DeserializeFromJSON<DataStorage>(appServerStorageFilePath);
+            if (checkDate < lastModifiedDatePFFile)
+               dataStore = DeserializeFromJSON<DataStorage>(pfStorageFilePath);
             else
-               throw new Exception("Pricing Data file is too old");
-         }
-         catch (Exception)
-         {
-            //Just catch exception and try with PF file instead.
-            try
-            {
-               //Make sure that file is recent 
-               if (checkDate < lastModifiedDatePFFile)
-                  dataStore = DeserializeFromJSON<DataStorage>(pfStorageFilePath);
-               else
-                  throw new BackgroundMessageBoxException("Error",
-                     "Pricing Data has not been uploaded."
-                     + "\n    -----------------     \n"
-                     + "You need to update the data.");
-            }
-            catch (BackgroundMessageBoxException bme)
-            {
-               throw bme;
-            }
-            catch (Exception ex)
-            {
                throw new BackgroundMessageBoxException("Error",
                   "Pricing Data has not been uploaded."
                      + "\n    -----------------     \n"
                      + "You need to update the data."
-                     + "\n    -----------------     \n"
-                     + ex.Message);
-            }//Catch
-         }//Catch
+                     + "\n    -----------------     \n");
+
 
          CustomerMap = dataStore.CustomerMap;
 
          ProductMap = dataStore.ProductMap;
-
-         customerActivity = dataStore.CustomerActivity;
-         priceListActivity = dataStore.PriceListActivity;
-
+         
       }//UpdateFromBackup
 
       //-------------------------------------------------------------------------------------------------------//

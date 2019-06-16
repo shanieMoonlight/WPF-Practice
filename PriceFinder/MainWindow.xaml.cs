@@ -1,9 +1,9 @@
 ﻿using BespokeFusion;
-using PriceFinding;
-using PriceFinding.Business_Objects;
 using PriceFinding.Managing_Data;
 using PriceFinding.Managing_Data.ODBC_Readers;
+using PriceFinding.Models;
 using PriceFinding.Properties;
+using PriceFinding.ViewModels;
 using PriceFinding.Writing;
 using System;
 using System.Collections.Generic;
@@ -35,6 +35,9 @@ namespace PriceFinding
       private double defaultMargin;
       private readonly string NOT_FOUND = Settings.Default.NOT_FOUND;
       private DataManager _dataManager;
+      private MainViewModel _mainViewModel;
+
+
 
       //-------------------------------------------------------------------------------------------------------//
 
@@ -49,7 +52,9 @@ namespace PriceFinding
          {
             _dataManager = new DataManager();
             _dataManager.UpdateFromBackup();
-            cbCustomerCode.ItemsSource = _dataManager.CustomerMap.Keys;
+            _mainViewModel = new MainViewModel(_dataManager);
+            DataContext = _mainViewModel;
+           // cbCustomerCode.ItemsSource = _dataManager.CustomerMap.Keys;
 
             SetInitialProductRows();
          }
@@ -473,7 +478,7 @@ namespace PriceFinding
                else
                   prodStrip.tbPriceList.Text = priceListPrice.ToString();
 
-
+               tbMargin.Text = Settings.Default.defaultMargin.ToString();
             }//ForEach
 
          }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace PriceFinding
+namespace PriceFinding.Models
 {
    [Serializable()]
    public class Product : IComparable<Product>, ISerializable

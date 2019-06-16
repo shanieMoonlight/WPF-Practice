@@ -1,4 +1,5 @@
 ﻿using PriceFinding.Managing_Data.ReaderInterfaces;
+using PriceFinding.Models;
 using PriceFinding.Properties;
 using PriceFinding.Utility.Sage;
 using System;

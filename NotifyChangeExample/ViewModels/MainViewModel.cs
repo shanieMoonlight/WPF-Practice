@@ -10,7 +10,7 @@ namespace NotifyChangeExample.ViewModels
 {
    class MainViewModel : ObservableObject
    {
-      public MainViewModel DataContext { get; }
+      //public MainViewModel DataContext { get; }
       public PersonViewModel Person { get; private set; }
       public BackgroundViewModel Background { get; private set; }
 

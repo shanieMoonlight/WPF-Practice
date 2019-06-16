@@ -15,19 +15,19 @@ namespace PriceFinding
    {
 
       public const int CODE_IDX = 0;
-      public const int DESC_IDX = 1;
+      public const int DESC_IDX = CODE_IDX + 1;
       public const int DATE_IDX = 0;
-      public const int LAST_IDX = 1;
-      public const int PRICE_LIST_IDX = 2;
-      public const int COST_IDX = 3;
+      public const int LAST_IDX = DATE_IDX + 1;
+      public const int PRICE_LIST_IDX = LAST_IDX + 1;
+      public const int COST_IDX = PRICE_LIST_IDX + 1;
 
-      public const int STACK_MARGIN_AND_TYPE_IDX = 4;      
+      public const int STACK_MARGIN_AND_TYPE_IDX = COST_IDX + 1;
       public const int MARGIN_IDX = 0;
       public const int TYPE_IDX = 1;
 
-      public const int RESULT_IDX = 5;
+      public const int RESULT_IDX = STACK_MARGIN_AND_TYPE_IDX + 1;
 
-      public const int STACK_QTY_IDX = 6;
+      public const int STACK_QTY_IDX = RESULT_IDX + 1;
       public const int QTY_IDX = 0;
       public const string NO_RESULT = "---";
 
@@ -74,11 +74,11 @@ namespace PriceFinding
          tbQty = (TextBox)stackQty.Children[QTY_IDX];
 
          tbMargin.PreviewTextInput += NumberValidationTextBox;
-         tbMargin.Text = Settings.Default.defaultMargin.ToString();
+         //tbMargin.Text = Settings.Default.defaultMargin.ToString();
 
 
          tbQty.PreviewTextInput += NumberValidationTextBox;
-         //tbQty.Text = "1";
+
 
          cbTypes.SelectionChanged += CbTypes_SelectionChanged;
 
@@ -114,6 +114,8 @@ namespace PriceFinding
          tbLast.Text = "";
          tbCost.Text = "";
          tbPriceList.Text = "";
+         tbResult.Text = "";
+         tbQty.Text = "";
       }//Clear
 
       //--------------------------------------------------------------------------//
@@ -159,6 +161,9 @@ namespace PriceFinding
 
       public void SetResult()
       {
+         if (cbTypes.SelectedValue == null)
+            return;
+
          switch (cbTypes.SelectedValue.ToString())
          {
             case PriceTypes.LAST_PRICE:

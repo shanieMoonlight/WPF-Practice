@@ -1,4 +1,4 @@
-﻿using PriceFinding.Business_Objects;
+﻿using PriceFinding.Models;
 using PriceFinding.Properties;
 using SageDataObject240;
 using System;
@@ -20,7 +20,7 @@ namespace PriceFinding.Writing
         private ControlData conData;
         private CurrencyData currData;
         private Order order;
-        private FileStream logWriter;
+        private readonly FileStream logWriter;
 
         private static UserSettings setUsr = UserSettings.Default;
         private readonly Settings set = Settings.Default;
@@ -28,7 +28,7 @@ namespace PriceFinding.Writing
         private const string crlf = "\r\n";
         private Int16 taxCode;
 
-        private string username = String.Empty;
+        private string username = string.Empty;
         private double defTaxRate;
         private int currencyCode;
         private readonly int baseCurrencyCode = (int)setUsr.baseCurrCode;
@@ -39,7 +39,7 @@ namespace PriceFinding.Writing
 
         //----------------------------------------------------------------------------------------------//
 
-        public PostOrderWriter(Order order, String username)
+        public PostOrderWriter(Order order, string username)
         {
             this.order = order;
             this.username = username;
@@ -67,7 +67,7 @@ namespace PriceFinding.Writing
                 string cusPO = order.customer.PoNumber;
                 string address = order.customer.Address;
                 OrderType type = order.type;
-                List<Product> productList = order.productList;
+                List<Models.Product> productList = order.productList;
 
 
                 //Create a saleRecord with comboAccRef.Text and look for it in database.
@@ -101,14 +101,14 @@ namespace PriceFinding.Writing
 
 
                     //Add each DELIVERY address line to header if using one.
-                    if (!string.IsNullOrWhiteSpace(address) && !address.Equals(Customer.DEF_ADDRESS, StringComparison.InvariantCultureIgnoreCase))
+                    if (!string.IsNullOrWhiteSpace(address) && !address.Equals(Models.Customer.DEF_ADDRESS, StringComparison.InvariantCultureIgnoreCase))
                     {
                         // Split the address into separate lines.
                         String[] addressLines = address.Split(new string[] { "\n", "\r", "\f" }, StringSplitOptions.RemoveEmptyEntries);
                         int minLines = Math.Min(5, addressLines.Length);
                         for (int i = 0; i < minLines; i++)
                         {
-                            string addressLine = restrictLength(addressLines[i]);
+                            string addressLine = RestrictLength(addressLines[i]);
                             SDOHelper.Write(sopPost.Header, "DEL_ADDRESS_" + (i + 1), addressLine);
                         }//For                          
                     }//If
@@ -152,7 +152,7 @@ namespace PriceFinding.Writing
 
 
                     //Add each product to sopPost items section.
-                    foreach (Product product in productList)
+                    foreach (Models.Product product in productList)
                     {
                         AddItem(product, ws);
                     }//ForEach
@@ -188,7 +188,7 @@ namespace PriceFinding.Writing
 
         //----------------------------------------------------------------------------------------------//
 
-        private void AddItem(Product product, WorkSpace ws)
+        private void AddItem(Models.Product product, WorkSpace ws)
         {
          
             stockRecord = (StockRecord)ws.CreateObject("StockRecord");
@@ -280,7 +280,7 @@ namespace PriceFinding.Writing
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        private string restrictLength(String line)
+        private string RestrictLength(String line)
         {
          
             int min = Math.Min(line.Length, 60);

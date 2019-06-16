@@ -30,9 +30,9 @@ namespace PriceFinding
       /// Reads all customers and stores it's values in a List.
       /// </summary>
       /// <param name="customersFileName"></param>
-      public MyDictionary<Customer> ReadCustomerData()
+      public MyDictionary<Models.Customer> ReadCustomerData()
       {
-         MyDictionary<Customer> customerMap = new MyDictionary<Customer>();
+         MyDictionary<Models.Customer> customerMap = new MyDictionary<Models.Customer>();
 
          try
          {
@@ -52,7 +52,7 @@ namespace PriceFinding
                desc = CutQuotes((string)SDOHelper.Read(salesRecord, "NAME"));
 
                //Create customer
-               Customer customer = new Customer(code, desc);
+               Models.Customer customer = new Models.Customer(code, desc);
 
                //Check if it's a foreign customer. 
                //If it is add XRate to customer.
@@ -84,9 +84,9 @@ namespace PriceFinding
       /// Reads all products and stores it's values in a List.
       /// </summary>
       /// <param name="customersFileName"></param>
-      public MyDictionary<Product> ReadProductData()
+      public MyDictionary<Models.Product> ReadProductData()
       {
-         MyDictionary<Product> productMap = new MyDictionary<Product>();
+         MyDictionary<Models.Product> productMap = new MyDictionary<Models.Product>();
          //MyDictionary<MyDictionary<Product>> fastProductList = new MyDictionary<MyDictionary<Product>>();
 
          try
@@ -111,7 +111,7 @@ namespace PriceFinding
                   costPrice = (double)SDOHelper.Read(stockRecord, "LAST_PURCHASE_PRICE");
                   salePrice = (double)SDOHelper.Read(stockRecord, "SALES_PRICE");
 
-                  Product product = new Product(code, desc, costPrice);
+                  Models.Product product = new Models.Product(code, desc, costPrice);
                   productMap.Add(code, product);
 
                }

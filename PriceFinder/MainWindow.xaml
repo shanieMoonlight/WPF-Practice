@@ -29,16 +29,17 @@
                     <StackPanel Grid.Column="0" Orientation="Horizontal" MaxHeight="100" Margin="0,5,0,5">
 
                          <ComboBox x:Name="cbCustomerCode" Grid.Column="0" Grid.Row="1" Width="100" Margin="0,0,10,0" 
-                         Padding="2,10,0,4" 
+                              Padding="2,10,0,4" 
                               materialDesign:HintAssist.Hint="Customer Code"
                               materialDesign:HintAssist.IsFloating="True"
                               StaysOpenOnEdit="True"
                               IsEditable="True"
                               IsTextSearchEnabled="True"
                               AllowDrop="True"
-                              Cursor="" 
-                              SelectionChanged="CbCustomerCode_SelectionChanged"
-                              KeyUp="CbCustomerCode_KeyUp"
+                              Cursor="Hand" 
+                              ItemsSource="{Binding Order.Customer.CodeList}"
+                              SelectedValue="{Binding Order.Customer.Code}"
+                              DisplayMemberPath="{Binding Order.Customer.Code, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"         
                               TabIndex="0">
                               <ComboBox.ItemsPanel>
                                    <ItemsPanelTemplate>
@@ -52,6 +53,7 @@
                               IsReadOnly="True"
                               Focusable="False"
                               IsTabStop="False"
+                              Text="{Binding Order.Customer.Description}"
                               materialDesign:HintAssist.Hint="Customer Description"
                               materialDesign:HintAssist.IsFloating="True"/>
 
@@ -73,11 +75,11 @@
 
                     <StackPanel Grid.Column="0" Orientation="Horizontal"  MaxHeight="100">
                          <StackPanel Orientation="Vertical">
-                              <Label x:Name="lblProductCode" Grid.Column="0" Grid.Row="1" Width="100" Margin="0,0,0,0" 
+                              <Label x:Name="lblProductCode" Grid.Column="0" Grid.Row="1" Width="100" Margin="0,0,10,0" 
                          Content="Product Code"/>
                          </StackPanel>
                          <StackPanel Orientation="Vertical">
-                              <Label x:Name="lblProductDesc" Grid.Column="1" Grid.Row="1" Width="200" Margin="0,0,0,0"   
+                              <Label x:Name="lblProductDesc" Grid.Column="1" Grid.Row="1" Width="200" Margin="5,0,5,0"   
                          Focusable="False"
                         Content="Product Description"/>
                          </StackPanel>
@@ -131,14 +133,14 @@
                                    IsTextSearchEnabled="True"
                                    AllowDrop="True"
                                    TabIndex="1"
-                                   Cursor="" >
+                                   Cursor="Hand" >
                                    <ComboBox.ItemsPanel>
                                         <ItemsPanelTemplate>
                                              <VirtualizingStackPanel />
                                         </ItemsPanelTemplate>
                                    </ComboBox.ItemsPanel>
                               </ComboBox>
-                              <TextBox x:Name="tbProductDesc" Grid.Column="1" Grid.Row="1" Margin="10,0,10,0"  
+                              <TextBox x:Name="tbProductDesc" Grid.Column="1" Grid.Row="1" Margin="5,0,5,0"  
                                    Padding="3,0,2,0" 
                                    IsReadOnly="True"
                                    Focusable="False"
@@ -190,8 +192,8 @@
                                         materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"
                                         materialDesign:HintAssist.IsFloating="True"/>
 
-                                   <ComboBox x:Name="cbTypes" Width="80" Margin="0,0,0,0" Padding="0,10,0,15"  
-                                             SelectedIndex="0"
+                                   <!--SelectedIndex="0"-->
+                                   <ComboBox x:Name="cbTypes" Width="80" Margin="0,0,5,0" Padding="0,10,0,15"  
                                              Cursor="Hand">
                                    </ComboBox>
                               </StackPanel>
@@ -200,14 +202,13 @@
                                    Padding="3,0,2,0"
                                    IsReadOnly="True"
                                    Focusable="False"
-                                   Text="---"
                                    Cursor="Arrow"
                                    MaxLength="10"
                                    PreviewTextInput="NumberValidationTextBox"
                                    materialDesign:HintAssist.Hint="Price"
                                    materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"
                                    materialDesign:HintAssist.IsFloating="True"/>
-                              
+
                               <StackPanel Grid.Column="1" Orientation="Horizontal" Width="auto" Background="{StaticResource BrushPrimaryLight}">
                                    <TextBox x:Name="tbQty" Width="80" Margin="0,0,0,0"   
                                         Padding="3,0,2,0"

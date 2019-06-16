@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using PriceFinding.Properties;
 
-namespace PriceFinding
+namespace PriceFinding.Models
 {
    [Serializable()]
    public class Customer : ISerializable

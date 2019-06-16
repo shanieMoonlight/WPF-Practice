@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PriceFinder.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PriceFinding.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="defaultMargin" Type="System.Double" Scope="User">
@@ -15,7 +15,7 @@
       <Value Profile="(Default)">NOT_FOUND</Value>
     </Setting>
     <Setting Name="appProgramDir" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Price Finder</Value>
+      <Value Profile="(Default)">FindSe</Value>
     </Setting>
     <Setting Name="appPFUpdaterDir" Type="System.String" Scope="Application">
       <Value Profile="(Default)">PF_Updaters</Value>

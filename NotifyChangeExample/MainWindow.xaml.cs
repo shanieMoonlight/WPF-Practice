@@ -21,7 +21,7 @@ namespace NotifyChangeExample
    /// </summary>
    public partial class MainWindow : Window
    {
-      MainViewModel _main = new MainViewModel();
+      private MainViewModel _main = new MainViewModel();
 
       //----------------------------------------------------------------------//
 

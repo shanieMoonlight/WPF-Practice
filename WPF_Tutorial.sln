@@ -29,8 +29,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceDictionaries", "Res
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceFinder", "..\PriceFinder\PriceFinder.csproj", "{FA1F08BD-8B3F-4F3D-84EA-42B06D896DC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoCompleteTest", "AutoCompleteTest\AutoCompleteTest.csproj", "{A141A70A-B397-4012-BFD4-857CDA8D0D62}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,10 +79,6 @@ Global
 		{FA1F08BD-8B3F-4F3D-84EA-42B06D896DC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA1F08BD-8B3F-4F3D-84EA-42B06D896DC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA1F08BD-8B3F-4F3D-84EA-42B06D896DC0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A141A70A-B397-4012-BFD4-857CDA8D0D62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A141A70A-B397-4012-BFD4-857CDA8D0D62}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A141A70A-B397-4012-BFD4-857CDA8D0D62}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A141A70A-B397-4012-BFD4-857CDA8D0D62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
