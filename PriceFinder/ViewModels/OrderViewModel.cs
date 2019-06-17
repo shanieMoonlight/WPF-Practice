@@ -33,6 +33,14 @@ namespace PriceFinding.ViewModels
 
       //-------------------------------------------------------------------------------//
 
+      public void SetResult()
+      {
+         foreach (var product in Products)
+            product.SetResult();
+      }//SetResult
+
+      //-------------------------------------------------------------------------------//
+
       public void Clear()
       {
          Customer.Clear();

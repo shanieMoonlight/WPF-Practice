@@ -205,11 +205,11 @@
                                                             materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"
                                                             materialDesign:HintAssist.IsFloating="True"/>
 
-                                                       <!--SelectedIndex="0"-->
                                                        <ComboBox Width="80" Margin="0,0,5,0" Padding="0,10,0,15"  
                                                             Cursor="Hand"
+                                                            materialDesign:HintAssist.Hint="Type"
                                                             ItemsSource="{Binding Types}"                                                            
-                                                            SelectedValue="{Binding Type, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"      >
+                                                            SelectedValue="{Binding Type, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
                                                        </ComboBox>
                                                   </StackPanel>
 

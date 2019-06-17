@@ -2,6 +2,7 @@
 using PriceFinding.Utility.Binding;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace PriceFinding.ViewModels
 {
    public class CustomerViewModel : ObservableObject
    {
-      private IEnumerable<Customer> _codeList;
+      public ObservableCollection<Customer> CodeList { get; private set; }
       public BackgroundViewModel Background { get; set; }
       private MyDictionary<Customer> _map;
       private string _code;
@@ -24,25 +25,10 @@ namespace PriceFinding.ViewModels
       {
          _map = customerMap;
          //CodeList = _map.Keys;
-         CodeList = _map.ToList().Select(kvp => kvp.Value);
+         CodeList = new ObservableCollection<Customer>(_map.ToList().Select(kvp => kvp.Value));
+         
          Background = new BackgroundViewModel();
       }//ctor
-
-      //-------------------------------------------------------------------------------//
-
-      public IEnumerable<Customer> CodeList
-      {
-         get
-         {
-            return _codeList;
-         }
-         set
-         {
-            _codeList = value;
-            //"CodeList" is the name of the Property that just got changed. This will tell the View about it.
-            OnPropertyChanged(nameof(CodeList));
-         }
-      }//CodeList
 
       //-------------------------------------------------------------------------------//
 

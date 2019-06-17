@@ -2,6 +2,7 @@
 using PriceFinding.Utility.Binding;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace PriceFinding.ViewModels
    class ProductViewModel : ObservableObject
    {
 
-      private IEnumerable<string> _codeList;
+      public ObservableCollection<string> CodeList { get; private set; }
       private MyDictionary<Product> _map;
       private string _code;
       private string _description;
@@ -23,7 +24,7 @@ namespace PriceFinding.ViewModels
       private DateTime? _date;
       private double? _result;
       private int? _quantity;
-      private IEnumerable<string> _types;
+      public ObservableCollection<string> Types { get; private set; }
 
 
       //-------------------------------------------------------------------------------//
@@ -31,27 +32,11 @@ namespace PriceFinding.ViewModels
       public ProductViewModel(MyDictionary<Product> productMap)
       {
          _map = productMap;
-         CodeList = _map.Keys;
-         Types = PriceTypes.GetPriceTypes();
+         CodeList = new ObservableCollection<string>(_map.Keys);
+         Types = new ObservableCollection<string>(PriceTypes.GetPriceTypes());
       }//ctor
 
-      //-------------------------------------------------------------------------------//
-
-      public IEnumerable<string> CodeList
-      {
-         get
-         {
-            return _codeList;
-         }
-         set
-         {
-            _codeList = value;
-            //Tell the View about it.
-            OnPropertyChanged(nameof(CodeList));
-         }
-      }//CodeList
-
-      //-------------------------------------------------------------------------------//
+      //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
 
       public string Code
       {
@@ -74,7 +59,7 @@ namespace PriceFinding.ViewModels
          }
       }//Code
 
-      //-------------------------------------------------------------------------------//
+      //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
 
       public string Description
       {
@@ -93,7 +78,7 @@ namespace PriceFinding.ViewModels
          }
       }//Description
 
-      //-------------------------------------------------------------------------------//
+      //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
 
       public double? Last
       {
@@ -110,7 +95,7 @@ namespace PriceFinding.ViewModels
          }
       }//Last
 
-      //-------------------------------------------------------------------------------//
+      //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
 
       public double? Cost
       {
@@ -126,7 +111,7 @@ namespace PriceFinding.ViewModels
          }
       }//Cost
 
-      //-------------------------------------------------------------------------------//
+      //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
 
       public double? PriceList
       {
@@ -143,7 +128,7 @@ namespace PriceFinding.ViewModels
          }
       }//PriceList
 
-      //-------------------------------------------------------------------------------//
+      //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
 
       public double? Margin
       {
@@ -159,7 +144,7 @@ namespace PriceFinding.ViewModels
          }
       }//Margin
 
-      //-------------------------------------------------------------------------------//
+      //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
 
       public DateTime? Date
       {
@@ -175,7 +160,7 @@ namespace PriceFinding.ViewModels
          }
       }//Date
 
-      //-------------------------------------------------------------------------------//
+      //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
 
       public double? Result
       {
@@ -191,7 +176,7 @@ namespace PriceFinding.ViewModels
          }
       }//Result
 
-      //-------------------------------------------------------------------------------//
+      //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
 
       public int? Quantity
       {
@@ -207,24 +192,7 @@ namespace PriceFinding.ViewModels
          }
       }//Quantity
 
-      //-------------------------------------------------------------------------------//
-
-
-      public IEnumerable<string> Types
-      {
-         get
-         {
-            return _types;
-         }
-         set
-         {
-            _types = value;
-            //Tell the View about it.
-            OnPropertyChanged(nameof(Types));
-         }
-      }//Types
-
-      //-------------------------------------------------------------------------------//
+      //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
 
       public string Type
       {
@@ -243,6 +211,7 @@ namespace PriceFinding.ViewModels
       }//Type
 
       //-------------------------------------------------------------------------------//
+
       public void Clear()
       {
          Code = null;
@@ -251,7 +220,7 @@ namespace PriceFinding.ViewModels
 
       //-------------------------------------------------------------------------------//
 
-      private void SetResult()
+      public void SetResult()
       {
          Result = new Random().Next();
          Console.WriteLine("SetResult");
