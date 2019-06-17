@@ -1,8 +1,5 @@
-﻿using PriceFinding.Managing_Data.ODBC_Readers;
+﻿using PriceFinding.Utility;
 using PriceFinding.Utility.Binding;
-using System;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace PriceFinding.ViewModels
@@ -26,7 +23,7 @@ namespace PriceFinding.ViewModels
          Order = new OrderViewModel();
          FindCommand = new RelayCommandAsync(FindPricesAsync, CanUseFindPrices);
          UpdateCommand = new RelayCommandAsync(UpdateAsync, CanUseUpdate);
-         PlaceOrderCommand = new RelayCommandAsync(OrderAsync, CanUseOrder);
+         PlaceOrderCommand = new RelayCommandAsync(PlaceOrderAsync, CanUseOrder);
          ClearCommand = new RelayCommand(Clear, CanUseClear);
 
 
@@ -114,15 +111,19 @@ namespace PriceFinding.ViewModels
 
       //-------------------------------------------------------------------------------//
 
-      private async Task OrderAsync(object obj)
+      private async Task PlaceOrderAsync(object obj)
       {
          ShowProgressSpinner = true;
          _disableButtons = true;
 
-         await Task.Run(() => Thread.Sleep(2500));
+         Info info = await Task.Run(() => Order.PlaceOrder());
+
 
          ShowProgressSpinner = false;
          _disableButtons = false;
+
+         MyMessageBox.ShowOk(info.Title, info.Message);
+
       }//Update
 
       //-------------------------------------------------------------------------------//

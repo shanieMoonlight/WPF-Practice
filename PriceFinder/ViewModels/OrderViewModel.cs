@@ -1,8 +1,11 @@
 ﻿using PriceFinding.Managing_Data.ODBC_Readers;
 using PriceFinding.Models;
 using PriceFinding.Properties;
+using PriceFinding.Utility;
 using PriceFinding.Utility.Binding;
+using PriceFinding.Writing;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -132,6 +135,74 @@ namespace PriceFinding.ViewModels
          foreach (var product in Products)
             product.UpdateData(_dataManager.ProductMap);
       }//UpdateData
+
+      //-------------------------------------------------------------------------------//
+
+      public Info PlaceOrder()
+      {
+         var products = new List<Product>();
+         string cusCode = Customer.Code;
+
+         if (cusCode.Equals(""))
+            return new Info("Error", "Customer not found");
+
+         Customer customer = _dataManager.CheckCustomer(cusCode);
+
+         foreach (var productVM in Products)
+         {
+            string prodCode = productVM.Code;
+
+            if (prodCode.Equals(""))
+               continue;
+
+            Product product = _dataManager.CheckProduct(prodCode);
+            if (product.Code != Settings.Default.NOT_FOUND && productVM.Result != null && productVM.Quantity != null)
+            {
+               product.SalePrice = productVM.Result.Value;
+               product.Qty = productVM.Quantity.Value;
+               products.Add(product);
+            }//if
+
+         }//foreach
+
+         PostOrderWriter posrOrderWriter = null;
+
+         Order order = new Order(customer, products);
+         string username = "Shanie Moonlight";
+         posrOrderWriter = new PostOrderWriter(order, username);
+
+         if (order == null)
+         {
+            return new Info("Error", "Something went wrong. Order not in correct format. Please re-try");
+         }//Else
+
+         //Make sure order has customer and products.
+         if (order.customer == null)
+         {
+            return new Info("Error", "You must enter a valid Customer");
+         }
+         if (order.productList.Count <= 0)
+         {
+            return new Info("Error", "You must enter at leeast one Product");
+         }//If
+
+         try
+         {
+            //Let rep know if order was posted.
+            if (posrOrderWriter.Post())
+               return new Info("Success", "You're order has been created.");
+            else
+               return new Info("Error", "Order not posted. Contact administrator.");
+         }
+         catch (Exception ex)
+         {
+
+            return new Info("Error", "WTF." + Environment.NewLine + ex.Message);
+         }//catch
+
+
+
+      }//PlaceOrder
 
       //-------------------------------------------------------------------------------//
 

@@ -50,8 +50,6 @@ namespace PriceFinding
             _mainViewModel = new MainViewModel();
             DataContext = _mainViewModel;
 
-            MyMessageBox.ShowOk("Error","55555555555555");
-
          }
          catch (BackgroundMessageBoxException mbe)
          {

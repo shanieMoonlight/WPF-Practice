@@ -110,6 +110,7 @@
     <Compile Include="Utility\Binding\RelayCommandAsync.cs" />
     <Compile Include="Utility\Binding\RelayCommandParametered.cs" />
     <Compile Include="Utility\DataStorage.cs" />
+    <Compile Include="Utility\Info.cs" />
     <Compile Include="Utility\MyDictionary.cs" />
     <Compile Include="Utility\MyException.cs" />
     <Compile Include="Model\Order.cs" />
