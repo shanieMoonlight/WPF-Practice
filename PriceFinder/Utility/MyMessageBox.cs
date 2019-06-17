@@ -77,11 +77,11 @@ namespace PriceFinding
             BtnOk = {
                Content = "Ok" ,
                Background = (Brush)Application.Current.Resources["BrushPrimaryDark"],
-               BorderBrush = (Brush)Application.Current.Resources["BrushPrimaryDark"]
+               BorderBrush = (Brush)Application.Current.Resources["BrushPrimaryDark"]               
             },
 
             ShowCloseButton = true,
-
+            
             ResizeMode = ResizeMode.CanResizeWithGrip,
 
             MainContentControl = { Background = (Brush)Application.Current.Resources["BrushPrimaryLight"] },
@@ -91,6 +91,7 @@ namespace PriceFinding
 
 
          msg.BtnCancel.Visibility = Visibility.Collapsed;
+        
 
          if (!canCopy)
             msg.BtnCopyMessage.Visibility = Visibility.Collapsed;

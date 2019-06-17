@@ -50,6 +50,8 @@ namespace PriceFinding
             _mainViewModel = new MainViewModel();
             DataContext = _mainViewModel;
 
+            MyMessageBox.ShowOk("Error","55555555555555");
+
          }
          catch (BackgroundMessageBoxException mbe)
          {
@@ -136,161 +138,17 @@ namespace PriceFinding
 
       }//ButtOrder_Click
 
-      //-------------------------------------------------------------------------------------------------------//
-
-      private void FabAddProductrow_Click(object sender, RoutedEventArgs e)
-      {
-         //  AddProductRow();
-      }//FabAddProductrow_Click
-
-      //-------------------------------------------------------------------------------------------------------//
-
-      private void FabRemoveProductRow_Click(object sender, RoutedEventArgs e)
-      {
-         // RemoveProductRow();
-      }//FabRemoveProductRow_Click
-
-      //-------------------------------------------------------------------------------------------------------//
-
+     
       private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
       {
          Regex regex = new Regex("[^0-9]+");
          e.Handled = regex.IsMatch(e.Text);
       }//NumberValidationTextBox
 
-      //-------------------------------------------------------------------------------------------------------//
-
-      private async void ButtUpdate_Click(object sender, RoutedEventArgs e)
-      {
-         //try
-         //{
-         //   prgDisplay.Visibility = Visibility.Visible;
-
-         //   if (_dataManager == null)
-         //      _dataManager = new DataManager(false);
-
-
-         //   await Task.Run(() =>
-         //   {
-         //      _dataManager.Update();
-         //   });
-
-         //   cbCustomerCode.ItemsSource = _dataManager.CustomerMap.Keys;
-         //   foreach (var strip in strips)
-         //      strip.UpdateProductList(_dataManager.ProductMap.Keys);
-
-         //   MyMessageBox.ShowOk("Result", "Ready to go.");
-         //}
-         //catch (BackgroundMessageBoxException mbe)
-         //{
-         //   MyMessageBox.ShowOk(mbe.Title, mbe.Message);
-         //}
-         //finally
-         //{
-         //   prgDisplay.Visibility = Visibility.Hidden;
-         //}//finally
-
-
-      }//ButtUpdate_Click
 
       //-------------------------------------------------------------------------------------------------------//
 
-      /// <summary>
-      /// Try to find prices for customer and products.
-      /// </summary>
-      private void FindPrices2()
-      {
-
-         //var productReader = new ODBCProductReader();
-
-         //try
-         //{
-         //   string cusCode = cbCustomerCode.Text;
-
-         //   if (cusCode.Equals(""))
-         //   {
-         //      MyMessageBox.ShowOk("Error", "You must enter a customer.");
-         //      return;
-         //   }//If
-
-
-         //   var prodCodes = strips
-         //      .Where(s => !string.IsNullOrWhiteSpace(s.cbCode.Text))
-         //      .Select(s => s.cbCode.Text);
-
-         //   var sales = _dataManager.CheckSales(cusCode, prodCodes);
-         //   var costs = _dataManager.CheckCostPrices(prodCodes);
-         //   var listPrices = _dataManager.CheckListPrices(cusCode, prodCodes);
-
-         //   //Fill in all queried rows.
-         //   foreach (ProductStrip prodStrip in strips)
-         //   {
-         //      string prodCode = prodStrip.cbCode.Text;
-
-         //      //Skip blanks
-         //      if (prodCode.Equals(""))
-         //         continue;
-
-
-
-         //      var customer = _dataManager.CheckCustomer(cbCustomerCode.Text);
-
-         //      //If Product exists get Cost Price
-         //      prodStrip.tbCost.Text = costs[prodCode].ToString();
-
-         //      //Check last sale
-         //      if (!costs.TryGetValue(prodCode, out double cost))
-         //         prodStrip.tbCost.Text = NOT_FOUND;
-         //      else
-         //         prodStrip.tbCost.Text = cost.ToString();
-
-
-
-         //      //Check last sale
-         //      if (!sales.TryGetValue(prodCode, out Sale sale))
-         //      {
-         //         prodStrip.tbDate.Text = NOT_FOUND;
-         //         prodStrip.tbLast.Text = NOT_FOUND;
-         //         prodStrip.tbQty.Text = "";
-         //      }
-         //      else
-         //      {
-         //         prodStrip.tbDate.Text = sale.Date.ToString("dd-MMM-yy");
-         //         prodStrip.tbLast.Text = sale.SalePrice.ToString();
-         //         prodStrip.tbQty.Text = sale.Qty.ToString();
-         //      }//Else
-
-
-         //      //Check Price List
-         //      if (!listPrices.TryGetValue(prodCode, out double priceListPrice))
-         //         prodStrip.tbPriceList.Text = NOT_FOUND;
-         //      else
-         //         prodStrip.tbPriceList.Text = priceListPrice.ToString();
-
-         //      //tbMargin.Text = Settings.Default.defaultMargin.ToString();
-         //   }//ForEach
-
-         //}
-         //catch (Exception ex)
-         //{
-         //   string exInfo = ex.GetType().ToString() + "\r\n" + ex.Message;
-         //   MyMessageBox.ShowOk("Error", exInfo);
-         //}//Catch
-
-      }//FindPrices2
-
-      //-------------------------------------------------------------------------------------------------------//
-
-      private void ButtFind_Click(object sender, RoutedEventArgs e)
-      {
-         FindPrices2();
-
-         _mainViewModel.SetResult();
-
-      }//ButtFind_Click
-
-      //-------------------------------------------------------------------------------------------------------//
-
+     
    
    }//Cls
 }//NS

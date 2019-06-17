@@ -24,9 +24,7 @@ namespace PriceFinding.ViewModels
 
       public CustomerViewModel(MyDictionary<Customer> customerMap)
       {
-         _map = customerMap;
-         CodeList = new ObservableCollection<Customer>(_map.ToList().Select(kvp => kvp.Value));
-
+         UpdateData(customerMap);
          Background = new BackgroundViewModel();
       }//ctor
 
@@ -90,6 +88,15 @@ namespace PriceFinding.ViewModels
          Code = null;
          Description = null;
       }//Clear
+
+      //-------------------------------------------------------------------------------//
+
+      public void UpdateData(MyDictionary<Customer> customerMap)
+      {
+         _map = customerMap;
+         CodeList = new ObservableCollection<Customer>(_map.ToList().Select(kvp => kvp.Value));
+
+      }//UpdateData
 
       //-------------------------------------------------------------------------------//
 

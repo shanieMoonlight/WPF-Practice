@@ -1,4 +1,5 @@
 ﻿using PriceFinding.Models;
+using PriceFinding.Properties;
 using PriceFinding.Utility.Binding;
 using System;
 using System.Collections.Generic;
@@ -25,14 +26,16 @@ namespace PriceFinding.ViewModels
       private double? _result;
       private int? _quantity;
       public ObservableCollection<string> Types { get; private set; }
+      public bool IsValid { get; set; } = false;
+      private readonly double _defaultMargin = Settings.Default.defaultMargin;
+      private readonly string NOT_FOUND = Settings.Default.NOT_FOUND;
 
 
       //-------------------------------------------------------------------------------//
 
       public ProductViewModel(MyDictionary<Product> productMap)
       {
-         _map = productMap;
-         CodeList = new ObservableCollection<string>(_map.Keys);
+         UpdateData(productMap);
          Types = new ObservableCollection<string>(PriceTypes.GetPriceTypes());
       }//ctor
 
@@ -42,17 +45,21 @@ namespace PriceFinding.ViewModels
       {
          get
          {
-            if (_code == null)
-               return "";
-
-            return _code;
+            return _code ?? "";
          }
          set
          {
             _code = value ?? "";
             //Set description.
             if (_map.TryGetValue(_code, out Product customer))
+            {
                Description = customer.Description;
+               IsValid = true;
+            }
+            else
+            {
+               IsValid = false;
+            }//else
 
             //Tell the view.
             OnPropertyChanged(nameof(Code));
@@ -139,6 +146,7 @@ namespace PriceFinding.ViewModels
          set
          {
             _margin = value;
+            Result = GetMarginPrice();
             //Tell the View about it.
             OnPropertyChanged(nameof(Margin));
          }
@@ -229,9 +237,60 @@ namespace PriceFinding.ViewModels
 
       public void SetResult()
       {
-         Result = new Random().Next();
-         Console.WriteLine("SetResult");
+         switch (Type)
+         {
+            case PriceTypes.LAST_PRICE:
+               Result = GetLastPrice();
+               break;
+            case PriceTypes.MARGIN:
+               Result = GetMarginPrice();
+               break;
+            case PriceTypes.PRICE_LIST_PRICE:
+               Result = GetPriceListPrice();
+               break;
+            default:
+               GetLastPrice();
+               break;
+         }//switch
+
       }//SetResult
+
+      //-------------------------------------------------------------------------------//
+
+      public void UpdateData(MyDictionary<Product> productMap)
+      {
+         _map = productMap;
+         CodeList = new ObservableCollection<string>(_map.Keys);
+
+      }//UpdateData
+
+      //-------------------------------------------------------------------------------//
+
+      private double? GetLastPrice()
+      {
+         return Last;
+      }//GetLastPrice
+
+      //-------------------------------------------------------------------------------//
+
+      private double? GetPriceListPrice()
+      {
+         return PriceList;
+      }//GetPriceListPrice
+
+      //-------------------------------------------------------------------------------//
+
+      private double? GetMarginPrice()
+      {
+         if (Cost == null)
+            return null;
+
+         if (Margin == null)
+            return null;
+
+         var marginPercent = Margin / 100;
+         return Cost / (1 - marginPercent);
+      }//GetMarginPrice
 
       //-------------------------------------------------------------------------------//
 

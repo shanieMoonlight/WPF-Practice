@@ -1,8 +1,7 @@
-﻿using PriceFinding.Utility.Binding;
+﻿using PriceFinding.Managing_Data.ODBC_Readers;
+using PriceFinding.Utility.Binding;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,10 +12,10 @@ namespace PriceFinding.ViewModels
 
       public OrderViewModel Order { get; private set; }
       private bool _showProgressSpinner;
-      private readonly DataManager _dataManager;
+      private bool _disableButtons;
       public RelayCommandAsync FindCommand { get; private set; }
-      public RelayCommandParametered UpdateCommand { get; private set; }
-      public RelayCommandParametered OrderCommand { get; private set; }
+      public RelayCommandAsync UpdateCommand { get; private set; }
+      public RelayCommandAsync PlaceOrderCommand { get; private set; }
       public RelayCommand ClearCommand { get; private set; }
 
 
@@ -24,12 +23,11 @@ namespace PriceFinding.ViewModels
 
       public MainViewModel()
       {
-
-         _dataManager = new DataManager();
-         _dataManager.UpdateFromBackup();
-         Order = new OrderViewModel(_dataManager);
+         Order = new OrderViewModel();
          FindCommand = new RelayCommandAsync(FindPricesAsync, CanUseFindPrices);
-         ClearCommand = new RelayCommand(Clear);
+         UpdateCommand = new RelayCommandAsync(UpdateAsync, CanUseUpdate);
+         PlaceOrderCommand = new RelayCommandAsync(OrderAsync, CanUseOrder);
+         ClearCommand = new RelayCommand(Clear, CanUseClear);
 
 
       }//ctor 
@@ -59,7 +57,11 @@ namespace PriceFinding.ViewModels
 
       //-------------------------------------------------------------------------------//
 
-      public void SetResult()
+      private bool CanUseClear(object message) => _disableButtons ? false : true;
+
+      //-------------------------------------------------------------------------------//
+
+      private void SetResult()
       {
          Order.SetResult();
       }//SetResult
@@ -69,21 +71,78 @@ namespace PriceFinding.ViewModels
       private async Task FindPricesAsync(object obj)
       {
          ShowProgressSpinner = true;
+         _disableButtons = true;
 
-          await Task.Run(()=> Thread.Sleep(1500));
-         
+         await Task.Run(() => Order.FindPrices());
+
          ShowProgressSpinner = false;
+         _disableButtons = false;
+
+
+         DisplayMessage("Order ready", "Don't forget to set the quantities, and pricing types.");
       }//FindPrices
 
       //-------------------------------------------------------------------------------//
 
-      public bool CanUseFindPrices(object message)
+      private bool CanUseFindPrices(object message)
       {
-            return Order.AreItemsSelected();
+         if (_disableButtons)
+            return false;
+
+         return Order.IsReadyToFindPrices();
       }//ConsoleCanUse
 
       //-------------------------------------------------------------------------------//
 
+      private async Task UpdateAsync(object obj)
+      {
+         ShowProgressSpinner = true;
+         _disableButtons = true;
+
+         await Task.Run(() => Order.UpdateData());
+
+         ShowProgressSpinner = false;
+         _disableButtons = false;
+
+         DisplayMessage("Updated", "Ready to go!");
+
+      }//Update
+
+      //-------------------------------------------------------------------------------//
+
+      private bool CanUseUpdate(object message) => _disableButtons ? false : true;
+
+      //-------------------------------------------------------------------------------//
+
+      private async Task OrderAsync(object obj)
+      {
+         ShowProgressSpinner = true;
+         _disableButtons = true;
+
+         await Task.Run(() => Thread.Sleep(2500));
+
+         ShowProgressSpinner = false;
+         _disableButtons = false;
+      }//Update
+
+      //-------------------------------------------------------------------------------//
+
+      private bool CanUseOrder(object message)
+      {
+         if (_disableButtons)
+            return false;
+
+         return Order.IsReadyToPlaceOrder();
+      }//CanUseOrder
+
+      //-------------------------------------------------------------------------------//
+
+      private void DisplayMessage(string title, string message)
+      {
+         MyMessageBox.ShowOk(title, message);
+      }//DisplayMessage
+
+      //-------------------------------------------------------------------------------//
 
    }//Cls
 }//NS
