@@ -102,7 +102,13 @@
     </Compile>
     <Compile Include="Utility\BackgroundMessageBoxException.cs" />
     <Compile Include="Model\Customer.cs" />
+    <Compile Include="Utility\Binding\Converters\BoolToBrushConverter.cs" />
+    <Compile Include="Utility\Binding\Converters\BoolToStringConverter.cs" />
+    <Compile Include="Utility\Binding\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Utility\Binding\ObservableObject.cs" />
+    <Compile Include="Utility\Binding\RelayCommand.cs" />
+    <Compile Include="Utility\Binding\RelayCommandAsync.cs" />
+    <Compile Include="Utility\Binding\RelayCommandParametered.cs" />
     <Compile Include="Utility\DataStorage.cs" />
     <Compile Include="Utility\MyDictionary.cs" />
     <Compile Include="Utility\MyException.cs" />

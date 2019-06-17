@@ -216,6 +216,13 @@ namespace PriceFinding.ViewModels
       {
          Code = null;
          Description = null;
+         Date = null;
+         Last = null;
+         Cost = null;
+         PriceList = null;
+         Margin = null;
+         Result = null;
+         Quantity = null;
       }//Clear
 
       //-------------------------------------------------------------------------------//

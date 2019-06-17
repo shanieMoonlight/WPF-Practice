@@ -50,7 +50,15 @@ namespace PriceFinding.ViewModels
 
       //-------------------------------------------------------------------------------//
 
+      public bool AreItemsSelected()
+      {
+         if (!Customer.IsValid)
+            return false;
 
+         return true;
+      }//AreItemsSelected
+
+      //-------------------------------------------------------------------------------//
 
    }//Cls
 }//NS

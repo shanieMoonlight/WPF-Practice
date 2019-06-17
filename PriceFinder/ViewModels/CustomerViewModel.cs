@@ -14,6 +14,7 @@ namespace PriceFinding.ViewModels
    {
       public ObservableCollection<Customer> CodeList { get; private set; }
       public BackgroundViewModel Background { get; set; }
+      public bool IsValid { get; set; } = false;
       private MyDictionary<Customer> _map;
       private string _code;
       private string _description;
@@ -24,9 +25,8 @@ namespace PriceFinding.ViewModels
       public CustomerViewModel(MyDictionary<Customer> customerMap)
       {
          _map = customerMap;
-         //CodeList = _map.Keys;
          CodeList = new ObservableCollection<Customer>(_map.ToList().Select(kvp => kvp.Value));
-         
+
          Background = new BackgroundViewModel();
       }//ctor
 
@@ -40,17 +40,23 @@ namespace PriceFinding.ViewModels
          }
          set
          {
-            _code = value ?? "";
+            _code = value;
 
-            if (_map.TryGetValue(_code, out Customer customer) || string.IsNullOrWhiteSpace(_code))
+            if (_code == null)
+            {
+               _code = "";
+               Background.Color = Brushes.Transparent;
+               IsValid = false;
+            }
+            else if (_map.TryGetValue(_code, out Customer customer))
             {
                Background.Color = Brushes.Transparent;
-               //Description = customer.Description;
+               IsValid = true;
             }
             else
             {
+               IsValid = false;
                Background.Color = Brushes.Salmon;
-               //Description = "";
             }//else
 
             //Tell the view.

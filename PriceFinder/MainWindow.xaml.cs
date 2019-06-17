@@ -32,7 +32,6 @@ namespace PriceFinding
 
       private double defaultMargin;
       private readonly string NOT_FOUND = Settings.Default.NOT_FOUND;
-      private DataManager _dataManager;
       private MainViewModel _mainViewModel;
 
 
@@ -48,9 +47,7 @@ namespace PriceFinding
          defaultMargin = Settings.Default.defaultMargin;
          try
          {
-            _dataManager = new DataManager();
-            _dataManager.UpdateFromBackup();
-            _mainViewModel = new MainViewModel(_dataManager);
+            _mainViewModel = new MainViewModel();
             DataContext = _mainViewModel;
 
          }
@@ -198,16 +195,6 @@ namespace PriceFinding
 
       //-------------------------------------------------------------------------------------------------------//
 
-      private void ToggleProgressBarVisibility()
-      {
-         if (prgDisplay.Visibility == Visibility.Visible)
-            prgDisplay.Visibility = Visibility.Hidden;
-         else
-            prgDisplay.Visibility = Visibility.Visible;
-      }//ToggleProgressBarVisibility
-
-      //-------------------------------------------------------------------------------------------------------//
-
       /// <summary>
       /// Try to find prices for customer and products.
       /// </summary>
@@ -304,13 +291,6 @@ namespace PriceFinding
 
       //-------------------------------------------------------------------------------------------------------//
 
-      private void ButtClear_Click(object sender, RoutedEventArgs e)
-      {
-         _mainViewModel.Clear();
-
-      }//ButtClear_Click
-
-      //-------------------------------------------------------------------------------------------------------//
-
+   
    }//Cls
 }//NS
