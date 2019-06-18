@@ -8,10 +8,10 @@ using System.Text;
 namespace PriceFinding.Models
 {
    [Serializable()]
-   public class Product : IComparable<Product>, ISerializable
+   public class Product : OrderItem, IComparable<Product>, ISerializable
    {
       #region Constructors
-      public Product()
+      public Product() : base(null, null)
       {
       }//ctor
 
@@ -22,10 +22,8 @@ namespace PriceFinding.Models
       /// </summary>
       /// <param name="code"></param>
       /// <param name="description"></param>
-      public Product(string code, string description)
+      public Product(string code, string description) : base(code, description)
       {
-         this.Code = code;
-         this.Description = description;
       }//ctor
 
       //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
@@ -36,11 +34,10 @@ namespace PriceFinding.Models
       /// <param name="code"></param>
       /// <param name="salePrice"></param>
       /// <param name="qty"></param>
-      public Product(string code, double salePrice, int qty)
+      public Product(string code, double salePrice, int qty) : base(null, null)
       {
-         this.Code = code;
-         this.SalePrice = salePrice;
-         this.Qty = qty;
+         SalePrice = salePrice;
+         Qty = qty;
       }//ctor
 
       //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
@@ -51,12 +48,10 @@ namespace PriceFinding.Models
       /// <param name="code"></param>
       /// <param name="salePrice"></param>
       /// <param name="qty"></param>
-      public Product(string code, string description, double salePrice, int qty)
+      public Product(string code, string description, double salePrice, int qty) : base(code, description)
       {
-         this.Code = code;
-         this.Description = description;
-         this.SalePrice = salePrice;
-         this.Qty = qty;
+         SalePrice = salePrice;
+         Qty = qty;
       }//ctor
 
       //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
@@ -67,11 +62,9 @@ namespace PriceFinding.Models
       /// <param name="code"></param>
       /// <param name="salePrice"></param>
       /// <param name="qty"></param>
-      public Product(string code, string description, int qty)
+      public Product(string code, string description, int qty) : base(code, description)
       {
-         this.Code = code;
-         this.Description = description;
-         this.Qty = qty;
+         Qty = qty;
       }//ctor
 
       //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
@@ -82,21 +75,17 @@ namespace PriceFinding.Models
       /// <param name="code"></param>
       /// <param name="salePrice"></param>
       /// <param name="qty"></param>
-      public Product(string code, string description, int qty, double costPrice)
+      public Product(string code, string description, int qty, double costPrice) : base(code, description)
       {
-         this.Code = code;
-         this.Description = description;
-         this.CostPrice = costPrice;
-         this.Qty = qty;
+         CostPrice = costPrice;
+         Qty = qty;
       }//ctor
 
       //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 
-      public Product(string code, string description, double costPrice)
+      public Product(string code, string description, double costPrice) : base(code, description)
       {
-         this.Code = code;
-         this.Description = description;
-         this.CostPrice = costPrice;
+         CostPrice = costPrice;
       }//ctor
 
       //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
@@ -108,12 +97,10 @@ namespace PriceFinding.Models
       /// <param name="description"></param>
       /// <param name="costPrice"></param>
       /// <param name="salePrice"></param>
-      public Product(string code, string description, double costPrice, double salePrice)
+      public Product(string code, string description, double costPrice, double salePrice) : base(code, description)
       {
-         this.Code = code;
-         this.Description = description;
-         this.CostPrice = costPrice;
-         this.SalePrice = salePrice;
+         CostPrice = costPrice;
+         SalePrice = salePrice;
       }//ctor
 
       //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
@@ -124,11 +111,10 @@ namespace PriceFinding.Models
       /// <param name="code"></param>
       /// <param name="salePrice"></param>
       /// <param name="qty"></param>
-      public Product(string code, int qty, double costPrice)
+      public Product(string code, int qty, double costPrice) : base(code, null)
       {
-         this.Code = code;
-         this.CostPrice = costPrice;
-         this.Qty = qty;
+         CostPrice = costPrice;
+         Qty = qty;
       }//ctor 
 
       //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
@@ -139,14 +125,12 @@ namespace PriceFinding.Models
       /// <param name="code"></param>
       /// <param name="salePrice"></param>
       /// <param name="qty"></param>
-      public Product(Product product)
+      public Product(Product product) : base(product.Code, product.Description)
       {
-         this.Code = product.Code;
-         this.Description = product.Description;
-         this.CostPrice = product.CostPrice;
-         this.SalePrice = product.SalePrice;
-         this.UsingPriceListPrice = product.UsingPriceListPrice;
-         this.Qty = product.Qty;
+         CostPrice = product.CostPrice;
+         SalePrice = product.SalePrice;
+         UsingPriceListPrice = product.UsingPriceListPrice;
+         Qty = product.Qty;
       }//ctor
 
       //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
@@ -156,14 +140,12 @@ namespace PriceFinding.Models
       /// </summary>
       /// <param name="info"></param>
       /// <param name="ctxt"></param>
-      public Product(SerializationInfo info, StreamingContext ctxt)
+      public Product(SerializationInfo info, StreamingContext ctxt) : base((string)info.GetValue("code", typeof(string)), (string)info.GetValue("description", typeof(string)))
       {
-         this.Code = (string)info.GetValue("code", typeof(string));
-         this.Description = (string)info.GetValue("description", typeof(string));
-         this.CostPrice = (double)info.GetValue("costPrice", typeof(double));
-         this.SalePrice = (double)info.GetValue("salePrice", typeof(double));
-         this.Qty = (int)info.GetValue("qty", typeof(int));
-         this.UsingPriceListPrice = (bool)info.GetValue("usingPriceListPrice", typeof(bool));
+         CostPrice = (double)info.GetValue("costPrice", typeof(double));
+         SalePrice = (double)info.GetValue("salePrice", typeof(double));
+         Qty = (int)info.GetValue("qty", typeof(int));
+         UsingPriceListPrice = (bool)info.GetValue("usingPriceListPrice", typeof(bool));
       }//ctor
 
 
@@ -172,8 +154,6 @@ namespace PriceFinding.Models
       //----------------------------------------------------------------------------------------------//
 
       #region Properties
-      public string Code { get; } = Settings.Default.NOT_FOUND;
-      public string Description { get; } = Settings.Default.NOT_FOUND;
       public int Qty { get; set; }
       public double CostPrice { get; }
       public double SalePrice { get; set; }
@@ -184,12 +164,7 @@ namespace PriceFinding.Models
 
       public override string ToString()
       {
-         return "code: " + Code + " \r\n"
-                + "description: " + Description + " \r\n"
-                + "costPrice: " + CostPrice + " \r\n"
-                + "salePrice: " + SalePrice + " \r\n"
-                + "qty: " + Qty + "\r\n"
-                + "Use list price: " + UsingPriceListPrice + "\r\n";
+         return Code + " - " + Description;
       }//ToString
 
       //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
@@ -210,12 +185,12 @@ namespace PriceFinding.Models
       /// <param name="context"></param>
       public void GetObjectData(SerializationInfo info, StreamingContext context)
       {
-         info.AddValue("code", this.Code);
-         info.AddValue("description", this.Description);
-         info.AddValue("costPrice", this.CostPrice);
-         info.AddValue("salePrice", this.SalePrice);
-         info.AddValue("qty", this.Qty);
-         info.AddValue("usingPriceListPrice", this.UsingPriceListPrice);
+         info.AddValue("code", Code);
+         info.AddValue("description", Description);
+         info.AddValue("costPrice", CostPrice);
+         info.AddValue("salePrice", SalePrice);
+         info.AddValue("qty", Qty);
+         info.AddValue("usingPriceListPrice", UsingPriceListPrice);
       }//GetObjectData
 
       //----------------------------------------------------------------------------------------------//

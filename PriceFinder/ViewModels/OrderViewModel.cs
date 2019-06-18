@@ -21,15 +21,19 @@ namespace PriceFinding.ViewModels
       public RelayCommand RemoveProductCommand { get; private set; }
       private readonly double _defaultMargin = Settings.Default.defaultMargin;
       private readonly string NOT_FOUND = Settings.Default.NOT_FOUND;
+      private MyDictionary<Product> _prodMap;
+      private IEnumerable<Product> _prodList;
+      private MyDictionary<Customer> _customerMap;
+      private IEnumerable<Customer> _customerList;
 
       //-------------------------------------------------------------------------------//
 
       public OrderViewModel()
       {
          _dataManager = new DataManager();
-         _dataManager.UpdateFromBackup();
+         var updateResult = UpdateDataFromBackUp();
 
-         Customer = new CustomerViewModel(_dataManager.CustomerMap);
+         Customer = new CustomerViewModel(_dataManager.CustomerMap, _dataManager.CustomerMap.ToList().Select(kvp => kvp.Value));
          Products = new ObservableCollection<ProductViewModel>();
          for (int i = 0; i < INITIAL_ROW_COUNT; i++)
          {
@@ -39,6 +43,9 @@ namespace PriceFinding.ViewModels
          AddProductCommand = new RelayCommand(AddProduct);
          RemoveProductCommand = new RelayCommand(RemoveProduct, CanUseRemoveProduct);
 
+         //If daya was not updated inform user.
+         if (!updateResult.Succeeded)
+            MyMessageBox.ShowOk("Error", updateResult.Info);
       }//ctor
 
       //-------------------------------------------------------------------------------//
@@ -100,7 +107,7 @@ namespace PriceFinding.ViewModels
 
       private void AddProduct()
       {
-         Products.Add(new ProductViewModel(_dataManager.ProductMap));
+         Products.Add(new ProductViewModel(_prodMap, _prodList));
       }//AddProduct
 
       //-------------------------------------------------------------------------------//
@@ -129,11 +136,33 @@ namespace PriceFinding.ViewModels
       public void UpdateData()
       {
          _dataManager.Update();
+         _prodMap = _dataManager.ProductMap;
+         _prodList = _prodMap.ToList().Select(kvp => kvp.Value).ToList();
 
-         Customer.UpdateData(_dataManager.CustomerMap);
+         _customerMap = _dataManager.CustomerMap;
+         _customerList = _dataManager.CustomerMap.ToList().Select(kvp => kvp.Value);
+
+         Customer.UpdateData(_customerMap, _customerList);
+
 
          foreach (var product in Products)
-            product.UpdateData(_dataManager.ProductMap);
+            product.UpdateData(_prodMap, _prodList);
+
+      }//UpdateData
+
+      //-------------------------------------------------------------------------------//
+
+      public GenResult<bool> UpdateDataFromBackUp()
+      {
+         var updateResult = _dataManager.UpdateFromBackup();
+
+         _prodMap = _dataManager.ProductMap;
+         _prodList = _prodMap.ToList().Select(kvp => kvp.Value);
+
+         _customerMap = _dataManager.CustomerMap;
+         _customerList = _dataManager.CustomerMap.ToList().Select(kvp => kvp.Value);
+
+         return updateResult;
       }//UpdateData
 
       //-------------------------------------------------------------------------------//
@@ -200,8 +229,6 @@ namespace PriceFinding.ViewModels
             return new Info("Error", "WTF." + Environment.NewLine + ex.Message);
          }//catch
 
-
-
       }//PlaceOrder
 
       //-------------------------------------------------------------------------------//
@@ -209,7 +236,7 @@ namespace PriceFinding.ViewModels
       /// <summary>
       /// Try to find prices for customer and products.
       /// </summary>
-      public void FindPrices()
+      public GenResult<bool> FindPrices()
       {
 
          var productReader = new ODBCProductReader();
@@ -220,29 +247,26 @@ namespace PriceFinding.ViewModels
 
             if (cusCode.Equals(""))
             {
-               MyMessageBox.ShowOk("Error", "You must enter a customer.");
-               return;
+               return new GenResult<bool>(false, "You must enter a customer.");
             }//If
 
+            //Remove empty rows
+            var enteredProducts = Products
+               .Where(s => !string.IsNullOrWhiteSpace(s.Code));
 
-            var prodCodes = Products
-               .Where(s => !string.IsNullOrWhiteSpace(s.Code))
+            var prodCodes = enteredProducts
                .Select(s => s.Code);
+
 
             var sales = _dataManager.CheckSales(cusCode, prodCodes);
             var costs = _dataManager.CheckCostPrices(prodCodes);
             var listPrices = _dataManager.CheckListPrices(cusCode, prodCodes);
 
             //Fill in all queried rows.
-            foreach (var product in Products)
+            foreach (var product in enteredProducts)
             {
                string prodCode = product.Code;
-
-               //Skip blanks
-               if (prodCode.Equals(""))
-                  continue;
-
-
+               
 
                var customer = _dataManager.CheckCustomer(Customer.Code);
 
@@ -286,11 +310,12 @@ namespace PriceFinding.ViewModels
                   product.Type = PriceTypes.MARGIN;
             }//ForEach
 
+            return new GenResult<bool>(true);
          }
          catch (Exception ex)
          {
             string exInfo = ex.GetType().ToString() + "\r\n" + ex.Message;
-            MyMessageBox.ShowOk("Error", exInfo);
+            return new GenResult<bool>(false, exInfo);
          }//Catch
 
       }//FindPrices

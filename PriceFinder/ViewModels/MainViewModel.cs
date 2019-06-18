@@ -8,7 +8,7 @@ namespace PriceFinding.ViewModels
    {
 
       public OrderViewModel Order { get; private set; }
-      private bool _showProgressSpinner;
+      private bool _showProgressSpinner = false;
       private bool _disableButtons;
       public RelayCommandAsync FindCommand { get; private set; }
       public RelayCommandAsync UpdateCommand { get; private set; }
@@ -20,11 +20,11 @@ namespace PriceFinding.ViewModels
 
       public MainViewModel()
       {
-         Order = new OrderViewModel();
          FindCommand = new RelayCommandAsync(FindPricesAsync, CanUseFindPrices);
          UpdateCommand = new RelayCommandAsync(UpdateAsync, CanUseUpdate);
          PlaceOrderCommand = new RelayCommandAsync(PlaceOrderAsync, CanUseOrder);
          ClearCommand = new RelayCommand(Clear, CanUseClear);
+         Order = new OrderViewModel();
 
 
       }//ctor 
@@ -70,13 +70,16 @@ namespace PriceFinding.ViewModels
          ShowProgressSpinner = true;
          _disableButtons = true;
 
-         await Task.Run(() => Order.FindPrices());
+        var findResult =  await Task.Run(() => Order.FindPrices());
 
          ShowProgressSpinner = false;
          _disableButtons = false;
 
+         if (findResult.Succeeded)
+            DisplayMessage("Order ready", "Don't forget to set the quantities, and pricing types.");
+         else
+            DisplayMessage("Error", findResult.Info);
 
-         DisplayMessage("Order ready", "Don't forget to set the quantities, and pricing types.");
       }//FindPrices
 
       //-------------------------------------------------------------------------------//
@@ -122,7 +125,7 @@ namespace PriceFinding.ViewModels
          ShowProgressSpinner = false;
          _disableButtons = false;
 
-         MyMessageBox.ShowOk(info.Title, info.Message);
+         DisplayMessage(info.Title, info.Message);
 
       }//Update
 

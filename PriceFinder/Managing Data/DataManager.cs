@@ -1,18 +1,14 @@
-﻿using PriceFinding.Properties;
+﻿using Newtonsoft.Json;
+using PriceFinding.Managing_Data.ODBC_Readers;
+using PriceFinding.Managing_Data.ReaderInterfaces;
+using PriceFinding.Models;
+using PriceFinding.Properties;
+using PriceFinding.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Windows;
-using Newtonsoft.Json;
-using PriceFinding.Managing_Data.ODBC_Readers;
-using PriceFinding.Managing_Data.ReaderInterfaces;
-using PriceFinding.Models;
 
 namespace PriceFinding
 {
@@ -48,8 +44,6 @@ namespace PriceFinding
 
       public MyDictionary<Customer> CustomerMap { get; private set; }
       public MyDictionary<Product> ProductMap { get; private set; }
-
-      public bool IsSerializing { get; private set; } = false;
 
       public bool IsUpdated { get; private set; } = false;
 
@@ -122,17 +116,12 @@ namespace PriceFinding
          //Store data.
          try
          {
-            IsSerializing = true;
             SerializeToJSON();
          }
          catch (Exception e)
          {
             throw new BackgroundMessageBoxException("Error", "Data updates have not been stored. You will have to update again on next program start up\r\n\r\n" + e.Message);
-         }
-         finally
-         {
-            IsSerializing = false;
-         }//Finally
+         }//Catch
 
 
 
@@ -145,7 +134,7 @@ namespace PriceFinding
       /// </summary>
       /// <param name="sender"></param>
       /// <param name="e"></param>
-      public void UpdateFromBackup()
+      public GenResult<bool> UpdateFromBackup()
       {
          //Last update must be sooner than minDataFileAgeInDays ago.
          DateTime checkDate = DateTime.Now.AddDays(-(int)set.minDataFileAgeInDays);
@@ -155,22 +144,19 @@ namespace PriceFinding
          //Deserialize stored data.
          //First check if the server has left one for us. If check if PF left one otherwise inform user.
          dataStore = new DataStorage();
-       
-            //Make sure that file is recent 
-            if (checkDate < lastModifiedDatePFFile)
-               dataStore = DeserializeFromJSON<DataStorage>(pfStorageFilePath);
-            else
-               throw new BackgroundMessageBoxException("Error",
-                  "Pricing Data has not been uploaded."
-                     + "\n    -----------------     \n"
-                     + "You need to update the data."
-                     + "\n    -----------------     \n");
+
+         //Make sure that file is recent 
+         if (checkDate < lastModifiedDatePFFile)
+            dataStore = DeserializeFromJSON<DataStorage>(pfStorageFilePath);
+         else
+            return new GenResult<bool>(false, "Customer & Product Data has not been uploaded.\nYou need to update the data.");
 
 
          CustomerMap = dataStore.CustomerMap;
-
          ProductMap = dataStore.ProductMap;
-         
+
+         return new GenResult<bool>(true);
+
       }//UpdateFromBackup
 
       //-------------------------------------------------------------------------------------------------------//
@@ -253,7 +239,7 @@ namespace PriceFinding
       public double CheckListPrice(string cusCode, string prodCode)
       {
 
-       return  PriceListReader.GetPriceListPrice(cusCode, prodCode);
+         return PriceListReader.GetPriceListPrice(cusCode, prodCode);
 
       }//CheckListPrice
 
@@ -263,7 +249,7 @@ namespace PriceFinding
       {
          return PriceListReader.GetPriceListPrices(cusCode, prodCodes);
       }//CheckListPrices
-      
+
       //-------------------------------------------------------------------------------------------------------//
 
       /// <summary>

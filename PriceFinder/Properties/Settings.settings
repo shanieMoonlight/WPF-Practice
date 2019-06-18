@@ -14,14 +14,8 @@
     <Setting Name="NOT_FOUND" Type="System.String" Scope="User">
       <Value Profile="(Default)">NOT_FOUND</Value>
     </Setting>
-    <Setting Name="appProgramDir" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">FindSe</Value>
-    </Setting>
-    <Setting Name="appPFUpdaterDir" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">PF_Updaters</Value>
-    </Setting>
     <Setting Name="programDir" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Price Finder</Value>
+      <Value Profile="(Default)">FindSe</Value>
     </Setting>
     <Setting Name="storageFileName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">PfDataStore.ser</Value>

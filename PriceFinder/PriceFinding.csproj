@@ -95,13 +95,14 @@
     <Compile Include="Managing Data\Reader Interfaces\IProductReader.cs" />
     <Compile Include="Managing Data\ODBC Readers\ODBCProductReader.cs" />
     <Compile Include="Managing Data\SDO  Readers\SDOProductReader.cs" />
+    <Compile Include="Models\OrderItem.cs" />
     <Compile Include="Properties\UserSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>UserSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="Utility\BackgroundMessageBoxException.cs" />
-    <Compile Include="Model\Customer.cs" />
+    <Compile Include="Models\Customer.cs" />
     <Compile Include="Utility\Binding\Converters\BoolToBrushConverter.cs" />
     <Compile Include="Utility\Binding\Converters\BoolToStringConverter.cs" />
     <Compile Include="Utility\Binding\Converters\BoolToVisibilityConverter.cs" />
@@ -110,13 +111,14 @@
     <Compile Include="Utility\Binding\RelayCommandAsync.cs" />
     <Compile Include="Utility\Binding\RelayCommandParametered.cs" />
     <Compile Include="Utility\DataStorage.cs" />
+    <Compile Include="Utility\GenResult.cs" />
     <Compile Include="Utility\Info.cs" />
     <Compile Include="Utility\MyDictionary.cs" />
     <Compile Include="Utility\MyException.cs" />
-    <Compile Include="Model\Order.cs" />
-    <Compile Include="Model\Product.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\Product.cs" />
     <Compile Include="Utility\SageAccessType.cs" />
-    <Compile Include="Model\Sale.cs" />
+    <Compile Include="Models\Sale.cs" />
     <Compile Include="Managing Data\DataManager.cs" />
     <Compile Include="Managing Data\ODBC Readers\ODBCInvoiceReader.cs" />
     <Compile Include="Managing Data\ODBC Readers\ODBCListReader.cs" />
@@ -135,6 +137,7 @@
     <Compile Include="ViewModels\BackgroundViewModel.cs" />
     <Compile Include="ViewModels\CustomerViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\OrderItemViewModel.cs" />
     <Compile Include="ViewModels\OrderViewModel.cs" />
     <Compile Include="ViewModels\ProductViewModel.cs" />
     <Compile Include="Writing\PostOrderWriter.cs" />

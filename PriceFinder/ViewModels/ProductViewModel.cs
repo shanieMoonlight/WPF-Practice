@@ -10,13 +10,8 @@ using System.Threading.Tasks;
 
 namespace PriceFinding.ViewModels
 {
-   class ProductViewModel : ObservableObject
+   class ProductViewModel : OrderItemViewModel<Product>
    {
-
-      public ObservableCollection<string> CodeList { get; private set; }
-      private MyDictionary<Product> _map;
-      private string _code;
-      private string _description;
       private double? _last;
       private double? _cost;
       private double? _priceList;
@@ -26,64 +21,15 @@ namespace PriceFinding.ViewModels
       private double? _result;
       private int? _quantity;
       public ObservableCollection<string> Types { get; private set; }
-      public bool IsValid { get; set; } = false;
       private readonly double _defaultMargin = Settings.Default.defaultMargin;
-      private readonly string NOT_FOUND = Settings.Default.NOT_FOUND;
 
 
       //-------------------------------------------------------------------------------//
 
-      public ProductViewModel(MyDictionary<Product> productMap)
+      public ProductViewModel(MyDictionary<Product> productMap, IEnumerable<Product> productList) : base(productMap, productList)
       {
-         UpdateData(productMap);
          Types = new ObservableCollection<string>(PriceTypes.GetPriceTypes());
       }//ctor
-
-      //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-
-      public string Code
-      {
-         get
-         {
-            return _code ?? "";
-         }
-         set
-         {
-            _code = value ?? "";
-            //Set description.
-            if (_map.TryGetValue(_code, out Product customer))
-            {
-               Description = customer.Description;
-               IsValid = true;
-            }
-            else
-            {
-               IsValid = false;
-            }//else
-
-            //Tell the view.
-            OnPropertyChanged(nameof(Code));
-         }
-      }//Code
-
-      //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-
-      public string Description
-      {
-         get
-         {
-            if (string.IsNullOrWhiteSpace(_description))
-               return "";
-            else
-               return _description;
-         }
-         set
-         {
-            _description = value;
-            //Tell the View about it.
-            OnPropertyChanged(nameof(Description));
-         }
-      }//Description
 
       //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
 
@@ -220,10 +166,9 @@ namespace PriceFinding.ViewModels
 
       //-------------------------------------------------------------------------------//
 
-      public void Clear()
+      public override void Clear()
       {
-         Code = null;
-         Description = null;
+         base.Clear();
          Date = null;
          Last = null;
          Cost = null;
@@ -254,15 +199,6 @@ namespace PriceFinding.ViewModels
          }//switch
 
       }//SetResult
-
-      //-------------------------------------------------------------------------------//
-
-      public void UpdateData(MyDictionary<Product> productMap)
-      {
-         _map = productMap;
-         CodeList = new ObservableCollection<string>(_map.Keys);
-
-      }//UpdateData
 
       //-------------------------------------------------------------------------------//
 

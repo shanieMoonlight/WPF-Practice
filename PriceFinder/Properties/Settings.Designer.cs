@@ -74,24 +74,6 @@ namespace PriceFinding.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("FindSe")]
-        public string appProgramDir {
-            get {
-                return ((string)(this["appProgramDir"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("PF_Updaters")]
-        public string appPFUpdaterDir {
-            get {
-                return ((string)(this["appPFUpdaterDir"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Price Finder")]
         public string programDir {
             get {
                 return ((string)(this["programDir"]));
