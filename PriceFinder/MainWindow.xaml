@@ -14,6 +14,13 @@
           <converters:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
           <converters:BoolToBrushConverter x:Key="BoolToBrush"/>
           <converters:BoolToStringConverter x:Key="BoolToString"/>
+          <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MaterialDesignComboBox}">
+               <Style.Triggers>
+                    <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                         <Setter Property="IsDropDownOpen" Value="true" />
+                    </Trigger>
+               </Style.Triggers>
+          </Style>
      </Window.Resources>
      <ScrollViewer>
 
@@ -36,7 +43,7 @@
 
                          <ComboBox x:Name="cbCustomerCode" Grid.Column="0" Grid.Row="1" Width="300" Margin="0,0,10,0" 
                               Padding="2,10,0,4" 
-                              materialDesign:HintAssist.Hint="Customer Code"
+                              materialDesign:HintAssist.Hint="Customer"
                               materialDesign:HintAssist.IsFloating="True"
                               StaysOpenOnEdit="True"
                               IsEditable="True"
@@ -86,48 +93,45 @@
                     </StackPanel>
                </Grid>
 
-               <Grid x:Name="gridProductLabels"  Grid.Row="1"  Background="{StaticResource BrushPrimaryDark}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,10,0,0">
+               <Grid x:Name="gridProductLabels"  Grid.Row="1"  Background="{StaticResource BrushPrimaryDark}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,0,0,0">
                     <Grid.ColumnDefinitions>
                          <ColumnDefinition Width="*"/>
                          <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="0" Orientation="Horizontal"  MaxHeight="100">
-                         <StackPanel Orientation="Vertical">
-                              <Label x:Name="lblProductCode" Grid.Column="0" Grid.Row="1" Width="100" Margin="0,0,10,0" 
-                         Content="Product Code"/>
-                         </StackPanel>
-                         <StackPanel Orientation="Vertical">
-                              <Label x:Name="lblProductDesc" Grid.Column="1" Grid.Row="1" Width="200" Margin="5,0,5,0"   
-                         Focusable="False"
-                        Content="Product Description"/>
-                         </StackPanel>
-                    </StackPanel>
+                         <Grid Grid.Column="0" Margin ="5,0,5,0">
+                              <Grid.ColumnDefinitions>
+                                   <ColumnDefinition Width="*"/>
+                                   <ColumnDefinition Width="auto"/>
+                              </Grid.ColumnDefinitions>
+                              <Label x:Name="lblProductCode" Grid.Column="0"  Margin="0,0,0,0" 
+                                   Content="Product"/>
+                              <Label x:Name="lblQty" Grid.Column="1" Width="80" Margin="0,0,0,0"  
+                                   Focusable="False"
+                                   Content="Qty"/>
+                    </Grid>
 
 
-                    <StackPanel Grid.Column="1" Orientation="Horizontal"  MaxHeight="100">
-                         <Label x:Name="lblDate" Grid.Column="0" Grid.Row="1" Width="80" Margin="0,0,0,0" 
+                    <StackPanel Grid.Column="1" Orientation="Horizontal"  MaxHeight="100" Margin="5,0,5,0">
+                         <Label x:Name="lblDate" Grid.Column="0" Grid.Row="1" Width="80" Margin="2,0,2,0" 
                               Content="Date"/>
-                         <Label x:Name="lblLastPrice" Grid.Column="1" Grid.Row="1" Width="80" Margin="0,0,0,0"   
+                         <Label x:Name="lblLastPrice" Grid.Column="1" Grid.Row="1" Width="80" Margin="2,0,2,0"   
                               Focusable="False"
                               Content="Last Price"/>
                          <Label x:Name="lblPriceList" Grid.Column="0" Grid.Row="1" Width="80"  
                               Content="List Price"/>
-                         <Label x:Name="lblCostPrice" Grid.Column="1" Grid.Row="1" Width="80" Margin="0,0,0,0"  
+                         <Label x:Name="lblCostPrice" Grid.Column="1" Grid.Row="1" Width="80" Margin="2,0,7,0"  
                               Focusable="False"
                               Content="Cost Price"/>
-                         <Label x:Name="lblMargin" Grid.Column="1" Grid.Row="1" Width="80" Margin="0,0,0,0"  
+                         <Label x:Name="lblMargin" Grid.Column="1" Grid.Row="1" Width="80" Margin="7,0,2,0"  
                               Focusable="False"
                               Content="Margin"/>
-                         <Label x:Name="lblType" Grid.Column="1" Grid.Row="1" Width="80" Margin="0,0,0,0"  
+                         <Label x:Name="lblType" Grid.Column="1" Grid.Row="1" Width="80" Margin="2,0,7,0"  
                               Focusable="False"
                               Content="Type"/>
-                         <Label x:Name="lblResult" Grid.Column="1" Grid.Row="1" Width="80" Margin="0,0,0,0"  
+                         <Label x:Name="lblResult" Grid.Column="1" Grid.Row="1" Width="80" Margin="5,0,2,0"  
                               Focusable="False"
                               Content="Price"/>
-                         <Label x:Name="lblQty" Grid.Column="1" Grid.Row="1" Width="80" Margin="0,0,0,0"  
-                              Focusable="False"
-                              Content="Qty"/>
                     </StackPanel>
 
                </Grid>
@@ -146,32 +150,49 @@
                                              <ColumnDefinition Width="*"/>
                                              <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <DockPanel Grid.Column="0">
-                                             <ComboBox Grid.Column="0" Grid.Row="1" Margin="0,0,10,0" 
+                                        <Grid Grid.Column="0" Margin ="5,0,5,0">
+                                             <Grid.ColumnDefinitions>
+                                                  <ColumnDefinition Width="*"/>
+                                                  <ColumnDefinition Width="auto"/>
+                                             </Grid.ColumnDefinitions>
+                                             <ComboBox Grid.Column="0"  Margin="2,0,2,0" 
                                                        Padding="2,10,0,4" 
-                                                       materialDesign:HintAssist.Hint="Product Code"
+                                                       materialDesign:HintAssist.Hint="Product"
                                                        materialDesign:HintAssist.IsFloating="True"
+                                                       HorizontalContentAlignment="Left"
                                                        StaysOpenOnEdit="True"
                                                        IsEditable="True"
                                                        IsTextSearchEnabled="True"
+                                                       
                                                        AllowDrop="True"
                                                        TabIndex="1"
                                                        ItemsSource="{Binding CodeList}"
                                                        SelectedValuePath="Code"
                                                        SelectedValue="{Binding Code, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"       
-                                                       Cursor="Hand" >
+                                                       Cursor="Hand" SelectionChanged="ComboBox_SelectionChanged" LostFocus="ComboBox_LostFocus_1" >
+                                                  
                                                   <ComboBox.ItemsPanel>
                                                        <ItemsPanelTemplate>
                                                             <VirtualizingStackPanel />
                                                        </ItemsPanelTemplate>
                                                   </ComboBox.ItemsPanel>
                                              </ComboBox>
+                                             <TextBox Grid.Column="1" Width="80" Margin="2,0,2,0"   
+                                                            Padding="3,0,2,0"
+                                                            IsReadOnly="False"
+                                                            Focusable="True"
+                                                            CaretBrush="{StaticResource BrushPrimaryDark}"
+                                                            PreviewTextInput="NumberValidationTextBox"                                                            
+                                                            TabIndex="200"
+                                                            Text="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,TargetNullValue=''}"
+                                                            materialDesign:HintAssist.Hint="Quantity"
+                                                            materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"
+                                                            materialDesign:HintAssist.IsFloating="True"/>
+                                        </Grid>
 
-                                        </DockPanel>
 
-
-                                        <StackPanel Grid.Column="1" Orientation="Horizontal" MaxHeight="100" Background="{StaticResource BrushPrimary}">
-                                             <TextBox Width="80" Margin="0,0,0,0" 
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" MaxHeight="100" Background="{StaticResource BrushPrimary}" Margin="5,0,0,0">
+                                             <TextBox Width="80" Margin="7,0,2,0" 
                                                        Padding="3,0,2,0"
                                                        IsReadOnly="True"
                                                        Focusable="False"
@@ -187,7 +208,7 @@
                                                        Text="{Binding Last}"                                                    
                                                        materialDesign:HintAssist.Hint="Last"
                                                        materialDesign:HintAssist.IsFloating="True"/>
-                                             <TextBox Width="80" Margin="0,0,0,0" 
+                                             <TextBox Width="80" Margin="2,0,2,0" 
                                                        Padding="3,0,2,0"
                                                        IsReadOnly="True"
                                                        Focusable="False"
@@ -195,7 +216,7 @@
                                                        Text="{Binding PriceList}"
                                                        materialDesign:HintAssist.Hint="List"
                                                        materialDesign:HintAssist.IsFloating="True"/>
-                                             <TextBox Width="80" Margin="0,0,0,0"   
+                                             <TextBox Width="80" Margin="2,0,7,0"   
                                                        Padding="3,0,2,0"
                                                        IsReadOnly="True"
                                                        Focusable="False"
@@ -204,7 +225,7 @@
                                                        materialDesign:HintAssist.Hint="Cost"
                                                        materialDesign:HintAssist.IsFloating="True"/>
                                              <StackPanel Grid.Column="1" Orientation="Horizontal" Width="auto" Background="{StaticResource BrushPrimaryLight}">
-                                                  <TextBox Width="80" Margin="0,0,0,0"   
+                                                  <TextBox Width="80" Margin="7,0,2,0"   
                                                             Padding="3,0,2,0"
                                                             IsReadOnly="False"
                                                             Focusable="True"
@@ -216,7 +237,7 @@
                                                             materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"
                                                             materialDesign:HintAssist.IsFloating="True"/>
 
-                                                  <ComboBox Width="80" Margin="0,0,5,0"   Padding="2,10,0,4" 
+                                                  <ComboBox Width="80" Margin="2,0,7,0"   Padding="2,10,0,4" 
                                                             materialDesign:HintAssist.IsFloating="True"
                                                             StaysOpenOnEdit="True"
                                                             IsTextSearchEnabled="True"
@@ -228,7 +249,7 @@
                                                   </ComboBox>
                                              </StackPanel>
 
-                                             <TextBox Width="80" Margin="0,0,0,0"   
+                                             <TextBox Width="80" Margin="5,0,7,0"   
                                                        Padding="3,0,2,0"
                                                        IsReadOnly="True"
                                                        Focusable="False"
@@ -239,20 +260,7 @@
                                                        Text="{Binding Result, StringFormat=N5}"
                                                        materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"
                                                        materialDesign:HintAssist.IsFloating="True"/>
-
-                                             <StackPanel Grid.Column="1" Orientation="Horizontal" Width="auto" Background="{StaticResource BrushPrimaryLight}">
-                                                  <TextBox Width="80" Margin="0,0,0,0"   
-                                                            Padding="3,0,2,0"
-                                                            IsReadOnly="False"
-                                                            Focusable="True"
-                                                            CaretBrush="{StaticResource BrushPrimaryDark}"
-                                                            PreviewTextInput="NumberValidationTextBox"                                                            
-                                                            TabIndex="200"
-                                                            Text="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,TargetNullValue=''}"
-                                                            materialDesign:HintAssist.Hint="Quantity"
-                                                            materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"
-                                                            materialDesign:HintAssist.IsFloating="True"/>
-                                             </StackPanel>
+                                             
                                         </StackPanel>
                                    </Grid>
 

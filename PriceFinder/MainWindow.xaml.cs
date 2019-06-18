@@ -65,10 +65,31 @@ namespace PriceFinding
          e.Handled = regex.IsMatch(e.Text);
       }//NumberValidationTextBox
 
+      private void ComboBox_LostFocus(object sender, RoutedEventArgs e)
+      {
+         var cb = (ComboBox)sender;
+         cb.HorizontalContentAlignment = HorizontalAlignment.Left;
+         var cmbTextBox = (TextBox)cb.Template.FindName("PART_EditableTextBox", cb);
+         cmbTextBox.CaretIndex = 0;
+      }
+
+      private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+      {
+
+      }
+
+      private void ComboBox_LostFocus_1(object sender, RoutedEventArgs e)
+      {
+         var cb = (ComboBox)sender;
+         cb.HorizontalContentAlignment = HorizontalAlignment.Left;
+         var cmbTextBox = (TextBox)cb.Template.FindName("PART_EditableTextBox", cb);
+         cmbTextBox.CaretIndex = 0;
+      }
+
 
       //-------------------------------------------------------------------------------------------------------//
 
-     
-   
+
+
    }//Cls
 }//NS

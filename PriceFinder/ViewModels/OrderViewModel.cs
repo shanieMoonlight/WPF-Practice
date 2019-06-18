@@ -286,13 +286,13 @@ namespace PriceFinding.ViewModels
                {
                   product.Date = null;
                   product.Last = null;
-                  product.Quantity = null;
+                  //product.Quantity = null;
                }
                else
                {
                   product.Date = sale.Date;
                   product.Last = sale.SalePrice;
-                  product.Quantity = sale.Qty;
+                  //product.Quantity = sale.Qty;
                }//Else
 
 
