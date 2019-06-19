@@ -162,14 +162,13 @@
                                                        HorizontalContentAlignment="Left"
                                                        StaysOpenOnEdit="True"
                                                        IsEditable="True"
-                                                       IsTextSearchEnabled="True"
-                                                       
+                                                       IsTextSearchEnabled="True"                                                       
                                                        AllowDrop="True"
-                                                       TabIndex="1"
+                                                       TabIndex="{Binding CodeTabIndex}"
                                                        ItemsSource="{Binding CodeList}"
                                                        SelectedValuePath="Code"
                                                        SelectedValue="{Binding Code, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"       
-                                                       Cursor="Hand" SelectionChanged="ComboBox_SelectionChanged" LostFocus="ComboBox_LostFocus_1" >
+                                                       Cursor="Hand" LostFocus="ComboBox_LostFocus_1" >
                                                   
                                                   <ComboBox.ItemsPanel>
                                                        <ItemsPanelTemplate>
@@ -183,7 +182,7 @@
                                                             Focusable="True"
                                                             CaretBrush="{StaticResource BrushPrimaryDark}"
                                                             PreviewTextInput="NumberValidationTextBox"                                                            
-                                                            TabIndex="200"
+                                                            TabIndex="{Binding QtyTabIndex}"
                                                             Text="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,TargetNullValue=''}"
                                                             materialDesign:HintAssist.Hint="Quantity"
                                                             materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"

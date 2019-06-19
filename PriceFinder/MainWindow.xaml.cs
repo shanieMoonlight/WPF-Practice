@@ -73,10 +73,7 @@ namespace PriceFinding
          cmbTextBox.CaretIndex = 0;
       }
 
-      private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-      {
-
-      }
+      //-------------------------------------------------------------------------------------------------------//
 
       private void ComboBox_LostFocus_1(object sender, RoutedEventArgs e)
       {

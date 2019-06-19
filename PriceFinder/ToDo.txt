@@ -4,3 +4,4 @@
 2. MVVM
 3. Add manual pricing option.
 4. Settings form
+5. Inherit from Textbox to make NumberOnlyTextBox

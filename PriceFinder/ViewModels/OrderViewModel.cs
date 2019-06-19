@@ -107,7 +107,7 @@ namespace PriceFinding.ViewModels
 
       private void AddProduct()
       {
-         Products.Add(new ProductViewModel(_prodMap, _prodList));
+         Products.Add(new ProductViewModel(_prodMap, _prodList, Products.Count));
       }//AddProduct
 
       //-------------------------------------------------------------------------------//

@@ -22,7 +22,9 @@ namespace PriceFinding.ViewModels
       private int? _quantity;
       public ObservableCollection<string> Types { get; private set; }
       private readonly double _defaultMargin = Settings.Default.defaultMargin;
-
+      public int QtyTabIndex { get; set; }
+      public int CodeTabIndex { get; set; }
+      private int _index;
 
       //-------------------------------------------------------------------------------//
 
@@ -32,6 +34,14 @@ namespace PriceFinding.ViewModels
       }//ctor
 
       //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
+
+      public ProductViewModel(MyDictionary<Product> productMap, IEnumerable<Product> productList, int index) : base(productMap, productList)
+      {
+         Types = new ObservableCollection<string>(PriceTypes.GetPriceTypes());
+         Index = index;
+      }//ctor
+
+      //-------------------------------------------------------------------------------//
 
       public double? Last
       {
@@ -164,6 +174,17 @@ namespace PriceFinding.ViewModels
          }
       }//Type
 
+      //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
+
+      public int Index
+      {
+         get { return _index; }
+         set
+         {
+            CodeTabIndex = value + 1;
+            QtyTabIndex = CodeTabIndex + 1;
+         }
+      }//Index
       //-------------------------------------------------------------------------------//
 
       public override void Clear()
