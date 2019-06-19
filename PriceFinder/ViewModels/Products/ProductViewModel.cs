@@ -1,43 +1,49 @@
 ﻿using PriceFinding.Models;
 using PriceFinding.Properties;
+using PriceFinding.Utility;
 using PriceFinding.Utility.Binding;
+using PriceFinding.ViewModels.Products;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
 
 namespace PriceFinding.ViewModels
 {
-   class ProductViewModel : OrderItemViewModel<Product>
+   public class ProductViewModel : OrderItemViewModel<Product>
    {
+      private readonly double _defaultMargin = Settings.Default.defaultMargin;
+
       private double? _last;
       private double? _cost;
       private double? _priceList;
       private double? _margin;
       private string _type;
       private DateTime? _date;
-      private double? _result;
       private int? _quantity;
+      private int _index;
+
       public ObservableCollection<string> Types { get; private set; }
-      private readonly double _defaultMargin = Settings.Default.defaultMargin;
       public int QtyTabIndex { get; set; }
       public int CodeTabIndex { get; set; }
-      private int _index;
+      public ResultViewModel Result { get; set; }
 
       //-------------------------------------------------------------------------------//
 
       public ProductViewModel(MyDictionary<Product> productMap, IEnumerable<Product> productList) : base(productMap, productList)
       {
          Types = new ObservableCollection<string>(PriceTypes.GetPriceTypes());
+         Result = new ResultViewModel();
       }//ctor
 
       //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
 
-      public ProductViewModel(MyDictionary<Product> productMap, IEnumerable<Product> productList, int index) : base(productMap, productList)
+      public ProductViewModel(MyDictionary<Product> productMap, IEnumerable<Product> productList, int index) : this(productMap, productList)
       {
-         Types = new ObservableCollection<string>(PriceTypes.GetPriceTypes());
          Index = index;
       }//ctor
 
@@ -102,7 +108,7 @@ namespace PriceFinding.ViewModels
          set
          {
             _margin = value;
-            Result = GetMarginPrice();
+            Result.Value = GetMarginPrice();
             //Tell the View about it.
             OnPropertyChanged(nameof(Margin));
          }
@@ -123,22 +129,6 @@ namespace PriceFinding.ViewModels
             OnPropertyChanged(nameof(Date));
          }
       }//Date
-
-      //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-
-      public double? Result
-      {
-         get
-         {
-            return _result;
-         }
-         set
-         {
-            _result = value;
-            //Tell the View about it.
-            OnPropertyChanged(nameof(Result));
-         }
-      }//Result
 
       //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
 
@@ -169,6 +159,21 @@ namespace PriceFinding.ViewModels
             _type = value;
             if (!string.IsNullOrWhiteSpace(_type))
                SetResult();
+
+            if (_type == PriceTypes.MANUAL)
+            {
+               Result.Readonly = false;
+               Result.Focusable = true;
+               Result.Caret.Color = (Brush)Application.Current.FindResource(MyResources.Brushes.PrimaryDark);
+               Result.Background.Color = (Brush)Application.Current.FindResource(MyResources.Brushes.PrimaryLight);
+
+            }
+            else {
+               Result.Readonly = true;
+               Result.Focusable = true;
+               Result.Caret.Color = (Brush)Application.Current.FindResource(MyResources.Brushes.Primary);
+               Result.Background.Color = (Brush)Application.Current.FindResource(MyResources.Brushes.Primary);
+            }//If
             //Tell the View about it.
             OnPropertyChanged(nameof(Type));
          }
@@ -181,7 +186,8 @@ namespace PriceFinding.ViewModels
          get { return _index; }
          set
          {
-            CodeTabIndex = value + 1;
+            _index = value;
+            CodeTabIndex = _index + 1;
             QtyTabIndex = CodeTabIndex + 1;
          }
       }//Index
@@ -206,13 +212,13 @@ namespace PriceFinding.ViewModels
          switch (Type)
          {
             case PriceTypes.LAST_PRICE:
-               Result = GetLastPrice();
+               Result.Value = GetLastPrice();
                break;
             case PriceTypes.MARGIN:
-               Result = GetMarginPrice();
+               Result.Value = GetMarginPrice();
                break;
             case PriceTypes.PRICE_LIST_PRICE:
-               Result = GetPriceListPrice();
+               Result.Value = GetPriceListPrice();
                break;
             default:
                GetLastPrice();

@@ -1,14 +1,9 @@
 ﻿using PriceFinding.Utility.Binding;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace PriceFinding.ViewModels
+namespace PriceFinding.ViewModels.Common
 {
-  public class BackgroundViewModel : ObservableObject
+   public class BackgroundViewModel : ObservableObject
    {
 
       private Brush _color;

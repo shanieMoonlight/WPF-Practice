@@ -110,6 +110,7 @@
     <Compile Include="Utility\Binding\RelayCommand.cs" />
     <Compile Include="Utility\Binding\RelayCommandAsync.cs" />
     <Compile Include="Utility\Binding\RelayCommandParametered.cs" />
+    <Compile Include="Utility\CustomControls\ClickSelectAllTextBox.cs" />
     <Compile Include="Utility\DataStorage.cs" />
     <Compile Include="Utility\GenResult.cs" />
     <Compile Include="Utility\Info.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="Utility\MyException.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Product.cs" />
+    <Compile Include="Utility\MyResources.cs" />
     <Compile Include="Utility\SageAccessType.cs" />
     <Compile Include="Models\Sale.cs" />
     <Compile Include="Managing Data\DataManager.cs" />
@@ -134,12 +136,14 @@
     <Compile Include="Managing Data\Reader Interfaces\IPriceListReader.cs" />
     <Compile Include="Utility\Sage\SageColumns.cs" />
     <Compile Include="Utility\Sage\SageTables.cs" />
-    <Compile Include="ViewModels\BackgroundViewModel.cs" />
+    <Compile Include="ViewModels\Common\CaretViewModel.cs" />
+    <Compile Include="ViewModels\Common\BackgroundViewModel.cs" />
     <Compile Include="ViewModels\CustomerViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\OrderItemViewModel.cs" />
     <Compile Include="ViewModels\OrderViewModel.cs" />
-    <Compile Include="ViewModels\ProductViewModel.cs" />
+    <Compile Include="ViewModels\Products\ProductViewModel.cs" />
+    <Compile Include="ViewModels\Products\ResultViewModel.cs" />
     <Compile Include="Writing\PostOrderWriter.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

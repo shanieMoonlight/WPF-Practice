@@ -1,6 +1,7 @@
 ﻿using PriceFinding.Models;
 using PriceFinding.Properties;
 using PriceFinding.Utility.Binding;
+using PriceFinding.ViewModels.Common;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
@@ -11,7 +12,7 @@ namespace PriceFinding.ViewModels
    /// Base class for CustomerViewModel & ProductViewModel
    /// </summary>
    /// <typeparam name="T"></typeparam>
-  public class OrderItemViewModel<T> : ObservableObject where T : OrderItem
+   public class OrderItemViewModel<T> : ObservableObject where T : OrderItem
    {
       private ObservableCollection<T> _codeList;
       public BackgroundViewModel Background { get; set; }

@@ -13,7 +13,7 @@ namespace PriceFinding.ViewModels
 {
    class OrderViewModel : ObservableObject
    {
-      private const int INITIAL_ROW_COUNT = 10;
+      private const int INITIAL_ROW_COUNT = 1;
       public CustomerViewModel Customer { get; private set; }
       public ObservableCollection<ProductViewModel> Products { get; private set; }
       private DataManager _dataManager;
@@ -187,7 +187,7 @@ namespace PriceFinding.ViewModels
             Product product = _dataManager.CheckProduct(prodCode);
             if (product.Code != Settings.Default.NOT_FOUND && productVM.Result != null && productVM.Quantity != null)
             {
-               product.SalePrice = productVM.Result.Value;
+               product.SalePrice = productVM.Result.Value.Value;
                product.Qty = productVM.Quantity.Value;
                products.Add(product);
             }//if
