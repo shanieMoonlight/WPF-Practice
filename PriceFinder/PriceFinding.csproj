@@ -110,6 +110,8 @@
     <Compile Include="Utility\Binding\RelayCommand.cs" />
     <Compile Include="Utility\Binding\RelayCommandAsync.cs" />
     <Compile Include="Utility\Binding\RelayCommandParametered.cs" />
+    <Compile Include="Utility\CustomControls\NumberOnlyTextBox .cs" />
+    <Compile Include="Utility\CustomControls\NumberOnlySelectAllTextBox .cs" />
     <Compile Include="Utility\CustomControls\ClickSelectAllTextBox.cs" />
     <Compile Include="Utility\DataStorage.cs" />
     <Compile Include="Utility\GenResult.cs" />
