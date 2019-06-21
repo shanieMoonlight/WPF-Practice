@@ -297,12 +297,18 @@
                     </materialDesign:Card>
                </smtx:XamlDisplay>
 
-
+               <Grid  Grid.Row="3" Background="Transparent"  Margin="0,-5,0,0" Panel.ZIndex="20">
+                    <Grid.ColumnDefinitions>
+                         <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                         <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
                <Button x:Name="fabRemoveProductRow"  Grid.Row="3" Style="{StaticResource MaterialDesignFloatingActionMiniButton}"   
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    Background="{StaticResource BrushPrimaryLight}"
-                   Margin="0,-5,0,5"
+                   Margin="20,0,0,0"
                    ToolTip="Remove Product Row" 
                    Command="{Binding Order.RemoveProductCommand}">
                     <materialDesign:PackIcon Kind="Minus" 
@@ -313,21 +319,21 @@
                    HorizontalAlignment="Right"
                    VerticalAlignment="Top"
                    Background="{StaticResource BrushPrimary}"
-                   Margin="0,-5,0,5"
+                   Margin="0,0,20,0"
                    ToolTip="Add Product Row" 
                    Command="{Binding Order.AddProductCommand}">
                     <materialDesign:PackIcon Kind="Plus" 
                    Height="24" Width="24" />
                </Button>
+               </Grid>
 
-
-               <Grid x:Name="gridFooter"  Grid.Row="4"  Background="{StaticResource BrushPrimary}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,0,0,0">
+               <Grid x:Name="gridFooter"  Grid.Row="4"  Background="{StaticResource BrushPrimary}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,-20,0,0">
                     <Grid.ColumnDefinitions>
-                         <ColumnDefinition Width="20"/>
+                         <ColumnDefinition Width="30"/>
                          <ColumnDefinition Width="*"/>
                          <ColumnDefinition Width="*"/>
                          <ColumnDefinition Width="*"/>
-                         <ColumnDefinition Width="20"/>
+                         <ColumnDefinition Width="30"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                          <RowDefinition Height="20"/>
@@ -339,17 +345,17 @@
                     <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" Margin="15,0,15,0" VerticalAlignment="Top">
                          <TextBox  Margin="0,0,0,0"   Background="{StaticResource BrushPrimaryLight}"
                               Padding="3,0,2,0"
-                              Text="{Binding Order.Customer.Description}"
+                              Text="{Binding Order.ExtraInfo.CustomerOrderNumber}"
                               materialDesign:HintAssist.Hint="Customer Order No."
                               materialDesign:HintAssist.IsFloating="True"/>
-                         <TextBox Margin="0,0,0,0"   Background="{StaticResource BrushPrimaryLight}"
+                         <textboxes:NumberOnlySelectAllTextBox Margin="0,0,0,0"   Background="{StaticResource BrushPrimaryLight}"
                               Padding="3,0,2,0"
-                              Text="{Binding Order.Customer.Description}"
+                              Text="{Binding Order.ExtraInfo.Carriage}"
                               materialDesign:HintAssist.Hint="Carriage"
                               materialDesign:HintAssist.IsFloating="True"/>
                          <TextBox Margin="0,0,0,0"   Background="{StaticResource BrushPrimaryLight}"
                               Padding="3,0,2,0"
-                              Text="{Binding Order.Customer.Description}"
+                              Text="{Binding Order.ExtraInfo.TakenBy}"
                               materialDesign:HintAssist.Hint="Taken By"
                               materialDesign:HintAssist.IsFloating="True"/>
 
@@ -357,30 +363,35 @@
 
 
                     <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Vertical"  Margin="15,0,15,0" VerticalAlignment="Center">
-                         <TextBox  Margin="0,0,0,0"   Background="{StaticResource BrushPrimaryLight}"
+                         <TextBox  Margin="0,0,0,0"   
+                              Background="{StaticResource BrushPrimaryLight}"
                               Padding="3,0,2,0"
-                              Text="{Binding Order.Customer.Description}"
-                              materialDesign:HintAssist.Hint="Customer Order No."
+                              Text="{Binding Order.ExtraInfo.DeliveryAddress.Line1}"
+                              materialDesign:HintAssist.Hint="Address Line 1"
                               materialDesign:HintAssist.IsFloating="True"/>
-                         <TextBox  Margin="0,0,0,0"   Background="{StaticResource BrushPrimaryLight}"
+                         <TextBox  Margin="0,0,0,0"   
+                              Background="{StaticResource BrushPrimaryLight}"
                               Padding="3,0,2,0"
-                              Text="{Binding Order.Customer.Description}"
-                              materialDesign:HintAssist.Hint="Customer Order No."
+                              Text="{Binding Order.ExtraInfo.DeliveryAddress.Line2}"
+                              materialDesign:HintAssist.Hint="Address Line 2"
                               materialDesign:HintAssist.IsFloating="True"/>
-                         <TextBox  Margin="0,0,0,0"   Background="{StaticResource BrushPrimaryLight}"
+                         <TextBox  Margin="0,0,0,0"   
+                              Background="{StaticResource BrushPrimaryLight}"
                               Padding="3,0,2,0"
-                              Text="{Binding Order.Customer.Description}"
-                              materialDesign:HintAssist.Hint="Customer Order No."
+                              Text="{Binding Order.ExtraInfo.DeliveryAddress.Line3}"
+                              materialDesign:HintAssist.Hint="Address Line 3"
                               materialDesign:HintAssist.IsFloating="True"/>
-                         <TextBox  Margin="0,0,0,0"   Background="{StaticResource BrushPrimaryLight}"
+                         <TextBox  Margin="0,0,0,0"   
+                              Background="{StaticResource BrushPrimaryLight}"
                               Padding="3,0,2,0"
-                              Text="{Binding Order.Customer.Description}"
-                              materialDesign:HintAssist.Hint="Customer Order No."
+                              Text="{Binding Order.ExtraInfo.DeliveryAddress.Line4}"
+                              materialDesign:HintAssist.Hint="Address Line 4"
                               materialDesign:HintAssist.IsFloating="True"/>
-                         <TextBox  Margin="0,0,0,0"   Background="{StaticResource BrushPrimaryLight}"
+                         <TextBox  Margin="0,0,0,0"   
+                              Background="{StaticResource BrushPrimaryLight}"
                               Padding="3,0,2,0"
-                              Text="{Binding Order.Customer.Description}"
-                              materialDesign:HintAssist.Hint="Customer Order No."
+                              Text="{Binding Order.ExtraInfo.DeliveryAddress.Line5}"
+                              materialDesign:HintAssist.Hint="Address Line 5"
                               materialDesign:HintAssist.IsFloating="True"/>
                     </StackPanel>
 
@@ -392,12 +403,13 @@
                               <RowDefinition Height="*"></RowDefinition>
                          </Grid.RowDefinitions>
                          <TextBox Grid.Column="1" Grid.Row="2"  HorizontalAlignment="Stretch" 
-                               TextWrapping="Wrap" 
-                                  AcceptsReturn="True"
-                                  Background="{StaticResource BrushPrimaryLight}"
+                              TextWrapping="Wrap" 
+                              AcceptsReturn="True"
+                              Background="{StaticResource BrushPrimaryLight}"
+                              Text="{Binding Order.ExtraInfo.Notes}"
                               materialDesign:HintAssist.Hint="Notes"
                               materialDesign:HintAssist.IsFloating="True"
-                             VerticalAlignment="Stretch" />
+                              VerticalAlignment="Stretch" />
                     </Grid>
 
 

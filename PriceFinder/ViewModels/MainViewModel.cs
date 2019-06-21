@@ -1,5 +1,6 @@
 ﻿using PriceFinding.Utility;
 using PriceFinding.Utility.Binding;
+using System;
 using System.Threading.Tasks;
 
 namespace PriceFinding.ViewModels
@@ -22,7 +23,7 @@ namespace PriceFinding.ViewModels
       {
          FindCommand = new RelayCommandAsync(FindPricesAsync, CanUseFindPrices);
          UpdateCommand = new RelayCommandAsync(UpdateAsync, CanUseUpdate);
-         PlaceOrderCommand = new RelayCommandAsync(PlaceOrderAsync, CanUseOrder);
+         PlaceOrderCommand = new RelayCommandAsync(PlaceOrderAsync, CanUsePlaceOrder);
          ClearCommand = new RelayCommand(Clear, CanUseClear);
          Order = new OrderViewModel();
 
@@ -67,18 +68,29 @@ namespace PriceFinding.ViewModels
 
       private async Task FindPricesAsync(object obj)
       {
-         ShowProgressSpinner = true;
-         _disableButtons = true;
+         try
+         {
+            ShowProgressSpinner = true;
+            _disableButtons = true;
 
-        var findResult =  await Task.Run(() => Order.FindPrices());
+            var findResult = await Task.Run(() => Order.FindPrices());
 
-         ShowProgressSpinner = false;
-         _disableButtons = false;
 
-         if (findResult.Succeeded)
-            DisplayMessage("Order ready", "Don't forget to set the quantities, and pricing types.");
-         else
-            DisplayMessage("Error", findResult.Info);
+            if (findResult.Succeeded)
+               DisplayMessage("Order ready", "Don't forget to set the quantities, and pricing types.");
+            else
+               DisplayMessage("Error", findResult.Info);
+
+         }
+         catch (Exception e)
+         {
+            DisplayMessage("Error", e.Message);
+         }
+         finally
+         {
+            ShowProgressSpinner = false;
+            _disableButtons = false;
+         }//finally
 
       }//FindPrices
 
@@ -116,22 +128,31 @@ namespace PriceFinding.ViewModels
 
       private async Task PlaceOrderAsync(object obj)
       {
-         ShowProgressSpinner = true;
-         _disableButtons = true;
+         try
+         {
+            ShowProgressSpinner = true;
+            _disableButtons = true;
 
-         Info info = await Task.Run(() => Order.PlaceOrder());
 
+            Info info = await Task.Run(() => Order.PlaceOrder());
 
-         ShowProgressSpinner = false;
-         _disableButtons = false;
-
-         DisplayMessage(info.Title, info.Message);
+            DisplayMessage(info.Title, info.Message);
+         }
+         catch (Exception e)
+         {
+            DisplayMessage("Error", e.Message);
+         }
+         finally
+         {
+            ShowProgressSpinner = false;
+            _disableButtons = false;
+         }//finally
 
       }//Update
 
       //-------------------------------------------------------------------------------//
 
-      private bool CanUseOrder(object message)
+      private bool CanUsePlaceOrder(object message)
       {
          if (_disableButtons)
             return false;

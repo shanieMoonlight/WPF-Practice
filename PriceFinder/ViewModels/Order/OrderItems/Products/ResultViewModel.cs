@@ -9,6 +9,7 @@ namespace PriceFinding.ViewModels.Products
       private double? _value;
       private bool _readonly = true;
       private bool _focusable = false;
+      public bool IsValid { get; set; } = false;
 
 
 
@@ -39,6 +40,12 @@ namespace PriceFinding.ViewModels.Products
          set
          {
             _value = value;
+
+            if (_value != null)
+               IsValid = true;
+            else
+               IsValid = false;
+            
             //Tell the view.
             OnPropertyChanged(nameof(Value));
          }
@@ -79,7 +86,12 @@ namespace PriceFinding.ViewModels.Products
 
       //-------------------------------------------------------------------------------//
 
+      public void Clear()
+      {
+         Value = null;
+      }//Clear
 
+      //-------------------------------------------------------------------------------//
 
    }//Cls
 }//NS

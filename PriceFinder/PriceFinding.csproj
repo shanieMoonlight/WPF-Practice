@@ -95,6 +95,7 @@
     <Compile Include="Managing Data\Reader Interfaces\IProductReader.cs" />
     <Compile Include="Managing Data\ODBC Readers\ODBCProductReader.cs" />
     <Compile Include="Managing Data\SDO  Readers\SDOProductReader.cs" />
+    <Compile Include="Models\Address.cs" />
     <Compile Include="Models\OrderItem.cs" />
     <Compile Include="Properties\UserSettings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -144,15 +145,16 @@
     <Compile Include="Managing Data\Reader Interfaces\IPriceListReader.cs" />
     <Compile Include="Utility\Sage\SageColumns.cs" />
     <Compile Include="Utility\Sage\SageTables.cs" />
+    <Compile Include="ViewModels\Order\ExtraInfo\DeliveryAddressViewModel.cs" />
+    <Compile Include="ViewModels\Order\ExtraInfo\ExtraInfoViewModel.cs" />
     <Compile Include="ViewModels\Common\CaretViewModel.cs" />
     <Compile Include="ViewModels\Common\BackgroundViewModel.cs" />
-    <Compile Include="ViewModels\CustomerViewModel.cs" />
-    <Compile Include="ViewModels\ISetFocus.cs" />
+    <Compile Include="ViewModels\Order\OrderItems\CustomerViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="ViewModels\OrderItemViewModel.cs" />
-    <Compile Include="ViewModels\OrderViewModel.cs" />
-    <Compile Include="ViewModels\Products\ProductViewModel.cs" />
-    <Compile Include="ViewModels\Products\ResultViewModel.cs" />
+    <Compile Include="ViewModels\Order\OrderItems\OrderItemViewModel.cs" />
+    <Compile Include="ViewModels\Order\OrderViewModel.cs" />
+    <Compile Include="ViewModels\Order\OrderItems\Products\ProductViewModel.cs" />
+    <Compile Include="ViewModels\Order\OrderItems\Products\ResultViewModel.cs" />
     <Compile Include="Writing\PostOrderWriter.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

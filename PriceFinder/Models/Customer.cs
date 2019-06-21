@@ -43,10 +43,8 @@ namespace PriceFinding.Models
       //-------------------------------------------------------------------------------------------------------//
 
       #region Properties
-      public string PoNumber { get { return PoNumber1; } }
       public string Address { get; }
       public double XRate { get; set; } = 1;
-      public string PoNumber1 { get; }
       #endregion
 
       //-------------------------------------------------------------------------------------------------------//

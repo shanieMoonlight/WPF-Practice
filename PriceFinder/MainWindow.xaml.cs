@@ -39,25 +39,7 @@ namespace PriceFinding
 
       }//ctor
 
-      private void LeftAlignedComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-      {
-         var cb = sender as ComboBox;
-         //var Prodrow = cb.Parent as 
-         Console.WriteLine("Sup?  " + cb.IsDropDownOpen);
-         if (cb.IsDropDownOpen)
-            cb.MoveFocus(new TraversalRequest(FocusNavigationDirection.Right));
-      }
 
-      private void CbCustomerCode_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-      {
-         var cb = sender as ComboBox;
-         if (cb.IsDropDownOpen)
-         {
-            Console.WriteLine("Hello?  " + cb.IsDropDownOpen);
-            e.Handled = true;
-            //cb.MoveFocus(new TraversalRequest(FocusNavigationDirection.Right));
-         }
-      }
 
       //-------------------------------------------------------------------------------------------------------//
 

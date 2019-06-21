@@ -26,7 +26,6 @@ namespace PriceFinding.ViewModels
       private DateTime? _date;
       private int? _quantity;
       private int _index;
-      private bool _qtyFocused = false;
 
       public ObservableCollection<string> Types { get; private set; }
       public int QtyTabIndex { get; set; }
@@ -199,13 +198,13 @@ namespace PriceFinding.ViewModels
       public override void Clear()
       {
          base.Clear();
+         Quantity = null;
          Date = null;
          Last = null;
          Cost = null;
          PriceList = null;
          Margin = null;
-         Result.Value = null;
-         Quantity = null;
+         Result.Clear();
       }//Clear
 
       //-------------------------------------------------------------------------------//

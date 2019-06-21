@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -70,14 +71,14 @@ namespace PriceFinding.Utility.CustomProperties
       /// </summary>
       /// <param name="sender">ComboBox</param>
       /// <param name="e"></param>
-      static void SelectionChanged(object sender, SelectionChangedEventArgs e)
+      static void PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
       {
          var cb = sender as ComboBox;
          Console.WriteLine("SC");
          if (cb.IsDropDownOpen)
          {
-            e.Handled = true;
-            //cb.MoveFocus(new TraversalRequest(FocusNavigationDirection.Right));
+            // e.Handled = true;
+             cb.MoveFocus(new TraversalRequest(FocusNavigationDirection.Right));
          }//if
 
       }//SelectionChanged
@@ -112,17 +113,17 @@ namespace PriceFinding.Utility.CustomProperties
          if ((bool)e.NewValue)
          {
             ue.Unloaded += Unloaded;
-            ue.PreviewKeyDown += PreviewKeyDown;
-            ue.KeyDown += KeyDown;
+            //ue.PreviewKeyDown += PreviewKeyDown;
+            //ue.KeyDown += KeyDown;
+            //ue.PreviewKeyUp += PreviewKeyUp;
            
-            ue.SelectionChanged += SelectionChanged;
-            ue.PreviewKeyUp += PreviewKeyUp;
+            ue.PreviewMouseLeftButtonDown += PreviewMouseLeftButtonDown;
          }
          else
          {
-            ue.PreviewKeyDown -= PreviewKeyDown;
+            //ue.PreviewKeyDown -= PreviewKeyDown;
             //ue.PreviewKeyUp -= PreviewKeyUp;
-            ue.SelectionChanged -= SelectionChanged;
+            ue.PreviewMouseLeftButtonDown += PreviewMouseLeftButtonDown;
          }//else
 
       }//IsEnabledChanged

@@ -13,14 +13,18 @@ namespace PriceFinding.ViewModels
 {
    class OrderViewModel : ObservableObject
    {
-      private const int INITIAL_ROW_COUNT = 10;
       public CustomerViewModel Customer { get; private set; }
       public ObservableCollection<ProductViewModel> Products { get; private set; }
-      private DataManager _dataManager;
+      public ExtraInfoViewModel ExtraInfo { get; private set; }
+
       public RelayCommand AddProductCommand { get; private set; }
       public RelayCommand RemoveProductCommand { get; private set; }
+
+      private DataManager _dataManager;
+      private const int INITIAL_ROW_COUNT = 8;
       private readonly double _defaultMargin = Settings.Default.defaultMargin;
       private readonly string NOT_FOUND = Settings.Default.NOT_FOUND;
+
       private MyDictionary<Product> _prodMap;
       private IEnumerable<Product> _prodList;
       private MyDictionary<Customer> _customerMap;
@@ -39,6 +43,8 @@ namespace PriceFinding.ViewModels
          {
             AddProduct();
          }//for
+
+         ExtraInfo = new ExtraInfoViewModel();
 
          AddProductCommand = new RelayCommand(AddProduct);
          RemoveProductCommand = new RelayCommand(RemoveProduct, CanUseRemoveProduct);
@@ -63,6 +69,8 @@ namespace PriceFinding.ViewModels
          Customer.Clear();
          foreach (var product in Products)
             product.Clear();
+
+         ExtraInfo.Clear();
       }//Clear
 
       //-------------------------------------------------------------------------------//
@@ -92,9 +100,11 @@ namespace PriceFinding.ViewModels
 
          foreach (var product in Products)
          {
-            if (product.IsValid && (product.Quantity == null || product.Result == null))
+            //Product is missing Qty or Result
+            if (product.IsValid && (product.Quantity == null || !product.Result.IsValid))
                return false;
 
+            //Got one good one.
             if (product.IsValid)
                atLeastOne = true;
          }//foreach
@@ -203,11 +213,19 @@ namespace PriceFinding.ViewModels
 
          }//foreach
 
-         PostOrderWriter posrOrderWriter = null;
+         PostOrderWriter postOrderWriter = null;
 
-         Order order = new Order(customer, products);
+         Order order = new Order(customer, products)
+         {
+            TakenBy = ExtraInfo.TakenBy,
+            CustomerOrderNumber = ExtraInfo.CustomerOrderNumber,
+            DeliveryAddress = ExtraInfo.DeliveryAddress.ConvertToOrderDeliveryAddress(),
+            Carriage = ExtraInfo.Carriage.GetValueOrDefault(),
+            Notes = ExtraInfo.Notes
+         };
+
          string username = "Shanie Moonlight";
-         posrOrderWriter = new PostOrderWriter(order, username);
+         postOrderWriter = new PostOrderWriter(order, username);
 
          if (order == null)
          {
@@ -215,11 +233,11 @@ namespace PriceFinding.ViewModels
          }//Else
 
          //Make sure order has customer and products.
-         if (order.customer == null)
+         if (order.Customer == null)
          {
             return new Info("Error", "You must enter a valid Customer");
          }
-         if (order.productList.Count <= 0)
+         if (order.ProductList.Count <= 0)
          {
             return new Info("Error", "You must enter at leeast one Product");
          }//If
@@ -227,7 +245,7 @@ namespace PriceFinding.ViewModels
          try
          {
             //Let rep know if order was posted.
-            if (posrOrderWriter.Post())
+            if (postOrderWriter.Post())
                return new Info("Success", "You're order has been created.");
             else
                return new Info("Error", "Order not posted. Contact administrator.");
@@ -275,7 +293,7 @@ namespace PriceFinding.ViewModels
             foreach (var product in enteredProducts)
             {
                string prodCode = product.Code;
-               
+
 
                var customer = _dataManager.CheckCustomer(Customer.Code);
 
