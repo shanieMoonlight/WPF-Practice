@@ -2,22 +2,22 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace PriceFinding.Utility.CustomControls
+namespace PriceFinding.Utility.CustomControls.TextBoxes
 {
-   class NumberOnlyTextBox : TextBox
+  public class NumberOnlyTextBox : TextBox
    {
       public NumberOnlyTextBox()
       {
-         AddHandler(PreviewTextInputEvent, new TextCompositionEventHandler(NumberValidationTextBox), true);
+         AddHandler(PreviewTextInputEvent, new TextCompositionEventHandler(NumberValidation), true);
       }//ctor
 
       //---------------------------------------------------------------------------//
       
-      private static void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+      private static void NumberValidation(object sender, TextCompositionEventArgs e)
       {
-         Regex regex = new Regex("[^0-9]+");
+         Regex regex = new Regex(@"/^\d*\.?\d*$/");
          e.Handled = regex.IsMatch(e.Text);
-      }//NumberValidationTextBox
+      }//NumberValidation
 
 
       //---------------------------------------------------------------------------//

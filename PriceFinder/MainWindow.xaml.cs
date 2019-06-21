@@ -1,26 +1,8 @@
-﻿using BespokeFusion;
-using PriceFinding.Managing_Data;
-using PriceFinding.Managing_Data.ODBC_Readers;
-using PriceFinding.Models;
-using PriceFinding.Properties;
-using PriceFinding.ViewModels;
-using PriceFinding.Writing;
+﻿using PriceFinding.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Markup;
-using System.Windows.Media;
-using System.Xml;
 
 namespace PriceFinding
 {
@@ -31,7 +13,7 @@ namespace PriceFinding
    {
 
       private MainViewModel _mainViewModel;
-      
+
 
       //-------------------------------------------------------------------------------------------------------//
 
@@ -57,35 +39,27 @@ namespace PriceFinding
 
       }//ctor
 
-      //-------------------------------------------------------------------------------------------------------//
-
-      private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+      private void LeftAlignedComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
       {
-         Regex regex = new Regex("[^0-9]+");
-         e.Handled = regex.IsMatch(e.Text);
-      }//NumberValidationTextBox
+         var cb = sender as ComboBox;
+         //var Prodrow = cb.Parent as 
+         Console.WriteLine("Sup?  " + cb.IsDropDownOpen);
+         if (cb.IsDropDownOpen)
+            cb.MoveFocus(new TraversalRequest(FocusNavigationDirection.Right));
+      }
 
-      private void ComboBox_LostFocus(object sender, RoutedEventArgs e)
+      private void CbCustomerCode_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
       {
-         var cb = (ComboBox)sender;
-         cb.HorizontalContentAlignment = HorizontalAlignment.Left;
-         var cmbTextBox = (TextBox)cb.Template.FindName("PART_EditableTextBox", cb);
-         cmbTextBox.CaretIndex = 0;
+         var cb = sender as ComboBox;
+         if (cb.IsDropDownOpen)
+         {
+            Console.WriteLine("Hello?  " + cb.IsDropDownOpen);
+            e.Handled = true;
+            //cb.MoveFocus(new TraversalRequest(FocusNavigationDirection.Right));
+         }
       }
 
       //-------------------------------------------------------------------------------------------------------//
-
-      private void ComboBox_LostFocus_1(object sender, RoutedEventArgs e)
-      {
-         var cb = (ComboBox)sender;
-         cb.HorizontalContentAlignment = HorizontalAlignment.Left;
-         var cmbTextBox = (TextBox)cb.Template.FindName("PART_EditableTextBox", cb);
-         cmbTextBox.CaretIndex = 0;
-      }
-
-
-      //-------------------------------------------------------------------------------------------------------//
-
 
 
    }//Cls

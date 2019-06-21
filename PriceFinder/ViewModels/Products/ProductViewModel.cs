@@ -26,6 +26,7 @@ namespace PriceFinding.ViewModels
       private DateTime? _date;
       private int? _quantity;
       private int _index;
+      private bool _qtyFocused = false;
 
       public ObservableCollection<string> Types { get; private set; }
       public int QtyTabIndex { get; set; }
@@ -38,6 +39,7 @@ namespace PriceFinding.ViewModels
       {
          Types = new ObservableCollection<string>(PriceTypes.GetPriceTypes());
          Result = new ResultViewModel();
+
       }//ctor
 
       //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
@@ -166,9 +168,9 @@ namespace PriceFinding.ViewModels
                Result.Focusable = true;
                Result.Caret.Color = (Brush)Application.Current.FindResource(MyResources.Brushes.PrimaryDark);
                Result.Background.Color = (Brush)Application.Current.FindResource(MyResources.Brushes.PrimaryLight);
-
             }
-            else {
+            else
+            {
                Result.Readonly = true;
                Result.Focusable = true;
                Result.Caret.Color = (Brush)Application.Current.FindResource(MyResources.Brushes.Primary);
@@ -191,6 +193,7 @@ namespace PriceFinding.ViewModels
             QtyTabIndex = CodeTabIndex + 1;
          }
       }//Index
+
       //-------------------------------------------------------------------------------//
 
       public override void Clear()
@@ -201,7 +204,7 @@ namespace PriceFinding.ViewModels
          Cost = null;
          PriceList = null;
          Margin = null;
-         Result = null;
+         Result.Value = null;
          Quantity = null;
       }//Clear
 

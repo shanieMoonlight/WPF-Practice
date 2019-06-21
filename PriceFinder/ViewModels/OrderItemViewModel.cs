@@ -2,6 +2,7 @@
 using PriceFinding.Properties;
 using PriceFinding.Utility.Binding;
 using PriceFinding.ViewModels.Common;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
@@ -29,6 +30,15 @@ namespace PriceFinding.ViewModels
       {
          UpdateData(map, list);
          Background = new BackgroundViewModel();
+      }//ctor
+
+      //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
+
+      public OrderItemViewModel(MyDictionary<T> map, IEnumerable<T> list, Action setFocus)
+      {
+         UpdateData(map, list);
+         Background = new BackgroundViewModel();
+
       }//ctor
 
       //-------------------------------------------------------------------------------//

@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace PriceFinding.Utility.CustomControls
+namespace PriceFinding.Utility.CustomControls.TextBoxes
 {
    public class ClickSelectAllTextBox : TextBox
    {

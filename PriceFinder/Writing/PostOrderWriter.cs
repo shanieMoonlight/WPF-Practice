@@ -168,7 +168,7 @@ namespace PriceFinding.Writing
                 }
                 else
                 {
-                    throw new MyException("405 Customer " + order.customer.Code + " does not seem to exist.");
+                    throw new MyException("Customer " + order.customer.Code + " does not seem to exist.");
                 }//Else
             }
             catch (MyException mE)
@@ -177,7 +177,7 @@ namespace PriceFinding.Writing
             }
             catch (Exception e)
             {
-                throw new MyException("502 Problem posting order to database " + e.GetType().Name + ":" + e.Message);
+                throw new MyException("Problem posting order to database " + e.GetType().Name + ":" + e.Message);
             }
             finally
             {

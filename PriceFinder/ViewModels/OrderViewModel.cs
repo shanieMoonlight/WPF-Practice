@@ -13,7 +13,7 @@ namespace PriceFinding.ViewModels
 {
    class OrderViewModel : ObservableObject
    {
-      private const int INITIAL_ROW_COUNT = 1;
+      private const int INITIAL_ROW_COUNT = 10;
       public CustomerViewModel Customer { get; private set; }
       public ObservableCollection<ProductViewModel> Products { get; private set; }
       private DataManager _dataManager;
@@ -177,7 +177,16 @@ namespace PriceFinding.ViewModels
 
          Customer customer = _dataManager.CheckCustomer(cusCode);
 
-         foreach (var productVM in Products)
+
+         //Remove empty rows
+         var enteredProducts = Products
+            .Where(s => !string.IsNullOrWhiteSpace(s.Code));
+
+         var prodCodes = enteredProducts
+            .Select(s => s.Code);
+
+
+         foreach (var productVM in enteredProducts)
          {
             string prodCode = productVM.Code;
 
