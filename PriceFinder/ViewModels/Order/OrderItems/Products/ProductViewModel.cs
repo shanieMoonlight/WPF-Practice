@@ -32,12 +32,16 @@ namespace PriceFinding.ViewModels
       public int CodeTabIndex { get; set; }
       public ResultViewModel Result { get; set; }
 
+      public RelayCommand ClearCommand { get; private set; }
+
       //-------------------------------------------------------------------------------//
 
       public ProductViewModel(MyDictionary<Product> productMap, IEnumerable<Product> productList) : base(productMap, productList)
       {
          Types = new ObservableCollection<string>(PriceTypes.GetPriceTypes());
          Result = new ResultViewModel();
+
+         ClearCommand = new RelayCommand(Clear, CanUseClear);
 
       }//ctor
 
@@ -206,6 +210,10 @@ namespace PriceFinding.ViewModels
          Margin = null;
          Result.Clear();
       }//Clear
+
+      //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
+
+      private bool CanUseClear(object message) =>  true;
 
       //-------------------------------------------------------------------------------//
 

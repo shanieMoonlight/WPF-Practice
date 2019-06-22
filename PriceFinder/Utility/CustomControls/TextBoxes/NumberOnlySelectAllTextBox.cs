@@ -30,8 +30,8 @@ namespace PriceFinding.Utility.CustomControls.TextBoxes
             }//else
          }//if
 
-         e.Handled = !(char.IsDigit(e.Text, e.Text.Length - 1));
-         Console.WriteLine(e.Handled);
+         e.Handled = !IsDigit(e.Text);
+
       }//NumberValidationTextBox
 
       //---------------------------------------------------------------------------//
@@ -40,6 +40,13 @@ namespace PriceFinding.Utility.CustomControls.TextBoxes
       {
          return text.Contains(".");
       }//AlreadyHasDot
+
+      //---------------------------------------------------------------------------//
+
+      private static bool IsDigit(string text)
+      {
+         return (char.IsDigit(text, text.Length - 1));
+      }//IsDigit
 
       //---------------------------------------------------------------------------//
 

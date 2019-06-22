@@ -12,13 +12,40 @@ namespace PriceFinding.Utility.CustomControls.TextBoxes
       }//ctor
 
       //---------------------------------------------------------------------------//
-      
+
       private static void NumberValidation(object sender, TextCompositionEventArgs e)
       {
-         Regex regex = new Regex(@"/^\d*\.?\d*$/");
-         e.Handled = regex.IsMatch(e.Text);
-      }//NumberValidation
+         if (e.Text == ".")
+         {
+            var originalText = ((TextBox)sender).Text;
+            if (AlreadyHasDot(originalText))
+            {
+               e.Handled = true;
+               return;
+            }
+            else
+            {
+               return;
+            }//else
+         }//if
 
+         e.Handled = !IsDigit(e.Text);
+
+      }//NumberValidationTextBox
+
+      //---------------------------------------------------------------------------//
+
+      private static bool AlreadyHasDot(string text)
+      {
+         return text.Contains(".");
+      }//AlreadyHasDot
+
+      //---------------------------------------------------------------------------//
+
+      private static bool IsDigit(string text)
+      {
+         return (char.IsDigit(text, text.Length - 1));
+      }//IsDigit
 
       //---------------------------------------------------------------------------//
 

@@ -20,6 +20,7 @@
           <converters:BoolToStringConverter x:Key="BoolToString"/>
           <converters:BoolToOrderTypeConverter x:Key="BoolToOrderType"/>
 
+          
           <Style x:Key="AutoOpenComboBox" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MaterialDesignComboBox}">
                <Style.Triggers>
                     <Trigger Property="IsKeyboardFocusWithin" Value="True">
@@ -78,15 +79,6 @@
                                    </ItemsPanelTemplate>
                               </ComboBox.ItemsPanel>
                          </ComboBox>
-
-                         <!--<TextBox x:Name="tbCustomerDesc" Grid.Column="1" Grid.Row="1" Width="200" Margin="0,0,0,0"   
-                              Padding="3,0,2,0"
-                              IsReadOnly="True"
-                              Focusable="False"
-                              IsTabStop="False"
-                              Text="{Binding Order.Customer.Description}"
-                              materialDesign:HintAssist.Hint="Customer Description"
-                              materialDesign:HintAssist.IsFloating="True"/>-->
 
                     </StackPanel>
 
@@ -149,6 +141,10 @@
                          <Label x:Name="lblResult" Grid.Column="1" Grid.Row="1" Width="80" Margin="5,0,2,0"  
                               Focusable="False"
                               Content="Price"/>
+
+                         <Label x:Name="lblClear" Grid.Column="1" Grid.Row="1" Width="42" Margin="5,0,2,0"  
+                              Focusable="False"
+                              Content=""/>
                     </StackPanel>
 
                </Grid>
@@ -279,6 +275,14 @@
                                                        materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"
                                                        materialDesign:HintAssist.IsFloating="True"/>
                                              </StackPanel>
+                                             <Button 
+                                                  BorderBrush="Transparent"
+                                                  Background="Transparent"
+                                                  ToolTip="Clear Row" 
+                                                  Command="{Binding ClearCommand}">
+                                                  
+                                                  <materialDesign:PackIcon Kind="Clear"/>
+                                             </Button>
 
                                         </StackPanel>
                                    </Grid>
@@ -369,7 +373,7 @@
                                    Content="Enter as Quote"/>
                               <CheckBox Background="White"
                                         IsChecked="{Binding Order.ExtraInfo.OrderType, Converter={StaticResource BoolToOrderType}}">
-                                   
+
                               </CheckBox>
                          </StackPanel>
                     </StackPanel>

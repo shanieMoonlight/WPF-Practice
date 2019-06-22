@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace PriceFinding.Utility.Binding
 {
-   class RelayCommand : ICommand
+   public class RelayCommand : ICommand
    {
       private readonly Action _execute;
       private readonly Predicate<object> _canExecute;
