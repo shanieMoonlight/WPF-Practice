@@ -10,7 +10,7 @@ namespace PriceFinding.ViewModels
       private string _line3;
       private string _line4;
       private string _line5;
-
+        
       //----------------------------------------------------------------------//
 
       public DeliveryAddressViewModel()

@@ -151,16 +151,17 @@ namespace PriceFinding.Writing
                var notes = order.Notes;
                if (!string.IsNullOrWhiteSpace(notes))
                {
+                  var len = notes.Length;
                   //Split the note up if it's too long
-                  SDOHelper.Write(sopPost.Header, "NOTES_1", RestrictLength(order.Notes.Substring(0, MAX_LENGTH_NOTE)));
+                  SDOHelper.Write(sopPost.Header, "NOTES_1", RestrictLength(order.Notes.Substring(0, Math.Min(len, MAX_LENGTH_NOTE))));
 
-                  if (notes.Length > MAX_LENGTH_NOTE)
-                     SDOHelper.Write(sopPost.Header, "NOTES_2", RestrictLength(order.Notes.Substring(MAX_LENGTH_NOTE, 2 * MAX_LENGTH_NOTE)));
+                  if (len > MAX_LENGTH_NOTE)
+                     SDOHelper.Write(sopPost.Header, "NOTES_2", RestrictLength(order.Notes.Substring(MAX_LENGTH_NOTE, Math.Min(len, 2 * MAX_LENGTH_NOTE))));
 
-                  if (notes.Length > 2 * MAX_LENGTH_NOTE)
-                     SDOHelper.Write(sopPost.Header, "NOTES_3", RestrictLength(order.Notes.Substring(2 * MAX_LENGTH_NOTE, 3 * MAX_LENGTH_NOTE)));
+                  if (len > 2 * MAX_LENGTH_NOTE)
+                     SDOHelper.Write(sopPost.Header, "NOTES_3", RestrictLength(order.Notes.Substring(2 * MAX_LENGTH_NOTE, Math.Min(len, 3 * MAX_LENGTH_NOTE))));
 
-               }
+               }//If
 
                //Add discount rate (usually 0).
                cusDiscountRate = (double)SDOHelper.Read(salesRecord, "DISCOUNT_RATE");

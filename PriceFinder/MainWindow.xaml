@@ -7,6 +7,7 @@
         ScrollViewer.VerticalScrollBarVisibility="Visible"
         Title="Find Sé" Height="580" Width="1000"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:smtx="clr-namespace:ShowMeTheXAML;assembly=ShowMeTheXAML"
         xmlns:converters="clr-namespace:PriceFinding.Utility.Binding.Converters"
         xmlns:textboxes="clr-namespace:PriceFinding.Utility.CustomControls.TextBoxes"
@@ -17,6 +18,8 @@
           <converters:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
           <converters:BoolToBrushConverter x:Key="BoolToBrush"/>
           <converters:BoolToStringConverter x:Key="BoolToString"/>
+          <converters:BoolToOrderTypeConverter x:Key="BoolToOrderType"/>
+
           <Style x:Key="AutoOpenComboBox" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MaterialDesignComboBox}">
                <Style.Triggers>
                     <Trigger Property="IsKeyboardFocusWithin" Value="True">
@@ -271,8 +274,8 @@
                                                        CaretBrush="{Binding Result.Caret.Color}"
                                                        Cursor="Arrow"
                                                        MaxLength="10"
-                                                       materialDesign:HintAssist.Hint="Price"
                                                        Text="{Binding Result.Value, StringFormat=N5,TargetNullValue=''}"
+                                                       materialDesign:HintAssist.Hint="Price"
                                                        materialDesign:HintAssist.Foreground="{StaticResource BrushPrimaryDark}"
                                                        materialDesign:HintAssist.IsFloating="True"/>
                                              </StackPanel>
@@ -304,27 +307,27 @@
                     <Grid.RowDefinitions>
                          <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-               <Button x:Name="fabRemoveProductRow"  Grid.Row="3" Style="{StaticResource MaterialDesignFloatingActionMiniButton}"   
+                    <Button x:Name="fabRemoveProductRow"  Grid.Row="3" Style="{StaticResource MaterialDesignFloatingActionMiniButton}"   
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    Background="{StaticResource BrushPrimaryLight}"
                    Margin="20,0,0,0"
                    ToolTip="Remove Product Row" 
                    Command="{Binding Order.RemoveProductCommand}">
-                    <materialDesign:PackIcon Kind="Minus" 
+                         <materialDesign:PackIcon Kind="Minus" 
                    Height="24" Width="24" />
-               </Button>
+                    </Button>
 
-               <Button x:Name="fabAddProductrow"  Grid.Row="3" Style="{StaticResource MaterialDesignFloatingActionMiniButton}"   
+                    <Button x:Name="fabAddProductrow"  Grid.Row="3" Style="{StaticResource MaterialDesignFloatingActionMiniButton}"   
                    HorizontalAlignment="Right"
                    VerticalAlignment="Top"
                    Background="{StaticResource BrushPrimary}"
                    Margin="0,0,20,0"
                    ToolTip="Add Product Row" 
                    Command="{Binding Order.AddProductCommand}">
-                    <materialDesign:PackIcon Kind="Plus" 
+                         <materialDesign:PackIcon Kind="Plus" 
                    Height="24" Width="24" />
-               </Button>
+                    </Button>
                </Grid>
 
                <Grid x:Name="gridFooter"  Grid.Row="4"  Background="{StaticResource BrushPrimary}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,-20,0,0">
@@ -350,15 +353,25 @@
                               materialDesign:HintAssist.IsFloating="True"/>
                          <textboxes:NumberOnlySelectAllTextBox Margin="0,0,0,0"   Background="{StaticResource BrushPrimaryLight}"
                               Padding="3,0,2,0"
-                              Text="{Binding Order.ExtraInfo.Carriage}"
+                              Text="{Binding Order.ExtraInfo.Carriage, UpdateSourceTrigger=PropertyChanged,TargetNullValue=''}"
                               materialDesign:HintAssist.Hint="Carriage"
                               materialDesign:HintAssist.IsFloating="True"/>
-                         <TextBox Margin="0,0,0,0"   Background="{StaticResource BrushPrimaryLight}"
+                         <TextBox Margin="0,0,0,0"   
+                              Background="{StaticResource BrushPrimaryLight}"
                               Padding="3,0,2,0"
                               Text="{Binding Order.ExtraInfo.TakenBy}"
                               materialDesign:HintAssist.Hint="Taken By"
                               materialDesign:HintAssist.IsFloating="True"/>
-
+                         <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                              <Label x:Name="lblOrderType"  
+                                   Margin="2,0,7,0"  
+                                   Focusable="False"
+                                   Content="Enter as Quote"/>
+                              <CheckBox Background="White"
+                                        IsChecked="{Binding Order.ExtraInfo.OrderType, Converter={StaticResource BoolToOrderType}}">
+                                   
+                              </CheckBox>
+                         </StackPanel>
                     </StackPanel>
 
 

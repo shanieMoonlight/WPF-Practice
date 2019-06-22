@@ -221,7 +221,8 @@ namespace PriceFinding.ViewModels
             CustomerOrderNumber = ExtraInfo.CustomerOrderNumber,
             DeliveryAddress = ExtraInfo.DeliveryAddress.ConvertToOrderDeliveryAddress(),
             Carriage = ExtraInfo.Carriage.GetValueOrDefault(),
-            Notes = ExtraInfo.Notes
+            Notes = ExtraInfo.Notes,
+            type = ExtraInfo.OrderType
          };
 
          string username = "Shanie Moonlight";

@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace PriceFinding.Utility.CustomControls.TextBoxes
@@ -14,10 +16,30 @@ namespace PriceFinding.Utility.CustomControls.TextBoxes
 
       private static void NumberValidation(object sender, TextCompositionEventArgs e)
       {
-         Regex regex = new Regex(@"/^\d*\.?\d*$/");
-         e.Handled = regex.IsMatch(e.Text);
+         if (e.Text == ".")
+         {
+            var originalText = ((TextBox)sender).Text;
+            if (AlreadyHasDot(originalText))
+            {
+               e.Handled = true;
+               return;
+            }
+            else
+            {
+               return;
+            }//else
+         }//if
+
+         e.Handled = !(char.IsDigit(e.Text, e.Text.Length - 1));
+         Console.WriteLine(e.Handled);
       }//NumberValidationTextBox
 
+      //---------------------------------------------------------------------------//
+
+      private static bool AlreadyHasDot(string text)
+      {
+         return text.Contains(".");
+      }//AlreadyHasDot
 
       //---------------------------------------------------------------------------//
 

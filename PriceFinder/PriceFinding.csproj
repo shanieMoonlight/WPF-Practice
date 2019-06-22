@@ -106,6 +106,7 @@
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Utility\Binding\Converters\BoolToBrushConverter.cs" />
     <Compile Include="Utility\Binding\Converters\BoolToStringConverter.cs" />
+    <Compile Include="Utility\Binding\Converters\BoolToOrderTypeConverter.cs" />
     <Compile Include="Utility\Binding\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Utility\Binding\ObservableObject.cs" />
     <Compile Include="Utility\Binding\RelayCommand.cs" />
